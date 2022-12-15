@@ -1,7 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.denoic.educate_io">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
    <application
-        android:label="educate_io"
+        android:label="EducateIO"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

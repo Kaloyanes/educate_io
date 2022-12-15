@@ -15,8 +15,7 @@ class Themes {
         ),
         centerTitle: true,
       ),
-
-      textTheme: TextTheme(),
+      navigationDrawerTheme: NavigationDrawerThemeData(),
     );
   }
 }

@@ -18,10 +18,10 @@ class DetailsView extends GetView {
         children: [
           Hero(
             tag: teacher.imgUrl,
-            child: Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: Image.network(teacher.imgUrl),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: Image.network(
+                teacher.imgUrl,
               ),
             ),
           ),

@@ -16,7 +16,7 @@ class HomeController extends GetxController {
       "https://scontent.fsof11-1.fna.fbcdn.net/v/t1.6435-9/89824552_2952344278155746_5720414663200473088_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=730e14&_nc_ohc=FyGA3iBo-KwAX8enAwM&_nc_ht=scontent.fsof11-1.fna&oh=00_AfCIH1hDM3PTkkpkcIA9iMRqj__Qi4zSvHcWxSMruCVDOQ&oe=63C2B929",
       "Самвел Матинян",
       90,
-      "Не съм добре",
+      "За болница съм",
       ["Програмист", "Сертифиран Sex offender"],
     ),
     new Teacher(
