@@ -2,23 +2,24 @@ name: educate_io
 version: 1.0.0+1
 publish_to: none
 description: Platform to find private tutors
-environment: 
+environment:
   sdk: '>=2.19.0-467.0.dev <4.0.0'
 
-dependencies: 
+dependencies:
   cupertino_icons: ^1.0.2
   get: 4.6.5
-  flutter: 
-    sdk: flutter
-  shimmer: ^2.0.0
-  fast_cached_network_image: ^1.0.1
+  shimmer: 2.0.0
   cached_network_image: ^3.2.3
-
-dev_dependencies: 
-  flutter_lints: ^2.0.0
-  flutter_test: 
+  go_router: 5.2.4
+  path_provider: 2.0.11
+  flutter:
     sdk: flutter
 
-flutter: 
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
   uses-material-design: true
 

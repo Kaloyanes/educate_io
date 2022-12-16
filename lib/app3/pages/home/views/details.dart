@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,11 +19,14 @@ class DetailsView extends GetView {
         children: [
           Hero(
             tag: teacher.imgUrl,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: Image.network(
-                teacher.imgUrl,
-              ),
+            child: CachedNetworkImage(
+              imageUrl: teacher.imgUrl,
+              imageBuilder: (context, imageProvider) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image(image: imageProvider),
+                );
+              },
             ),
           ),
           Text(

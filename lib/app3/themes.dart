@@ -8,7 +8,6 @@ class Themes {
         seedColor: Colors.blue,
         brightness: darkMode ? Brightness.dark : Brightness.light,
       ),
-      // scaffoldBackgroundColor: Colors.white,
       appBarTheme: AppBarTheme(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(0),
