@@ -6,14 +6,23 @@ environment:
   sdk: '>=2.19.0-467.0.dev <4.0.0'
 
 dependencies:
-  cupertino_icons: ^1.0.2
-  get: 4.6.5
-  shimmer: 2.0.0
   cached_network_image: ^3.2.3
-  go_router: 5.2.4
-  path_provider: 2.0.11
+  cupertino_icons: ^1.0.2
+  dynamic_color: ^1.5.4
+  firebase_auth: ^4.2.1
+  firebase_core: ^2.4.0
+  firebase_storage: ^11.0.8
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  get: 4.6.5
+  go_router: 5.2.4
+  google_fonts: ^3.0.1
+  image_picker: 0.8.6
+  path: ^1.8.3
+  path_provider: 2.0.11
+  shimmer: 2.0.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -22,4 +31,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-

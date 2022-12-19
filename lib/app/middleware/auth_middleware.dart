@@ -1,3 +1,5 @@
+import 'package:educate_io/app/routes/app_pages.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,13 +8,19 @@ class AuthMiddleware extends GetMiddleware {
   // TODO: implement priority
   int? get priority => 1;
 
-  bool isAuthenticated = false;
-
   @override
   RouteSettings? redirect(String? route) {
-    if (!isAuthenticated) return RouteSettings(name: "/login");
+    var instance = FirebaseAuth.instance;
+
+    if (instance.currentUser == null) {
+      SignAnon(instance);
+    }
 
     // TODO: implement redirect
     return super.redirect(route);
+  }
+
+  void SignAnon(FirebaseAuth instance) async {
+    await instance.signInAnonymously();
   }
 }

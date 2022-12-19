@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "647367384059",
+    "project_id": "educateio",
+    "storage_bucket": "educateio.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647367384059:android:ee8b70a44f7772899fc95e",
+        "android_client_info": {
+          "package_name": "com.denoic.educate_io"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "647367384059-doc00uej0fsv1s69d2p8b6n7ntbegt59.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXQFGCIiVUpDMidzh8A_FhkD-9vVKqmfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "647367384059-doc00uej0fsv1s69d2p8b6n7ntbegt59.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

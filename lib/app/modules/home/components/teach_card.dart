@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
-import 'package:educate_io/app/pages/home/views/details.dart';
+import 'package:educate_io/app/modules/home/views/details_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,17 +10,26 @@ class TeachCard extends StatelessWidget {
   final Teacher teacher;
 
   void GoToDetails() {
-    Get.to(DetailsView(teacher));
+    Get.to(
+      DetailsView(teacher),
+      fullscreenDialog: true,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => GoToDetails(),
+      // onLongPress: () => ShowBottomSheet(),
       child: SizedBox(
         width: 250,
         child: Card(
-          clipBehavior: Clip.antiAliasWithSaveLayer,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              )),
+          color: Colors.transparent,
           child: Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
             child: Column(
