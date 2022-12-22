@@ -12,6 +12,11 @@ import 'package:image_picker/image_picker.dart';
 class SettingsController extends GetxController {
   //TODO: Implement SettingsController
 
+  final savedSettings = false.obs;
+  set setSavedSettings(bool val) {
+    savedSettings.value = val;
+  }
+
   Rx<XFile> photo = XFile("").obs;
   set setPhoto(XFile val) => photo.value = val;
 
@@ -24,13 +29,28 @@ class SettingsController extends GetxController {
   var displayController = TextEditingController(
       text: FirebaseAuth.instance.currentUser!.displayName ?? "");
 
-  Future<void> getPhoto() async {
-    Uint8List? photoData =
-        await storage.ref().child(auth.currentUser!.uid).getData();
+  Future<bool> popScope() async {
+    FocusScope.of(Get.context!).requestFocus(FocusNode());
+    if (!savedSettings.value) return Future.value(true);
 
-    if (photoData != null) {
-      photo.value = XFile.fromData(photoData);
-    }
+    return await showDialog(
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.warning, size: 30),
+        title:
+            const Text("Сигурни ли сте, че не искате да запазите промените?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Да"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Не"),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> selectPhoto() async {
@@ -38,7 +58,7 @@ class SettingsController extends GetxController {
       context: Get.context!,
       constraints: BoxConstraints.tightFor(
         width: double.infinity,
-        height: Get.size.height / 4.2,
+        height: Get.size.height / 4.5,
       ),
       builder: (context) {
         return Container(
@@ -48,43 +68,52 @@ class SettingsController extends GetxController {
             ),
             color: Theme.of(context).bottomSheetTheme.backgroundColor,
           ),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                height: 5,
-                width: Get.size.width / 3,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+          child: SafeArea(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 15,
                 ),
-              ),
-              const SizedBox(height: 20),
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text("Снимай с камера"),
-                onTap: () async => capture(ImageSource.camera),
-              ),
-              const SizedBox(height: 10),
-              ListTile(
-                leading: const Icon(Icons.photo),
-                title: const Text("Избери снимка от галерията"),
-                onTap: () async => capture(ImageSource.gallery),
-              ),
-            ],
+                Container(
+                  height: 5,
+                  width: Get.size.width / 3,
+                  decoration: BoxDecoration(
+                    color: Theme.of(Get.context!).dividerColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text("Снимай с камера"),
+                  onTap: () async => _capture(ImageSource.camera),
+                  tileColor: Colors.transparent,
+                ),
+                const SizedBox(height: 10),
+                ListTile(
+                  leading: const Icon(Icons.photo),
+                  title: const Text("Избери снимка от галерията"),
+                  onTap: () async => _capture(ImageSource.gallery),
+                  tileColor: Colors.transparent,
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  Future<void> capture(ImageSource source) async {
-    setPhoto = (await _picker.pickImage(
+  Future<void> _capture(ImageSource source) async {
+    var photo = await _picker.pickImage(
       source: source,
       preferredCameraDevice: CameraDevice.front,
-    ))!;
+    );
+
+    if (photo != null) {
+      setPhoto = photo;
+      setSavedSettings = true;
+    }
   }
 
   Future<void> savePhoto() async {
@@ -99,12 +128,6 @@ class SettingsController extends GetxController {
       storage2.putFile(file);
 
       auth.currentUser!.updatePhotoURL(await storage2.getDownloadURL());
-
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        const SnackBar(
-          content: Text("Качена е снимката"),
-        ),
-      );
     } on Exception catch (e) {
       showDialog(
         context: Get.context!,
@@ -127,6 +150,7 @@ class SettingsController extends GetxController {
     changeDisplayName();
     savePhoto();
 
+    setSavedSettings = false;
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       const SnackBar(
         content: Text("Запазени са промените"),

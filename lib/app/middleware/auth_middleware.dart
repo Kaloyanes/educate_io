@@ -10,17 +10,7 @@ class AuthMiddleware extends GetMiddleware {
 
   @override
   RouteSettings? redirect(String? route) {
-    var instance = FirebaseAuth.instance;
-
-    if (instance.currentUser == null) {
-      SignAnon(instance);
-    }
-
     // TODO: implement redirect
     return super.redirect(route);
-  }
-
-  void SignAnon(FirebaseAuth instance) async {
-    await instance.signInAnonymously();
   }
 }

@@ -35,7 +35,8 @@ class HomeView extends GetView<HomeController> {
 
                     var instance = FirebaseAuth.instance;
 
-                    var name = instance.currentUser!.displayName!.split(' ');
+                    var name = instance.currentUser?.displayName?.split(' ') ??
+                        "?".split(' ');
 
                     String display = "";
                     name.forEach(

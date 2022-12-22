@@ -1,5 +1,7 @@
 import 'package:educate_io/app/routes/app_pages.dart';
+import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 
@@ -31,7 +33,7 @@ class LoginView extends GetView<LoginController> {
                 ),
                 Form(
                   // key: controller.formkey,
-                  autovalidateMode: AutovalidateMode.always,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(
                     children: [
                       TextFormField(
@@ -42,23 +44,36 @@ class LoginView extends GetView<LoginController> {
                           label: Text("Имейл"),
                           prefixIcon: Icon(Icons.email),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Попълнете полето";
+                          }
+
+                          if (!value.isEmail) {
+                            return "Невалиден имейл";
+                          }
+                        },
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        keyboardType: TextInputType.visiblePassword,
-                        controller: controller.passwordController,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          label: const Text("Парола"),
-                          prefixIcon: const Icon(Icons.password),
-                          suffixIcon: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.remove_red_eye),
+                      Obx(
+                        () => TextFormField(
+                          keyboardType: TextInputType.visiblePassword,
+                          controller: controller.passwordController,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            label: const Text("Парола"),
+                            prefixIcon: const Icon(Icons.password),
+                            suffixIcon: IconButton(
+                              onPressed: () =>
+                                  controller.setPasswordVisibility =
+                                      !controller.showPassword.value,
+                              icon: const Icon(Icons.remove_red_eye),
+                            ),
                           ),
+                          obscureText: !controller.showPassword.value,
                         ),
-                        obscureText: true,
                       ),
                       const SizedBox(
                         height: 20,
@@ -77,6 +92,14 @@ class LoginView extends GetView<LoginController> {
                   },
                   icon: Icon(Icons.app_registration),
                   label: Text("Направи си акаунт"),
+                ),
+                IconButton(
+                  onPressed: () => FirebaseAuthService.logInGoogle(),
+                  icon: SvgPicture.network(
+                    "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg",
+                    width: 30,
+                    height: 30,
+                  ),
                 ),
               ],
             ),

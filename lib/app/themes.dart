@@ -17,11 +17,23 @@ class Themes {
       ),
       iconButtonTheme: IconButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStatePropertyAll(colors.background),
+          backgroundColor: MaterialStatePropertyAll(Colors.transparent),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: const OutlineInputBorder(),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: Colors.red.shade800),
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(
@@ -29,7 +41,6 @@ class Themes {
           ),
         ),
       ),
-      // textTheme: GoogleFonts.robotoTextTheme(),
     );
   }
 }

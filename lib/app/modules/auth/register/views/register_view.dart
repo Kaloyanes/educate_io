@@ -10,11 +10,15 @@ class RegisterView extends GetView<RegisterController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: Text(
-          'RegisterView is working',
-          style: TextStyle(fontSize: 20),
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Регистрация",
+            style: Theme.of(context).textTheme.headlineLarge,
+          ),
+          TextField(),
+        ],
       ),
     );
   }

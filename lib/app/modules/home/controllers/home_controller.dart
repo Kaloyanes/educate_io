@@ -39,34 +39,93 @@ class HomeController extends GetxController {
   void showProfileSettings() {
     showDialog(
       context: Get.context!,
-      builder: (context) => AlertDialog(
-        icon: Icon(Icons.person_rounded),
-        title: Text("Настройки на профила"),
-        content: Column(
+      builder: (context) => customDialog(context),
+    );
+  }
+}
+
+Widget customDialog(BuildContext context) => Dialog(
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(child: Container()),
-            TextButton(
-              onPressed: () {
-                Get.toNamed(Routes.PROFILE_SETTINGS);
-              },
-              child: Text("Настройки на профила"),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.person,
+                    size: 40,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    onPressed: () => Get.back(),
+                    icon: Icon(Icons.close),
+                  ),
+                )
+              ],
             ),
-            TextButton(
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Настройки на профила",
+              style: context.textTheme.headlineSmall,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextButton.icon(
+              label: Text("Настройки на профила"),
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                Get.toNamed(Routes.PROFILE_SETTINGS, preventDuplicates: false);
+              },
+            ),
+            TextButton.icon(
+              icon: Icon(Icons.logout),
+              label: Text("Излез от профила"),
               onPressed: () {
                 FirebaseAuthService.logOut();
                 Get.back();
               },
-              child: Text("Излез от профила"),
             )
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text("Ок"),
-          ),
-        ],
       ),
     );
-  }
-}
+
+Widget alertDialog = AlertDialog(
+  actionsAlignment: MainAxisAlignment.center,
+  icon: Icon(Icons.person_rounded),
+  title: Text("Настройки на профила"),
+  content: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      TextButton(
+        onPressed: () {
+          Get.toNamed(Routes.PROFILE_SETTINGS, preventDuplicates: false);
+        },
+        child: Text("Настройки на профила"),
+      ),
+      TextButton(
+        onPressed: () {
+          FirebaseAuthService.logOut();
+          Get.back();
+        },
+        child: Text("Излез от профила"),
+      )
+    ],
+  ),
+  actions: [
+    TextButton(
+      onPressed: () => Get.back(),
+      child: Icon(Icons.close),
+    ),
+  ],
+);

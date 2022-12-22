@@ -8,6 +8,9 @@ class LoginController extends GetxController {
 
   GlobalKey<FormState> formkey = GlobalKey();
 
+  final showPassword = false.obs;
+  set setPasswordVisibility(val) => showPassword.value = val;
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -16,7 +19,6 @@ class LoginController extends GetxController {
       child: CircularProgressIndicator(),
     ));
 
-    print("kgowrkgo");
     try {
       await FirebaseAuthService.login(emailController.text.removeAllWhitespace,
           passwordController.text.removeAllWhitespace);
