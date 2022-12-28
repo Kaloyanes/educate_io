@@ -19,89 +19,101 @@ class LoginView extends GetView<LoginController> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Влизане",
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Form(
-                  // key: controller.formkey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        controller: controller.emailController,
-                        decoration: const InputDecoration(
-                          // border: OutlineInputBorder(),
-                          label: Text("Имейл"),
-                          prefixIcon: Icon(Icons.email),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Попълнете полето";
-                          }
-
-                          if (!value.isEmail) {
-                            return "Невалиден имейл";
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Obx(
-                        () => TextFormField(
-                          keyboardType: TextInputType.visiblePassword,
-                          controller: controller.passwordController,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            label: const Text("Парола"),
-                            prefixIcon: const Icon(Icons.password),
-                            suffixIcon: IconButton(
-                              onPressed: () =>
-                                  controller.setPasswordVisibility =
-                                      !controller.showPassword.value,
-                              icon: const Icon(Icons.remove_red_eye),
-                            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Влизане",
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Form(
+                    // key: controller.formkey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: controller.emailController,
+                          decoration: const InputDecoration(
+                            // border: OutlineInputBorder(),
+                            label: Text("Имейл"),
+                            prefixIcon: Icon(Icons.email),
                           ),
-                          obscureText: !controller.showPassword.value,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Попълнете полето";
+                            }
+
+                            if (!value.isEmail) {
+                              return "Невалиден имейл";
+                            }
+
+                            return null;
+                          },
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: () => controller.loginWithCredentials(),
-                        icon: Icon(Icons.login),
-                        label: Text("Влез"),
-                      ),
-                    ],
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Obx(
+                          () => TextFormField(
+                            keyboardType: TextInputType.visiblePassword,
+                            controller: controller.passwordController,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              label: const Text("Парола"),
+                              prefixIcon: const Icon(Icons.password),
+                              suffixIcon: IconButton(
+                                onPressed: () =>
+                                    controller.setPasswordVisibility =
+                                        !controller.showPassword.value,
+                                icon: const Icon(Icons.remove_red_eye),
+                              ),
+                            ),
+                            obscureText: !controller.showPassword.value,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Text("Забравил си паролата?"),
+                          ),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () => controller.loginWithCredentials(),
+                          icon: const Icon(Icons.login),
+                          label: const Text("Влез"),
+                          style: controller.sizeStyle,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    Get.toNamed(Routes.REGISTER);
-                  },
-                  icon: Icon(Icons.app_registration),
-                  label: Text("Направи си акаунт"),
-                ),
-                IconButton(
-                  onPressed: () => FirebaseAuthService.logInGoogle(),
-                  icon: SvgPicture.network(
-                    "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg",
-                    width: 30,
-                    height: 30,
+                  TextButton.icon(
+                    onPressed: () {
+                      Get.toNamed(Routes.REGISTER);
+                    },
+                    icon: const Icon(Icons.app_registration),
+                    label: const Text("Направи си акаунт"),
+                    style: controller.sizeStyle,
                   ),
-                ),
-              ],
+                  TextButton.icon(
+                    icon: SvgPicture.network(
+                      "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg",
+                      width: 30,
+                      height: 30,
+                    ),
+                    label: const Text("Google"),
+                    onPressed: () => FirebaseAuthService.logInGoogle(),
+                    style: controller.sizeStyle,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,17 +1,14 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
-import '../controllers/settings_controller.dart';
+import '../controllers/profile_settings_controller.dart';
 
-class SettingsView extends GetView<SettingsController> {
-  const SettingsView({Key? key}) : super(key: key);
+class ProfileSettingsView extends GetView<ProfileSettingsController> {
+  const ProfileSettingsView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -22,8 +19,9 @@ class SettingsView extends GetView<SettingsController> {
           centerTitle: true,
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
           child: SafeArea(
+            bottom: false,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -34,41 +32,42 @@ class SettingsView extends GetView<SettingsController> {
                   children: [
                     Align(
                       alignment: Alignment.center,
-                      child: Obx(
-                        () {
-                          if (controller.auth.currentUser?.photoURL == null &&
-                              controller.photo.value.path.isEmpty) {
-                            print(
-                                controller.auth.currentUser?.photoURL == null);
-                            return const Placeholder(
-                              child: SizedBox(
-                                height: 200,
-                                width: 200,
-                              ),
-                            );
-                          }
+                      child: FutureBuilder(
+                        future: controller.futurePhoto,
+                        builder: (context, snapshot) => Obx(
+                          () {
+                            if (!snapshot.hasData &&
+                                controller.photo.value.path.isEmpty) {
+                              return const Placeholder(
+                                child: SizedBox(
+                                  height: 200,
+                                  width: 200,
+                                ),
+                              );
+                            }
 
-                          if (controller.photo.value.path.isEmpty) {
+                            if (controller.photo.value.path.isEmpty) {
+                              return CircleAvatar(
+                                radius: 100,
+                                foregroundImage: CachedNetworkImageProvider(
+                                  snapshot.data ?? "",
+                                ),
+                              );
+                            }
+
                             return CircleAvatar(
                               radius: 100,
-                              foregroundImage: NetworkImage(
-                                controller.auth.currentUser?.photoURL ?? "",
+                              foregroundImage: FileImage(
+                                File(controller.photo.value.path),
                               ),
                             );
-                          }
-
-                          return CircleAvatar(
-                            radius: 100,
-                            foregroundImage: FileImage(
-                              File(controller.photo.value.path),
-                            ),
-                          );
-                        },
+                          },
+                        ),
                       ),
                     ),
                     Positioned(
                       bottom: 5,
-                      right: 80,
+                      right: 60,
                       child: IconButton(
                         onPressed: () => controller.selectPhoto(),
                         icon: Icon(Icons.add_a_photo),

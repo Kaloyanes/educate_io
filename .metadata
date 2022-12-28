@@ -4,8 +4,8 @@
 # This file should be version controlled.
 
 version:
-  revision: 95aa7582ba2803572883c18516c42e8f7b7e9be6
-  channel: flutter-3.7-candidate.4
+  revision: 7f7a8778d8a823cabcdcb4c5ee27deb2c499af5e
+  channel: flutter-3.7-candidate.12
 
 project_type: app
 
@@ -13,14 +13,11 @@ project_type: app
 migration:
   platforms:
     - platform: root
-      create_revision: 95aa7582ba2803572883c18516c42e8f7b7e9be6
-      base_revision: 95aa7582ba2803572883c18516c42e8f7b7e9be6
-    - platform: android
-      create_revision: 95aa7582ba2803572883c18516c42e8f7b7e9be6
-      base_revision: 95aa7582ba2803572883c18516c42e8f7b7e9be6
-    - platform: ios
-      create_revision: 95aa7582ba2803572883c18516c42e8f7b7e9be6
-      base_revision: 95aa7582ba2803572883c18516c42e8f7b7e9be6
+      create_revision: 7f7a8778d8a823cabcdcb4c5ee27deb2c499af5e
+      base_revision: 7f7a8778d8a823cabcdcb4c5ee27deb2c499af5e
+    - platform: web
+      create_revision: 7f7a8778d8a823cabcdcb4c5ee27deb2c499af5e
+      base_revision: 7f7a8778d8a823cabcdcb4c5ee27deb2c499af5e
 
   # User provided section
 

@@ -1,10 +1,9 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/home/components/teach_card.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
+import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,102 +18,124 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: StreamBuilder(
-                  stream: FirebaseAuth.instance.userChanges(),
+          appBar(context),
+          content(),
+        ],
+      ),
+    );
+  }
+
+  SliverAppBar appBar(BuildContext context) {
+    return SliverAppBar.medium(
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: StreamBuilder(
+            stream: FirebaseAuth.instance.userChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+
+              if (snapshot.hasError) {
+                print(snapshot.error);
+                return CircularProgressIndicator();
+              }
+
+              if (!snapshot.hasData) {
+                return IconButton(
+                  onPressed: () => Get.toNamed(Routes.LOGIN),
+                  icon: Icon(Icons.person),
+                );
+              }
+
+              return StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(snapshot.data?.uid ?? "")
+                    .snapshots(),
+                builder: (context, snapshot) => FutureBuilder(
+                  future: controller.getUserData(),
                   builder: (context, snapshot) {
-                    if (snapshot.data == null) {
-                      return IconButton(
-                        onPressed: () => Get.toNamed(Routes.LOGIN),
-                        icon: Icon(Icons.person),
-                      );
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      print(snapshot.error);
+                      return CircularProgressIndicator();
                     }
 
-                    var instance = FirebaseAuth.instance;
+                    var data = snapshot.data;
 
-                    var name = instance.currentUser?.displayName?.split(' ') ??
-                        "?".split(' ');
+                    Widget child = const CircularProgressIndicator();
 
-                    String display = "";
-                    name.forEach(
-                      (element) => display += element[0],
+                    child = CircleAvatar(
+                      child: Text(data!["name"]!),
                     );
 
-                    var child = CircleAvatar();
-
-                    if (instance.currentUser?.photoURL != null) {
+                    if (data["photoUrl"]!.isNotEmpty) {
                       child = CircleAvatar(
-                        foregroundImage: CachedNetworkImageProvider(
-                          instance.currentUser!.photoURL!,
-                        ),
-                      );
-                    } else {
-                      child = CircleAvatar(
-                        child: Text(
-                          display,
-                        ),
+                        foregroundImage:
+                            CachedNetworkImageProvider(data["photoUrl"]!),
                       );
                     }
 
                     return GestureDetector(
-                      onTap: () => controller.showProfileSettings(),
                       child: child,
+                      onTap: () => controller.showProfileSettings(),
                     );
                   },
                 ),
-              )
-            ],
-            title: Text(
-              "Учители",
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            centerTitle: false,
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-            flexibleSpace: ClipRRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Container(),
+              );
+            },
+          ),
+        )
+      ],
+      title: const Text(
+        "Учители",
+      ),
+      centerTitle: true,
+      pinned: true,
+      stretch: true,
+    );
+  }
+
+  SliverToBoxAdapter content() {
+    return SliverToBoxAdapter(
+      child: Column(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 30, left: 10, top: 20),
+              child: Text(
+                "Добре дошъл\nКалоян",
+                style: Get.textTheme.titleLarge,
               ),
             ),
-            floating: true,
-            forceElevated: false,
-            snap: true,
           ),
-          SliverToBoxAdapter(
-            child: Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 30, left: 10, top: 20),
-                    child: Text(
-                      "Добре дошъл\nКалоян",
-                      style: Get.textTheme.titleLarge,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 300,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: controller.teachers.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return TeachCard(teacher: controller.teachers[index]);
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
+          SizedBox(
+            height: 300,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: controller.teachers.length,
+              itemBuilder: (BuildContext context, int index) => TeachCard(
+                teacher: controller.teachers[index],
+              ),
             ),
-          )
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          for (int i = 1; i <= 100; i++)
+            Text(
+              i.toString(),
+              style: Theme.of(Get.context!).textTheme.headlineSmall,
+            ),
+          ElevatedButton(
+              onPressed: () => FirebaseAuthService.logOut(),
+              child: Text("log out"))
         ],
       ),
     );

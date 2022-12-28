@@ -6,13 +6,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 
 import 'app/routes/app_pages.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  var binding = WidgetsFlutterBinding.ensureInitialized();
 
+  FlutterNativeSplash.preserve(widgetsBinding: binding);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -33,38 +35,40 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DynamicColorBuilder(builder: (light, dark) {
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-      SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(
-          systemNavigationBarColor: Colors.transparent,
-          statusBarColor: Colors.transparent,
-        ),
-      );
-      SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
-      );
+    return DynamicColorBuilder(
+      builder: (light, dark) {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+        SystemChrome.setSystemUIOverlayStyle(
+          const SystemUiOverlayStyle(
+            systemNavigationBarColor: Colors.transparent,
+            statusBarColor: Colors.transparent,
+            systemStatusBarContrastEnforced: false,
+          ),
+        );
+        SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
+        );
+        FlutterNativeSplash.remove();
 
-      return GetMaterialApp(
-        title: "EducateIO",
-        initialRoute: AppPages.INITIAL,
-        getPages: AppPages.routes,
-        themeMode: ThemeMode.system,
-        theme: Themes.theme(light ?? defaultLight),
-        darkTheme: Themes.theme(
-          dark ?? defaultDark,
-          darkMode: true,
-        ),
-        debugShowCheckedModeBanner: false,
-        scrollBehavior: const CupertinoScrollBehavior(),
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        popGesture: false,
-        defaultTransition: Transition.native,
-      );
-    });
+        return GetMaterialApp(
+          title: "EducateIO",
+          initialRoute: AppPages.INITIAL,
+          getPages: AppPages.routes,
+          themeMode: ThemeMode.system,
+          theme: Themes.theme(light ?? defaultLight),
+          darkTheme: Themes.theme(dark ?? defaultDark, darkMode: true),
+          debugShowCheckedModeBanner: false,
+          scrollBehavior: const CupertinoScrollBehavior(),
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          defaultTransition: Transition.native,
+          smartManagement: SmartManagement.keepFactory,
+          // transitionDuration: const Duration(milliseconds: 400),
+        );
+      },
+    );
   }
 }

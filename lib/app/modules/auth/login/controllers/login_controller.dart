@@ -6,6 +6,12 @@ import 'package:get/get.dart';
 class LoginController extends GetxController {
   //TODO: Implement LoginController
 
+  final sizeStyle = const ButtonStyle(
+    minimumSize: MaterialStatePropertyAll(
+      Size(double.infinity, 40),
+    ),
+  );
+
   GlobalKey<FormState> formkey = GlobalKey();
 
   final showPassword = false.obs;

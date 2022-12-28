@@ -2,37 +2,53 @@ name: educate_io
 version: 1.0.0+1
 publish_to: none
 description: Platform to find private tutors
-environment:
+environment: 
   sdk: '>=2.19.0-467.0.dev <4.0.0'
 
-dependencies:
+dependencies: 
   cached_network_image: ^3.2.3
+  cloud_firestore: ^4.3.0
   cupertino_icons: ^1.0.2
   dynamic_color: ^1.5.4
   firebase_auth: ^4.2.1
   firebase_core: ^2.4.0
   firebase_storage: ^11.0.8
-  flutter:
-    sdk: flutter
-  flutter_localizations:
-    sdk: flutter
   flutter_svg: ^1.1.6
   get: 4.6.5
-  go_router: 5.2.4
   google_fonts: ^3.0.1
   google_sign_in: ^5.4.2
   image_picker: 0.8.6
   path: ^1.8.3
   path_provider: 2.0.11
   shimmer: 2.0.0
-
-dev_dependencies:
-  flutter_lints: ^2.0.0
-  flutter_test:
+  intl: ^0.17.0
+  flutter_native_splash: ^2.2.16
+  flutter: 
+    sdk: flutter
+  flutter_localizations: 
     sdk: flutter
 
-flutter:
+dev_dependencies: 
+  flutter_lints: ^2.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  assets: 
+    - assets/images/
   uses-material-design: true
 
-  assets:
-    - assets/images/
+flutter_native_splash: 
+  image: assets/light_mode.png
+  color: '#ffffff'
+  image_dark: assets/dark_mode.png
+  color_dark: '#1a1a1a'
+  android_12: 
+    image: assets/android_12_light_mode.png
+    color: '#ffffff'
+    image_dark: assets/android_12_dark_mode.png
+    color_dark: '#1a1a1a'
+  android12: true
+  android: true
+  ios: true
+

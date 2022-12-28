@@ -1,3 +1,5 @@
+import 'package:educate_io/app/modules/profile/profile_settings/bindings/profile_settings_bindings.dart';
+import 'package:educate_io/app/modules/profile/profile_settings/views/profile_settings_view.dart';
 import 'package:get/get.dart';
 
 import '../middleware/auth_middleware.dart';
@@ -8,8 +10,6 @@ import '../modules/auth/register/views/register_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
-import '../modules/profile/settings/bindings/settings_binding.dart';
-import '../modules/profile/settings/views/settings_view.dart';
 import '../modules/profile/views/profile_view.dart';
 
 part 'app_routes.dart';
@@ -51,8 +51,8 @@ class AppPages {
       children: [
         GetPage(
           name: _Paths.PROFILE_SETTINGS,
-          page: () => const SettingsView(),
-          binding: SettingsBinding(),
+          page: () => const ProfileSettingsView(),
+          binding: ProfileSettingsBinding(),
         ),
       ],
     ),
