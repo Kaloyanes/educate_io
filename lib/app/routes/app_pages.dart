@@ -1,8 +1,8 @@
-import 'package:educate_io/app/modules/profile/profile_settings/bindings/profile_settings_bindings.dart';
-import 'package:educate_io/app/modules/profile/profile_settings/views/profile_settings_view.dart';
 import 'package:get/get.dart';
 
 import '../middleware/auth_middleware.dart';
+import '../modules/auth/google_data/bindings/google_data_binding.dart';
+import '../modules/auth/google_data/views/google_data_view.dart';
 import '../modules/auth/login/bindings/login_binding.dart';
 import '../modules/auth/login/views/login_view.dart';
 import '../modules/auth/register/bindings/register_binding.dart';
@@ -10,6 +10,8 @@ import '../modules/auth/register/views/register_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/profile_settings/bindings/profile_settings_bindings.dart';
+import '../modules/profile/profile_settings/views/profile_settings_view.dart';
 import '../modules/profile/views/profile_view.dart';
 
 part 'app_routes.dart';
@@ -41,6 +43,11 @@ class AppPages {
           name: _Paths.REGISTER,
           page: () => const RegisterView(),
           binding: RegisterBinding(),
+        ),
+        GetPage(
+          name: _Paths.GOOGLE_DATA,
+          page: () => const GoogleDataView(),
+          binding: GoogleDataBinding(),
         ),
       ],
     ),

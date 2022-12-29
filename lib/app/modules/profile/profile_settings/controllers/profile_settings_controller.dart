@@ -1,8 +1,11 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/services/store_db/firebase_store_service.dart';
+import 'package:educate_io/app/modules/profile/profile_settings/components/image_crop.dart';
+import 'package:educate_io/app/routes/app_pages.dart';
+import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:flutter/services.dart';
 import "package:path/path.dart" as p;
 
@@ -29,12 +32,6 @@ class ProfileSettingsController extends GetxController {
 
   var displayController = TextEditingController(
       text: FirebaseAuth.instance.currentUser!.displayName ?? "");
-
-  var futurePhoto = FirebaseFirestore.instance
-      .collection("users")
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .get()
-      .then<String>((value) => value.data()?["photoUrl"] ?? "");
 
   Future<bool> popScope() async {
     FocusScope.of(Get.context!).requestFocus(FocusNode());
@@ -69,23 +66,36 @@ class ProfileSettingsController extends GetxController {
         width: double.infinity,
         height: Get.size.height / 3.9 + Get.mediaQuery.padding.bottom,
       ),
-      builder: (context) => photoBottomSheet(context),
+      builder: (context) => _photoBottomSheet(context),
     );
   }
 
   Future<void> _capture(ImageSource source) async {
-    var photo = await _picker.pickImage(
+    var selectedPhoto = await _picker.pickImage(
       source: source,
       preferredCameraDevice: CameraDevice.front,
-      // imageQuality: 1,
-      maxHeight: 1000,
-      maxWidth: 1000,
+      imageQuality: 60,
     );
 
-    if (photo != null) {
+    if (selectedPhoto != null) {
       HapticFeedback.lightImpact();
-      setPhoto = photo;
+      var photoData = await Get.to<Uint8List>(
+        ImageCropper(imageData: await selectedPhoto.readAsBytes()),
+        preventDuplicates: true,
+      );
+
+      if (photoData == null) return;
+
+      var path = selectedPhoto.path;
+      var savePhoto = XFile.fromData(photoData);
+
+      await savePhoto.saveTo(path);
+
+      savePhoto = XFile(path);
+      setPhoto = savePhoto;
+      inspect(photo.value);
       setSavedSettings = true;
+      Get.back();
     }
   }
 
@@ -99,6 +109,10 @@ class ProfileSettingsController extends GetxController {
           storage.ref().child("/profile_pictures/${auth.currentUser!.uid}$ext");
 
       var task = storage2.putFile(file);
+
+      task.snapshotEvents.listen((event) {
+        inspect(event);
+      });
 
       task.whenComplete(() async {
         var url = await storage2.getDownloadURL();
@@ -124,6 +138,21 @@ class ProfileSettingsController extends GetxController {
 
   void changeDisplayName() {}
 
+  Future<void> deleteProfile() async {
+    var user = FirebaseAuth.instance.currentUser!;
+
+    try {
+      await FirebaseStorage.instance
+          .ref("profile_pictures/${user.uid}")
+          .delete();
+    } on FirebaseException catch (e) {
+      inspect(e);
+    }
+    await FirebaseFirestore.instance.collection("users").doc(user.uid).delete();
+    await user.delete();
+    Get.offAllNamed(Routes.HOME);
+  }
+
   void saveSettings() {
     changeDisplayName();
     savePhoto();
@@ -136,7 +165,7 @@ class ProfileSettingsController extends GetxController {
     );
   }
 
-  Container photoBottomSheet(BuildContext context) {
+  Container _photoBottomSheet(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.vertical(

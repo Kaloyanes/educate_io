@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Themes {
-  static ThemeData theme(ColorScheme colors, {bool darkMode = false}) {
+  static ThemeData theme(ColorScheme colors) {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: colors.copyWith(
-          // background: darkMode ? Colors.black : Colors.white,
-          ),
+      colorScheme: colors,
       appBarTheme: AppBarTheme(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(0),
         ),
         centerTitle: true,
-      ),
-      iconButtonTheme: const IconButtonThemeData(
-        style: ButtonStyle(
-          backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-        ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -56,7 +49,6 @@ class Themes {
           ),
         ),
       ),
-      splashFactory: InkSplash.splashFactory,
     );
   }
 }

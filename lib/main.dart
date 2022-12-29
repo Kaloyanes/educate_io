@@ -42,13 +42,11 @@ class App extends StatelessWidget {
           const SystemUiOverlayStyle(
             systemNavigationBarColor: Colors.transparent,
             statusBarColor: Colors.transparent,
-            systemStatusBarContrastEnforced: false,
           ),
         );
         SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
         );
-        FlutterNativeSplash.remove();
 
         return GetMaterialApp(
           title: "EducateIO",
@@ -56,7 +54,7 @@ class App extends StatelessWidget {
           getPages: AppPages.routes,
           themeMode: ThemeMode.system,
           theme: Themes.theme(light ?? defaultLight),
-          darkTheme: Themes.theme(dark ?? defaultDark, darkMode: true),
+          darkTheme: Themes.theme(dark ?? defaultDark),
           debugShowCheckedModeBanner: false,
           scrollBehavior: const CupertinoScrollBehavior(),
           localizationsDelegates: const [

@@ -1,6 +1,10 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
+import 'package:educate_io/app/services/database/firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -25,57 +29,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.loose,
-                  clipBehavior: Clip.antiAlias,
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: FutureBuilder(
-                        future: controller.futurePhoto,
-                        builder: (context, snapshot) => Obx(
-                          () {
-                            if (!snapshot.hasData &&
-                                controller.photo.value.path.isEmpty) {
-                              return const Placeholder(
-                                child: SizedBox(
-                                  height: 200,
-                                  width: 200,
-                                ),
-                              );
-                            }
-
-                            if (controller.photo.value.path.isEmpty) {
-                              return CircleAvatar(
-                                radius: 100,
-                                foregroundImage: CachedNetworkImageProvider(
-                                  snapshot.data ?? "",
-                                ),
-                              );
-                            }
-
-                            return CircleAvatar(
-                              radius: 100,
-                              foregroundImage: FileImage(
-                                File(controller.photo.value.path),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 5,
-                      right: 60,
-                      child: IconButton(
-                        onPressed: () => controller.selectPhoto(),
-                        icon: Icon(Icons.add_a_photo),
-                        iconSize: 30,
-                      ),
-                    ),
-                  ],
-                ),
+                profilePicture(),
                 SizedBox(
                   height: 20,
                 ),
@@ -86,6 +40,17 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
                 const SizedBox(
                   height: 10,
                 ),
+                Expanded(child: Container()),
+                TextButton(
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all(Colors.red),
+                    overlayColor:
+                        MaterialStatePropertyAll(Colors.red.withAlpha(20)),
+                  ),
+                  onPressed: () => controller.deleteProfile(),
+                  child: Text("Изтрий профила"),
+                ),
+                SizedBox(height: Get.mediaQuery.padding.bottom),
               ],
             ),
           ),
@@ -103,6 +68,82 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
           ),
         ),
       ),
+    );
+  }
+
+  Stack profilePicture() {
+    return Stack(
+      alignment: Alignment.center,
+      fit: StackFit.loose,
+      clipBehavior: Clip.antiAlias,
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("users")
+                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .snapshots(),
+            builder: (context, snapshot) => FutureBuilder(
+              future: FirestoreService.getUserData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    snapshot.hasError) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                return Obx(() {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      !snapshot.hasData ||
+                      snapshot.hasError) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  if (controller.photo.value.path != "") {
+                    return CircleAvatar(
+                      radius: 100,
+                      foregroundImage: FileImage(
+                        File(controller.photo.value.path),
+                      ),
+                    );
+                  }
+
+                  var data = snapshot.data;
+
+                  Widget child = CircleAvatar(
+                    radius: 100,
+                    child: Text(
+                      data!["initials"] ?? "",
+                      style: TextStyle(fontSize: 60),
+                    ),
+                  );
+
+                  if (data["photoUrl"]?.isNotEmpty ?? false) {
+                    child = CircleAvatar(
+                      radius: 100,
+                      foregroundImage:
+                          CachedNetworkImageProvider(data["photoUrl"] ?? ""),
+                    );
+                  }
+
+                  return child;
+                });
+              },
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 5,
+          right: 70,
+          child: IconButton(
+            onPressed: () => controller.selectPhoto(),
+            icon: Icon(Icons.add_a_photo),
+            iconSize: 30,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -3,7 +3,7 @@ version: 1.0.0+1
 publish_to: none
 description: Platform to find private tutors
 environment: 
-  sdk: '>=2.19.0-467.0.dev <4.0.0'
+  sdk: '>=2.18.0-106.0.dev <4.0.0'
 
 dependencies: 
   cached_network_image: ^3.2.3
@@ -18,11 +18,12 @@ dependencies:
   google_fonts: ^3.0.1
   google_sign_in: ^5.4.2
   image_picker: 0.8.6
-  path: ^1.8.3
+  path: ^1.8.1
   path_provider: 2.0.11
   shimmer: 2.0.0
   intl: ^0.17.0
   flutter_native_splash: ^2.2.16
+  crop_your_image: ^0.7.3
   flutter: 
     sdk: flutter
   flutter_localizations: 

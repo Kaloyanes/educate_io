@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
+import 'package:educate_io/app/services/database/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
@@ -43,48 +45,23 @@ class HomeController extends GetxController {
     )
   ];
 
+  @override
+  void onInit() {
+    super.onInit();
+    FlutterNativeSplash.remove();
+  }
+
+  Future<String> getName() async {
+    var data = await FirestoreService.getUserData();
+    return data?["name"] ?? "";
+  }
+
   void showProfileSettings() {
     HapticFeedback.selectionClick();
     showDialog(
       context: Get.context!,
       builder: (context) => customDialog(context),
     );
-  }
-
-  Future<Map<String, String>?> getUserData() async {
-    var currentUser = FirebaseAuth.instance.currentUser;
-
-    if (currentUser == null) {
-      print("null user");
-      return null;
-    }
-    String uid = currentUser.uid;
-
-    // Get the document snapshot for the current user
-    DocumentSnapshot snapshot =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-    Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
-
-    if (data == null) {
-      return {};
-    }
-
-    // Get the name and photo url from the data
-    String name = data['name'] ?? "";
-    String photoUrl = data['photoUrl'] ?? "";
-    // If there is no photo url, generate the initials from the name
-    if (photoUrl == null || photoUrl.isEmpty) {
-      List<String> nameParts = name.split(' ');
-      String initials = '';
-      for (String part in nameParts) {
-        initials += part[0];
-      }
-      name = initials;
-    }
-
-    // Return a map with the name and photo url
-    return {'name': name, 'photoUrl': photoUrl};
   }
 }
 

@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/home/components/teach_card.dart';
+import 'package:educate_io/app/modules/home/components/teacher_category.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
+import 'package:educate_io/app/services/database/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -55,28 +57,24 @@ class HomeView extends GetView<HomeController> {
                     .doc(snapshot.data?.uid ?? "")
                     .snapshots(),
                 builder: (context, snapshot) => FutureBuilder(
-                  future: controller.getUserData(),
+                  future: FirestoreService.getUserData(),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
+                    if (snapshot.connectionState == ConnectionState.waiting ||
+                        !snapshot.hasData ||
+                        snapshot.hasError) {
                       return const CircularProgressIndicator();
-                    }
-                    if (snapshot.hasError) {
-                      print(snapshot.error);
-                      return CircularProgressIndicator();
                     }
 
                     var data = snapshot.data;
 
-                    Widget child = const CircularProgressIndicator();
-
-                    child = CircleAvatar(
-                      child: Text(data!["name"]!),
+                    Widget child = CircleAvatar(
+                      child: Text(data!["initials"] ?? ""),
                     );
 
-                    if (data["photoUrl"]!.isNotEmpty) {
+                    if (data["photoUrl"]?.isNotEmpty ?? false) {
                       child = CircleAvatar(
                         foregroundImage:
-                            CachedNetworkImageProvider(data["photoUrl"]!),
+                            CachedNetworkImageProvider(data["photoUrl"] ?? ""),
                       );
                     }
 
@@ -94,8 +92,6 @@ class HomeView extends GetView<HomeController> {
       title: const Text(
         "Учители",
       ),
-      centerTitle: true,
-      pinned: true,
       stretch: true,
     );
   }
@@ -108,23 +104,16 @@ class HomeView extends GetView<HomeController> {
             alignment: Alignment.topLeft,
             child: Container(
               margin: const EdgeInsets.only(bottom: 30, left: 10, top: 20),
-              child: Text(
-                "Добре дошъл\nКалоян",
-                style: Get.textTheme.titleLarge,
+              child: FutureBuilder(
+                future: controller.getName(),
+                builder: (context, snapshot) => Text(
+                  "Добре дошъл\n${snapshot.data ?? "Непознат педераст"}",
+                  style: Get.textTheme.titleLarge,
+                ),
               ),
             ),
           ),
-          SizedBox(
-            height: 300,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: controller.teachers.length,
-              itemBuilder: (BuildContext context, int index) => TeachCard(
-                teacher: controller.teachers[index],
-              ),
-            ),
-          ),
+          teacher_category(controller: controller),
           const SizedBox(
             height: 10,
           ),
