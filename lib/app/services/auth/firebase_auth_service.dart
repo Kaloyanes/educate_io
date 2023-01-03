@@ -62,14 +62,11 @@ class FirebaseAuthService {
       idToken: googleAuth?.idToken,
     );
 
-    print("maika ti");
-
     var userCred = await auth.signInWithCredential(credential);
     var doc = store.collection("users").doc(auth.currentUser?.uid);
 
     var doc2 = await doc.get();
     if (doc2.exists) {
-      print("doc exists");
       Get.back();
       return;
     }
@@ -87,5 +84,12 @@ class FirebaseAuthService {
     doc.set(data);
 
     Get.back();
+  }
+
+  static Future<void> forgotPassword(String email) async {
+    var auth = FirebaseAuth.instance;
+    await auth.sendPasswordResetEmail(
+      email: email,
+    );
   }
 }

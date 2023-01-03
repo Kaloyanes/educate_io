@@ -81,7 +81,7 @@ class LoginView extends GetView<LoginController> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () => controller.forgotPassword(),
                             child: Text("Забравил си паролата?"),
                           ),
                         ),
@@ -95,16 +95,14 @@ class LoginView extends GetView<LoginController> {
                     ),
                   ),
                   TextButton.icon(
-                    onPressed: () {
-                      Get.toNamed(Routes.REGISTER);
-                    },
+                    onPressed: () => Get.toNamed(Routes.REGISTER),
                     icon: const Icon(Icons.app_registration),
                     label: const Text("Направи си акаунт"),
                     style: controller.sizeStyle,
                   ),
                   TextButton.icon(
-                    icon: SvgPicture.network(
-                      "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg",
+                    icon: SvgPicture.asset(
+                      "assets/images/google_logo.svg",
                       width: 30,
                       height: 30,
                     ),

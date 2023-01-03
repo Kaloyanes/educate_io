@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:educate_io/app/modules/auth/login/components/forgot_password_dialog.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
@@ -32,12 +36,12 @@ class LoginController extends GetxController {
       Get.back();
       Get.dialog(
         AlertDialog(
-          icon: Icon(Icons.warning),
+          icon: const Icon(Icons.warning),
           content: Text(e.toString()),
           actions: [
             TextButton(
               onPressed: () => Get.back(),
-              child: Text("Ok"),
+              child: const Text("Ok"),
             ),
           ],
         ),
@@ -48,12 +52,24 @@ class LoginController extends GetxController {
 
     Get.offAllNamed(Routes.HOME)!;
     Future.delayed(
-      Duration(milliseconds: 600),
+      const Duration(milliseconds: 600),
       () => ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Влязохте"),
         ),
       ),
+    );
+  }
+
+  Future<void> forgotPassword() async {
+    var forEmailController = TextEditingController(text: emailController.text);
+    GlobalKey<FormState> forgotPasswordKey = GlobalKey();
+
+    showDialog(
+      context: Get.context!,
+      builder: (context) => ForgotPasswordDialog(
+          forgotPasswordKey: forgotPasswordKey,
+          forEmailController: forEmailController),
     );
   }
 }
