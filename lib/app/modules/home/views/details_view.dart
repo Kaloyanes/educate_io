@@ -1,13 +1,12 @@
 import 'dart:developer';
-import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/home/components/category_card.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 
 class DetailsView extends GetView {
@@ -30,6 +29,35 @@ class DetailsView extends GetView {
           child: ProfileView(context, teacher),
         ),
       ]),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButton: SpeedDial(
+        animationAngle: 20,
+        elevation: 0,
+        children: [
+          SpeedDialChild(
+            elevation: 5,
+            label: "Напиши съобщение",
+            labelBackgroundColor: Colors.transparent,
+            onTap: () {},
+            child: Icon(Icons.chat),
+          ),
+          SpeedDialChild(
+            elevation: 5,
+            label: "Обади се",
+            labelBackgroundColor: Colors.transparent,
+            onTap: () async =>
+                await FlutterPhoneDirectCaller.callNumber(teacher.phoneNumber),
+            child: Icon(Icons.phone),
+          )
+        ],
+        animationCurve: Curves.easeOutQuart,
+        animationDuration: Duration(milliseconds: 250),
+        animatedIcon: AnimatedIcons.menu_close,
+        childMargin: EdgeInsets.only(top: 10),
+        curve: Curves.easeOutQuart,
+        childrenButtonSize: Size(60, 60),
+        spaceBetweenChildren: 10,
+      ),
     );
   }
 }
@@ -41,26 +69,14 @@ SingleChildScrollView ProfileView(BuildContext context, Teacher teacher) {
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Hero(
-            flightShuttleBuilder: (
-              flightContext,
-              animation,
-              flightDirection,
-              fromHeroContext,
-              toHeroContext,
-            ) =>
-                SizeTransition(
-              sizeFactor: animation,
-              axis: Axis.horizontal,
-              child: toHeroContext.widget,
-            ),
-            tag: teacher,
+            tag: teacher.imgUrl,
             child: CachedNetworkImage(
               imageUrl: teacher.imgUrl,
-              filterQuality: FilterQuality.medium,
-              imageBuilder: (context, imageProvider) => Container(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image(image: imageProvider),
+              imageBuilder: (context, imageProvider) => ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image(
+                  fit: BoxFit.fitWidth,
+                  image: imageProvider,
                 ),
               ),
             ),

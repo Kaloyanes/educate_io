@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class FirestoreService {
+class FirestoreProfileService {
   static Future<Map<String, dynamic>?> getUserData() async {
     var currentUser = FirebaseAuth.instance.currentUser;
 

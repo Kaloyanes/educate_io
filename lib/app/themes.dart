@@ -5,6 +5,8 @@ class Themes {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colors,
+      // snackBarTheme:
+      //     const SnackBarThemeData(behavior: SnackBarBehavior.floating),
       appBarTheme: AppBarTheme(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(0),
@@ -13,7 +15,7 @@ class Themes {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: colors.primaryContainer.withAlpha(10),
+        fillColor: colors.primaryContainer.withAlpha(20),
         border: const OutlineInputBorder(),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),

@@ -1,4 +1,4 @@
-import 'package:educate_io/app/modules/home/components/teach_card.dart';
+import 'package:educate_io/app/modules/home/components/teacher_card.dart';
 import 'package:educate_io/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,13 +25,16 @@ class teacher_category extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(
+          height: 15,
+        ),
         SizedBox(
           height: 300,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemCount: controller.teachers.length,
-            itemBuilder: (BuildContext context, int index) => TeachCard(
+            itemBuilder: (BuildContext context, int index) => TeacherCard(
               teacher: controller.teachers[index],
             ),
           ),

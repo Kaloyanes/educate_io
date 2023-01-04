@@ -2,6 +2,7 @@
     package="com.denoic.educate_io">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android"/>
 
    <application
         android:label="EducateIO"

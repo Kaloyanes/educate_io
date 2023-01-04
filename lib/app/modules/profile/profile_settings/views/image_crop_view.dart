@@ -5,8 +5,8 @@ import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ImageCropper extends StatelessWidget {
-  ImageCropper({super.key, required Uint8List imageData})
+class ImageCropView extends StatelessWidget {
+  ImageCropView({super.key, required Uint8List imageData})
       : _imageData = imageData;
 
   final Uint8List _imageData;
@@ -27,15 +27,18 @@ class ImageCropper extends StatelessWidget {
           inspect(value);
           Get.back(result: value);
         },
-        withCircleUi: true,
         baseColor: Theme.of(context).scaffoldBackgroundColor,
         maskColor: Colors.black.withAlpha(100),
+        aspectRatio: 4 / 3,
+        withCircleUi: true,
+        radius: 50,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => cropController.cropCircle(),
+        onPressed: () => cropController.crop(),
         icon: const Icon(Icons.save_rounded),
         label: const Text("Запази"),
         elevation: 2,
+        heroTag: "saveButton",
       ),
     );
   }

@@ -16,7 +16,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => controller.popScope(),
+      onWillPop: () => controller.exitPage(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Настройки на профила'),
@@ -24,8 +24,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
         ),
         body: Padding(
           padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
-          child: SafeArea(
-            bottom: false,
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -40,14 +39,13 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
                 const SizedBox(
                   height: 10,
                 ),
-                Expanded(child: Container()),
                 TextButton(
                   style: ButtonStyle(
                     foregroundColor: MaterialStateProperty.all(Colors.red),
                     overlayColor:
                         MaterialStatePropertyAll(Colors.red.withAlpha(20)),
                   ),
-                  onPressed: () => controller.deleteProfile(),
+                  onPressed: () {},
                   child: Text("Изтрий профила"),
                 ),
                 SizedBox(height: Get.mediaQuery.padding.bottom),
@@ -58,11 +56,12 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
         floatingActionButton: Obx(
           () => AnimatedSlide(
             duration: Duration(milliseconds: 500),
-            curve: Curves.easeOutExpo,
+            curve: Curves.easeInOutExpo,
             offset:
                 controller.savedSettings.value ? Offset(0, 0) : Offset(0, 3),
             child: FloatingActionButton(
               onPressed: () => controller.saveSettings(),
+              heroTag: "saveButton",
               child: const Icon(Icons.save),
             ),
           ),
@@ -85,22 +84,15 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
                 .doc(FirebaseAuth.instance.currentUser!.uid)
                 .snapshots(),
             builder: (context, snapshot) => FutureBuilder(
-              future: FirestoreService.getUserData(),
+              future: FirestoreProfileService.getUserData(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting ||
+                    !snapshot.hasData ||
                     snapshot.hasError) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return const CircularProgressIndicator();
                 }
 
                 return Obx(() {
-                  if (snapshot.connectionState == ConnectionState.waiting ||
-                      !snapshot.hasData ||
-                      snapshot.hasError) {
-                    return const CircularProgressIndicator();
-                  }
-
                   if (controller.photo.value.path != "") {
                     return CircleAvatar(
                       radius: 100,
@@ -136,11 +128,18 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
         ),
         Positioned(
           bottom: 5,
-          right: 70,
-          child: IconButton(
-            onPressed: () => controller.selectPhoto(),
-            icon: Icon(Icons.add_a_photo),
-            iconSize: 30,
+          right: Get.width / 6,
+          child: Container(
+            decoration: BoxDecoration(
+              color:
+                  Theme.of(Get.context!).scaffoldBackgroundColor.withAlpha(100),
+              borderRadius: BorderRadius.circular(360),
+            ),
+            child: IconButton(
+              onPressed: () => controller.selectPhoto(),
+              icon: Icon(Icons.add_a_photo),
+              iconSize: 30,
+            ),
           ),
         ),
       ],

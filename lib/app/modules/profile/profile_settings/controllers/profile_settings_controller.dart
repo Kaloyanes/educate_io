@@ -3,7 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/modules/profile/profile_settings/components/image_crop.dart';
+import 'package:educate_io/app/modules/profile/profile_settings/components/photo_bottom_sheet.dart';
+import 'package:educate_io/app/modules/profile/profile_settings/views/image_crop_view.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +22,9 @@ class ProfileSettingsController extends GetxController {
   final savedSettings = false.obs;
   set setSavedSettings(bool val) => savedSettings.value = val;
 
+  final deletePhoto = false.obs;
+  set delPhoto(bool val) => deletePhoto.value = val;
+
   Rx<XFile> photo = XFile("").obs;
   set setPhoto(XFile val) => photo.value = val;
 
@@ -30,10 +34,12 @@ class ProfileSettingsController extends GetxController {
 
   final storage = FirebaseStorage.instance;
 
+  final store = FirebaseFirestore.instance;
+
   var displayController = TextEditingController(
       text: FirebaseAuth.instance.currentUser!.displayName ?? "");
 
-  Future<bool> popScope() async {
+  Future<bool> exitPage() async {
     FocusScope.of(Get.context!).requestFocus(FocusNode());
     if (!savedSettings.value) return Future.value(true);
 
@@ -60,27 +66,34 @@ class ProfileSettingsController extends GetxController {
   Future<void> selectPhoto() async {
     HapticFeedback.selectionClick();
 
-    showModalBottomSheet(
+    var imageSource = await showModalBottomSheet<String>(
       context: Get.context!,
-      constraints: BoxConstraints.tightFor(
-        width: double.infinity,
-        height: Get.size.height / 3.9 + Get.mediaQuery.padding.bottom,
-      ),
-      builder: (context) => _photoBottomSheet(context),
+      builder: (context) => const PhotoBottomSheet(),
+      isScrollControlled: true,
     );
+
+    if (imageSource == null) return;
+
+    if (imageSource == "delete") {
+      delPhoto = true;
+      return;
+    }
+
+    _capture(
+        imageSource == "camera" ? ImageSource.camera : ImageSource.gallery);
   }
 
   Future<void> _capture(ImageSource source) async {
     var selectedPhoto = await _picker.pickImage(
       source: source,
       preferredCameraDevice: CameraDevice.front,
-      imageQuality: 60,
+      imageQuality: 100,
     );
 
     if (selectedPhoto != null) {
       HapticFeedback.lightImpact();
       var photoData = await Get.to<Uint8List>(
-        ImageCropper(imageData: await selectedPhoto.readAsBytes()),
+        ImageCropView(imageData: await selectedPhoto.readAsBytes()),
         preventDuplicates: true,
       );
 
@@ -93,14 +106,13 @@ class ProfileSettingsController extends GetxController {
 
       savePhoto = XFile(path);
       setPhoto = savePhoto;
-      inspect(photo.value);
       setSavedSettings = true;
-      Get.back();
     }
   }
 
   Future<void> savePhoto() async {
     HapticFeedback.selectionClick();
+    print("Saving photo");
 
     var file = File(photo.value.path);
     var ext = p.extension(photo.value.path);
@@ -109,10 +121,6 @@ class ProfileSettingsController extends GetxController {
           storage.ref().child("/profile_pictures/${auth.currentUser!.uid}$ext");
 
       var task = storage2.putFile(file);
-
-      task.snapshotEvents.listen((event) {
-        inspect(event);
-      });
 
       task.whenComplete(() async {
         var url = await storage2.getDownloadURL();
@@ -138,71 +146,31 @@ class ProfileSettingsController extends GetxController {
 
   void changeDisplayName() {}
 
-  Future<void> deleteProfile() async {
-    var user = FirebaseAuth.instance.currentUser!;
+  Future<void> deletePhotoSetting() async {
+    print("deleting photo");
+    var doc = store.collection("users").doc(auth.currentUser?.uid);
+    var getDoc = await doc.get();
 
-    try {
-      await FirebaseStorage.instance
-          .ref("profile_pictures/${user.uid}")
-          .delete();
-    } on FirebaseException catch (e) {
-      inspect(e);
+    if (getDoc.data()!.containsKey("photoUrl")) {
+      setPhoto = XFile("");
+      await store.collection("users").doc(auth.currentUser?.uid).update({
+        "photoUrl": "",
+      });
     }
-    await FirebaseFirestore.instance.collection("users").doc(user.uid).delete();
-    await user.delete();
-    Get.offAllNamed(Routes.HOME);
   }
 
   void saveSettings() {
     changeDisplayName();
-    savePhoto();
+    if (deletePhoto.value) {
+      deletePhotoSetting();
+    } else {
+      savePhoto();
+    }
 
     setSavedSettings = false;
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       const SnackBar(
         content: Text("Запазени са промените"),
-      ),
-    );
-  }
-
-  Container _photoBottomSheet(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(30),
-        ),
-        color: Theme.of(context).bottomSheetTheme.backgroundColor,
-      ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 15,
-            ),
-            Container(
-              height: 5,
-              width: Get.size.width / 3,
-              decoration: BoxDecoration(
-                color: Theme.of(Get.context!).dividerColor,
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text("Снимай с камера"),
-              onTap: () async => _capture(ImageSource.camera),
-              tileColor: Colors.transparent,
-            ),
-            const SizedBox(height: 10),
-            ListTile(
-              leading: const Icon(Icons.photo),
-              title: const Text("Избери снимка от галерията"),
-              onTap: () async => _capture(ImageSource.gallery),
-              tileColor: Colors.transparent,
-            ),
-          ],
-        ),
       ),
     );
   }

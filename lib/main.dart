@@ -1,6 +1,6 @@
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:educate_io/app/themes.dart';
 import 'package:educate_io/app/firebase_options.dart';
+import 'package:educate_io/app/themes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +19,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(
-    const App(),
-  );
+  runApp(const App());
+  FlutterNativeSplash.remove();
 }
 
 class App extends StatelessWidget {
@@ -63,7 +62,8 @@ class App extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           defaultTransition: Transition.native,
-          smartManagement: SmartManagement.keepFactory,
+          smartManagement: SmartManagement.onlyBuilder,
+          popGesture: false,
           // transitionDuration: const Duration(milliseconds: 400),
         );
       },

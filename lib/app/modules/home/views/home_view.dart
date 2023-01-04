@@ -1,11 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/modules/home/components/teach_card.dart';
+import 'package:educate_io/app/modules/home/components/drawer/content/user_content.dart';
+import 'package:educate_io/app/modules/home/components/drawer/drawer_component.dart';
+import 'package:educate_io/app/modules/home/components/drawer/drawer_destination.dart';
+import 'package:educate_io/app/modules/home/components/teacher_card.dart';
 import 'package:educate_io/app/modules/home/components/teacher_category.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:educate_io/app/services/database/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +23,7 @@ class HomeView extends GetView<HomeController> {
     Get.lazyPut(() => HomeController());
 
     return Scaffold(
+      drawer: DrawerComponent(),
       body: CustomScrollView(
         slivers: [
           appBar(context),
@@ -33,6 +39,7 @@ class HomeView extends GetView<HomeController> {
         Padding(
           padding: const EdgeInsets.only(right: 20),
           child: StreamBuilder(
+            initialData: FirebaseAuth.instance.currentUser,
             stream: FirebaseAuth.instance.userChanges(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -41,13 +48,13 @@ class HomeView extends GetView<HomeController> {
 
               if (snapshot.hasError) {
                 print(snapshot.error);
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
 
               if (!snapshot.hasData) {
                 return IconButton(
                   onPressed: () => Get.toNamed(Routes.LOGIN),
-                  icon: Icon(Icons.person),
+                  icon: const Icon(Icons.person),
                 );
               }
 
@@ -57,7 +64,7 @@ class HomeView extends GetView<HomeController> {
                     .doc(snapshot.data?.uid ?? "")
                     .snapshots(),
                 builder: (context, snapshot) => FutureBuilder(
-                  future: FirestoreService.getUserData(),
+                  future: FirestoreProfileService.getUserData(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting ||
                         !snapshot.hasData ||
@@ -104,13 +111,17 @@ class HomeView extends GetView<HomeController> {
             alignment: Alignment.topLeft,
             child: Container(
               margin: const EdgeInsets.only(bottom: 30, left: 10, top: 20),
-              child: FutureBuilder(
-                future: controller.getName(),
-                builder: (context, snapshot) => Text(
-                  "Добре дошъл\n${snapshot.data ?? "Непознат педераст"}",
-                  style: Get.textTheme.titleLarge,
-                ),
-              ),
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("users")
+                      .doc(FirebaseAuth.instance.currentUser?.uid ?? "example")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    return Text(
+                      "Добре дошъл\n${snapshot.data?["name"] ?? ""}",
+                      style: Get.textTheme.titleLarge,
+                    );
+                  }),
             ),
           ),
           teacher_category(controller: controller),
@@ -124,7 +135,7 @@ class HomeView extends GetView<HomeController> {
             ),
           ElevatedButton(
               onPressed: () => FirebaseAuthService.logOut(),
-              child: Text("log out"))
+              child: const Text("log out"))
         ],
       ),
     );

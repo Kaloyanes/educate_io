@@ -1,6 +1,7 @@
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 
@@ -212,28 +213,21 @@ class RegisterView extends GetView<RegisterController> {
                   height: 30,
                 ),
                 ElevatedButton.icon(
-                  style: ButtonStyle(
-                    elevation: MaterialStateProperty.resolveWith(
-                      (states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return 5;
-                        }
-
-                        return 1;
-                      },
-                    ),
-                    minimumSize: const MaterialStatePropertyAll(
-                      Size(double.infinity, 50),
-                    ),
-                    textStyle: const MaterialStatePropertyAll(
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                  style: controller.sizeStyle,
                   onPressed: () => controller.createAccount(),
                   icon: const Icon(Icons.app_registration_rounded),
-                  label: const Text(
-                    "Регистриране",
+                  label: const Text("Регистриране"),
+                ),
+                const SizedBox(height: 15),
+                TextButton.icon(
+                  icon: SvgPicture.asset(
+                    "assets/images/google_logo.svg",
+                    width: 30,
+                    height: 30,
                   ),
+                  label: const Text("Google"),
+                  onPressed: () => FirebaseAuthService.logInGoogle(),
+                  style: controller.sizeStyle,
                 ),
               ],
             ),

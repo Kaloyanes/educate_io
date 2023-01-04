@@ -9,6 +9,24 @@ import 'package:intl/intl.dart';
 class RegisterController extends GetxController {
   //TODO: Implement RegisterController
 
+  final sizeStyle = ButtonStyle(
+    elevation: MaterialStateProperty.resolveWith(
+      (states) {
+        if (states.contains(MaterialState.pressed)) {
+          return 5;
+        }
+
+        return 1;
+      },
+    ),
+    minimumSize: const MaterialStatePropertyAll(
+      Size(double.infinity, 50),
+    ),
+    textStyle: const MaterialStatePropertyAll(
+      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    ),
+  );
+
   final formatter = DateFormat.yMd("bg");
 
   final formKey = GlobalKey<FormState>();
