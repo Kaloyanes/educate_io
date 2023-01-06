@@ -16,12 +16,12 @@ class UserContent extends StatelessWidget {
         DrawerDestination(
           icon: CupertinoIcons.heart_fill,
           label: "Запазени учители",
-          onTap: () {},
+          onTap: () => Get.toNamed(Routes.LIKED_TEACHERS),
         ),
         DrawerDestination(
           icon: Icons.chat_rounded,
           label: "Чатове",
-          onTap: () {},
+          onTap: () => Get.toNamed(Routes.CHATS),
         ),
         const Spacer(),
         DrawerDestination(

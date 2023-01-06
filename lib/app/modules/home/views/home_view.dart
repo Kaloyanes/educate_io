@@ -122,7 +122,9 @@ class HomeView extends GetView<HomeController> {
               ),
             ),
           ),
-          teacher_category(controller: controller),
+          const TeacherSubject(
+            subject: "Програмиране",
+          ),
           const SizedBox(
             height: 10,
           ),

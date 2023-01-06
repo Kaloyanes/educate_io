@@ -32,9 +32,9 @@ class TeacherCard extends StatelessWidget {
               SizedBox(
                 height: 200,
                 child: Hero(
-                  tag: teacher.imgUrl,
+                  tag: teacher.photoUrl,
                   child: CachedNetworkImage(
-                    imageUrl: teacher.imgUrl,
+                    imageUrl: teacher.photoUrl,
                     imageBuilder: (context, imageProvider) => ClipRRect(
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(20),
@@ -66,7 +66,7 @@ class TeacherCard extends StatelessWidget {
                 style: Get.textTheme.titleLarge,
               ),
               Text(
-                teacher.categories[0],
+                teacher.subjects[0],
                 style: Get.textTheme.titleMedium,
                 textAlign: TextAlign.left,
               ),

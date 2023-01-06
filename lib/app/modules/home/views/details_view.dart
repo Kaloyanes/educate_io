@@ -15,7 +15,6 @@ class DetailsView extends GetView {
 
   @override
   Widget build(BuildContext context) {
-    inspect(teacher);
     return Scaffold(
       body: CustomScrollView(slivers: [
         SliverAppBar.medium(
@@ -40,41 +39,13 @@ class DetailsView extends GetView {
               icon: Icon(Icons.chat),
             ),
             IconButton(
-              onPressed: () async => await FlutterPhoneDirectCaller.callNumber(
-                  teacher.phoneNumber),
+              onPressed: () async =>
+                  await FlutterPhoneDirectCaller.callNumber(teacher.phone),
               icon: Icon(Icons.phone),
             )
           ],
         ),
       ),
-      // floatingActionButton: SpeedDial(
-      //   animationAngle: 20,
-      //   elevation: 0,
-      //   children: [
-      //     SpeedDialChild(
-      //       elevation: 5,
-      //       label: "Напиши съобщение",
-      //       labelBackgroundColor: Colors.transparent,
-      //       onTap: () {},
-      //       child: Icon(Icons.chat),
-      //     ),
-      //     SpeedDialChild(
-      //       elevation: 5,
-      //       label: "Обади се",
-      //       labelBackgroundColor: Colors.transparent,
-      //       onTap: () async =>
-      //           await FlutterPhoneDirectCaller.callNumber(teacher.phoneNumber),
-      //       child: Icon(Icons.phone),
-      //     )
-      //   ],
-      //   animationCurve: Curves.easeOutQuart,
-      //   animationDuration: Duration(milliseconds: 250),
-      //   animatedIcon: AnimatedIcons.menu_close,
-      //   childMargin: EdgeInsets.only(top: 10),
-      //   curve: Curves.easeOutQuart,
-      //   childrenButtonSize: Size(60, 60),
-      //   spaceBetweenChildren: 10,
-      // ),
     );
   }
 }
@@ -86,9 +57,9 @@ SingleChildScrollView ProfileView(BuildContext context, Teacher teacher) {
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Hero(
-            tag: teacher.imgUrl,
+            tag: teacher.photoUrl,
             child: CachedNetworkImage(
-              imageUrl: teacher.imgUrl,
+              imageUrl: teacher.photoUrl,
               imageBuilder: (context, imageProvider) => ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image(
@@ -106,10 +77,10 @@ SingleChildScrollView ProfileView(BuildContext context, Teacher teacher) {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              CategoryCard(category: "Описание", value: teacher.description),
-              for (int i = 0; i < teacher.categories.length; i++)
+              CategoryCard(category: "Описание", value: ""),
+              for (int i = 0; i < teacher.subjects.length; i++)
                 Text(
-                  teacher.categories[i],
+                  teacher.subjects[i],
                   style: Get.textTheme.headlineSmall,
                 ),
               const SizedBox(

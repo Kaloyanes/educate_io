@@ -52,10 +52,8 @@ class _DrawerComponentState extends State<DrawerComponent> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
               }
-              inspect(snapshot);
 
               if (snapshot.hasError) {
-                inspect(snapshot.error);
                 return const CircularProgressIndicator();
               }
 

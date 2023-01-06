@@ -106,6 +106,7 @@ class ProfileSettingsController extends GetxController {
       );
 
       if (photoData == null) return;
+      setSavedSettings = true;
 
       var path = selectedPhoto.path;
       var savePhoto = XFile.fromData(photoData);
@@ -114,7 +115,6 @@ class ProfileSettingsController extends GetxController {
 
       savePhoto = XFile(path);
       setPhoto = savePhoto;
-      setSavedSettings = true;
     }
   }
 
@@ -181,5 +181,12 @@ class ProfileSettingsController extends GetxController {
         content: Text("Запазени са промените"),
       ),
     );
+  }
+
+  @override
+  void onClose() {
+    setPhoto = XFile("");
+    setSavedSettings = false;
+    super.onClose();
   }
 }

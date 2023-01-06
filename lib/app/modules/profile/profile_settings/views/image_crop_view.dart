@@ -24,7 +24,7 @@ class ImageCropView extends StatelessWidget {
         image: _imageData,
         controller: cropController,
         onCropped: (value) {
-          inspect(value);
+          (value);
           Get.back(result: value);
         },
         withCircleUi: true,
