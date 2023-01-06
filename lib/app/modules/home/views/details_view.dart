@@ -1,8 +1,12 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/home/components/category_card.dart';
+import 'package:educate_io/app/services/database/firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -19,45 +23,75 @@ class DetailsView extends GetView {
       body: CustomScrollView(slivers: [
         SliverAppBar.medium(
           flexibleSpace: FlexibleSpaceBar(
-            title: Text(teacher.name),
+            title: Text(
+              teacher.name,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             expandedTitleScale: 1.4,
             centerTitle: true,
             collapseMode: CollapseMode.parallax,
           ),
         ),
         SliverToBoxAdapter(
-          child: ProfileView(context, teacher),
+          child: profileView(context, teacher),
         ),
       ]),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           children: [
-            IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.heart)),
-            Spacer(),
+            favouriteButton(),
+            const Spacer(),
             IconButton(
               onPressed: () {},
-              icon: Icon(Icons.chat),
+              icon: const Icon(Icons.chat),
             ),
             IconButton(
               onPressed: () async =>
                   await FlutterPhoneDirectCaller.callNumber(teacher.phone),
-              icon: Icon(Icons.phone),
+              icon: const Icon(Icons.phone),
             )
           ],
         ),
       ),
     );
   }
+
+  Widget favouriteButton() {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            !snapshot.hasData) {
+          return const Icon(null);
+        }
+
+        var icon = CupertinoIcons.heart;
+
+        if (List.castFrom(snapshot.data?["likedTeachers"])
+            .contains(teacher.uid)) {
+          icon = CupertinoIcons.heart_fill;
+        }
+
+        return IconButton(
+          onPressed: () => favoriteTeacher(teacher),
+          icon: Icon(icon),
+        );
+      },
+    );
+  }
 }
 
-SingleChildScrollView ProfileView(BuildContext context, Teacher teacher) {
+SingleChildScrollView profileView(BuildContext context, Teacher teacher) {
   return SingleChildScrollView(
     child: Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Hero(
-            tag: teacher.photoUrl,
+            tag: teacher,
             child: CachedNetworkImage(
               imageUrl: teacher.photoUrl,
               imageBuilder: (context, imageProvider) => ClipRRect(
@@ -66,6 +100,10 @@ SingleChildScrollView ProfileView(BuildContext context, Teacher teacher) {
                   fit: BoxFit.fitWidth,
                   image: imageProvider,
                 ),
+              ),
+              errorWidget: (context, url, error) => const Icon(
+                Icons.question_mark,
+                size: 50,
               ),
             ),
           ),
@@ -92,4 +130,23 @@ SingleChildScrollView ProfileView(BuildContext context, Teacher teacher) {
       ],
     ),
   );
+}
+
+Future<void> favoriteTeacher(Teacher teacher) async {
+  var doc = FirebaseFirestore.instance
+      .collection("users")
+      .doc(FirebaseAuth.instance.currentUser!.uid);
+
+  var teachers =
+      await doc.get().then((value) => value.get("likedTeachers") as List);
+
+  if (teachers.contains(teacher.uid)) {
+    teachers.remove(teacher.uid);
+  } else {
+    teachers.add(teacher.uid);
+  }
+
+  doc.update({"likedTeachers": teachers});
+  ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
+      content: Text("Успешно добавен учител към любими учители")));
 }

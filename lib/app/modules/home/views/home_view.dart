@@ -104,39 +104,50 @@ class HomeView extends GetView<HomeController> {
     return SliverToBoxAdapter(
       child: Column(
         children: <Widget>[
-          Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 30, left: 10, top: 20),
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("users")
-                    .doc(FirebaseAuth.instance.currentUser?.uid ?? "example")
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  return Text(
-                    "Добре дошъл\n${snapshot.data?["name"] ?? ""}",
-                    style: Get.textTheme.titleLarge,
-                  );
-                },
-              ),
-            ),
-          ),
+          welcomeText(),
           const TeacherSubject(
             subject: "Програмиране",
           ),
           const SizedBox(
             height: 10,
           ),
-          for (int i = 1; i <= 100; i++)
-            Text(
-              i.toString(),
-              style: Theme.of(Get.context!).textTheme.headlineSmall,
-            ),
+          const TeacherSubject(
+            subject: "C# програмиране",
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const TeacherSubject(
+            subject: "Unity",
+          ),
           ElevatedButton(
               onPressed: () => FirebaseAuthService.logOut(),
-              child: const Text("log out"))
+              child: const Text("log out")),
+          SizedBox(
+            height: Get.mediaQuery.padding.bottom,
+          )
         ],
+      ),
+    );
+  }
+
+  Align welcomeText() {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 30, left: 10, top: 20),
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection("users")
+              .doc(FirebaseAuth.instance.currentUser?.uid ?? "example")
+              .snapshots(),
+          builder: (context, snapshot) {
+            return Text(
+              "Добре дошъл\n${snapshot.data?["name"] ?? ""}",
+              style: Theme.of(Get.context!).textTheme.titleLarge,
+            );
+          },
+        ),
       ),
     );
   }

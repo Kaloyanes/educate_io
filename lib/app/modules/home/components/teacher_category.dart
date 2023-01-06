@@ -21,8 +21,6 @@ class TeacherSubject extends StatefulWidget {
 
 class _TeacherSubjectState extends State<TeacherSubject> {
   Future<List<Teacher>> getTeachers() async {
-    print(widget.subject);
-
     var teachers = <Teacher>[];
 
     var teachersQuery = await FirebaseFirestore.instance
@@ -31,15 +29,13 @@ class _TeacherSubjectState extends State<TeacherSubject> {
         .where("subjects", arrayContains: widget.subject)
         .get();
 
-    (teachersQuery);
-    (teachersQuery.docs[0].data());
-
     teachersQuery.docs.forEach((element) {
       print("getting elements");
-      var teacher = Teacher.fromMap(element.data());
-      (element.data());
-      (element);
-      (teacher);
+
+      var data = element.data();
+      data.addAll({"uid": element.id});
+      var teacher = Teacher.fromMap(data);
+
       teachers.add(teacher);
     });
     (teachers);
@@ -55,8 +51,8 @@ class _TeacherSubjectState extends State<TeacherSubject> {
           child: Container(
             margin: EdgeInsets.only(left: 20),
             child: Text(
-              "Програмист",
-              style: Get.textTheme.titleLarge,
+              widget.subject,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
         ),

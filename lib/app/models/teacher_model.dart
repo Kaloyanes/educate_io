@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class Teacher {
+  String? uid;
   String email;
   String name;
   String phone;
@@ -13,6 +14,7 @@ class Teacher {
   DateTime birthDay;
   List<String> subjects;
   Teacher({
+    required this.uid,
     required this.email,
     required this.name,
     required this.phone,
@@ -23,6 +25,7 @@ class Teacher {
   });
 
   Teacher copyWith({
+    String? uid,
     String? email,
     String? name,
     String? phone,
@@ -32,6 +35,7 @@ class Teacher {
     List<String>? subjects,
   }) {
     return Teacher(
+      uid: uid ?? this.uid,
       email: email ?? this.email,
       name: name ?? this.name,
       phone: phone ?? this.phone,
@@ -56,6 +60,7 @@ class Teacher {
 
   factory Teacher.fromMap(Map<String, dynamic> map) {
     return Teacher(
+      uid: map['uid'],
       email: map['email'] as String,
       name: map['name'] as String,
       phone: map['phone'] as String,

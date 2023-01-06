@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -6,7 +8,6 @@ class FirestoreProfileService {
     var currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser == null) {
-      print("null user");
       return null;
     }
     String uid = currentUser.uid;
@@ -36,5 +37,14 @@ class FirestoreProfileService {
     data.addAll({"initials": name});
     // Return a map with the name and photo url
     return data;
+  }
+
+  static Future<Map<String, dynamic>> getUserMapData() async {
+    var data = FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    inspect(data);
+
+    return await data.get().then((value) => value.data() ?? {});
   }
 }

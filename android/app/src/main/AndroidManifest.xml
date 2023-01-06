@@ -2,8 +2,7 @@
     package="com.denoic.educate_io">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <permission-group android:name="android.permission-group.PHONE_CALLS"/>
 
    <application
         android:label="EducateIO"

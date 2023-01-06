@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/models/user_model.dart';
 import 'package:educate_io/app/modules/home/views/home_view.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
@@ -87,6 +86,8 @@ class RegisterController extends GetxController {
       "role": role.value,
       "birthDay": birthDate.value,
       "subjects": subjects,
+      "likedTeachers": [],
+      "photoUrl": "",
     };
 
     if (role.value.trim() == "teacher") {
@@ -138,6 +139,8 @@ class RegisterController extends GetxController {
       "birthDay": birthDate.value,
       "name": nameController.text.trim(),
       "role": role.value.trim(),
+      "likedTeachers": [],
+      "photoUrl": "",
     };
 
     if (role.value.trim() == "teacher") {

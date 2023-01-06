@@ -15,7 +15,7 @@ class ChatsView extends GetView<ChatsController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('ChatsView'),
+          title: const Text('Чатове'),
           centerTitle: true,
         ),
         body: StreamBuilder(
@@ -38,16 +38,16 @@ class ChatsView extends GetView<ChatsController> {
             }
 
             return ListView.builder(
-              itemCount: user.length,
+              itemCount: 15,
               itemBuilder: (context, index) {
-                var doc = user.elementAt(index);
+                // var doc = user.elementAt(index);
 
-                var otherPersonId = doc.id.split(".");
-                (otherPersonId);
+                // var otherPersonId = doc.id.split(".");
+                // (otherPersonId);
 
                 return ListTile(
                   leading: CircleAvatar(child: Text("KS")),
-                  title: Text(doc["sender"]),
+                  title: Text("Kaloyan Stoyanov"),
                   onTap: () {},
                 );
               },

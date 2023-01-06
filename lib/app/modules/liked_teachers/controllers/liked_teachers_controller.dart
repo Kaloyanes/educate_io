@@ -4,18 +4,12 @@ class LikedTeachersController extends GetxController {
   //TODO: Implement LikedTeachersController
 
   final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
+  final heroTransition = true.obs;
+  set setTransition(val) => heroTransition.value = val;
 
   @override
   void onClose() {
+    setTransition = false;
     super.onClose();
   }
 
