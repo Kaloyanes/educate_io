@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:educate_io/app/modules/home/components/drawer/content/anon_content.dart';
 import 'package:educate_io/app/modules/home/components/drawer/content/user_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,26 +44,28 @@ class _DrawerComponentState extends State<DrawerComponent> {
         ),
         // Content
 
-        StreamBuilder(
-          stream: authStream,
-          initialData: FirebaseAuth.instance.currentUser,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            }
+        Expanded(
+          child: StreamBuilder(
+            stream: authStream,
+            initialData: FirebaseAuth.instance.currentUser,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              inspect(snapshot);
 
-            if (snapshot.hasError) {
-              print(snapshot.error);
-              return const CircularProgressIndicator();
-            }
+              if (snapshot.hasError) {
+                inspect(snapshot.error);
+                return const CircularProgressIndicator();
+              }
 
-            if (snapshot.hasData)
-              return UserContent();
-            else
-              return AnonContent();
-
-            return Container();
-          },
+              if (snapshot.hasData) {
+                return const UserContent();
+              } else {
+                return AnonContent();
+              }
+            },
+          ),
         ),
         SizedBox(
           height: Get.mediaQuery.padding.bottom,

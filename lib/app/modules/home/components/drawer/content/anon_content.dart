@@ -9,22 +9,20 @@ class AnonContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          DrawerDestination(
-            icon: Icons.login,
-            label: "Влез в акаунта си",
-            onTap: () => Get.toNamed(Routes.LOGIN),
-          ),
-          const SizedBox(height: 10),
-          DrawerDestination(
-            icon: Icons.app_registration_rounded,
-            label: "Създай акаунт",
-            onTap: () => Get.toNamed(Routes.REGISTER),
-          )
-        ],
-      ),
+    return Column(
+      children: [
+        DrawerDestination(
+          icon: Icons.login,
+          label: "Влез в акаунта си",
+          onTap: () => Get.toNamed(Routes.LOGIN),
+        ),
+        const SizedBox(height: 10),
+        DrawerDestination(
+          icon: Icons.app_registration_rounded,
+          label: "Създай акаунт",
+          onTap: () => Get.toNamed(Routes.REGISTER),
+        )
+      ],
     );
   }
 }

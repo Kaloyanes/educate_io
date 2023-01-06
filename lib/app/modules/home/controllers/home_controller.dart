@@ -1,14 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
-import 'package:educate_io/app/modules/auth/google_data/views/google_data_view.dart';
 import 'package:educate_io/app/modules/home/components/profile_settings_dialog.dart';
-import 'package:educate_io/app/routes/app_pages.dart';
-import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:educate_io/app/services/database/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
@@ -30,7 +25,7 @@ class HomeController extends GetxController {
       name: "Самвел Матинян",
       age: 90,
       description:
-          "Здр, малки идиотчета, аз съм Самвел и се намирам във Варна. Обичам да играя шах с малки деца за да ги изнасилвам, Най-голямата ми жертва е Калоян от Бургас и създателя на това приложение",
+          "Здр, малки идиотчета, аз съм Самвел и се намирам във Варна. Обичам да играя шах с малки деца за да ги изнасилвам, Най-голямата ми жертва е Калоян от Бургас и създателя на това приложение, Здр, малки идиотчета, аз съм Самвел и се намирам във Варна. Обичам да играя шах с малки деца за да ги изнасилвам, Най-голямата ми жертва е Калоян от Бургас и създателя на това приложение, Здр, малки идиотчета, аз съм Самвел и се намирам във Варна. Обичам да играя шах с малки деца за да ги изнасилвам, Най-голямата ми жертва е Калоян от Бургас и създателя на това приложение, Здр, малки идиотчета, аз съм Самвел и се намирам във Варна. Обичам да играя шах с малки деца за да ги изнасилвам, Най-голямата ми жертва е Калоян от Бургас и създателя на това приложение",
       categories: ["Програмист", "Сертифиран Sex offender"],
       role: "Учител",
       phoneNumber: "+359879900137",
@@ -74,11 +69,11 @@ class HomeController extends GetxController {
     return data?["name"] ?? "";
   }
 
-  void showProfileSettings() {
-    HapticFeedback.selectionClick();
-    showDialog(
-      context: Get.context!,
-      builder: (context) => const ProfileSettingsDialog(),
-    );
-  }
+  // void showProfileSettings() {
+  //   HapticFeedback.selectionClick();
+  //   showDialog(
+  //     context: Get.context!,
+  //     builder: (context) => const ProfileSettingsDialog(),
+  //   );
+  // }
 }

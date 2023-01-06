@@ -15,6 +15,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
 
 class ProfileSettingsController extends GetxController {
   //TODO: Implement SettingsController
@@ -83,11 +84,18 @@ class ProfileSettingsController extends GetxController {
         imageSource == "camera" ? ImageSource.camera : ImageSource.gallery);
   }
 
+  Uint8List _fixOrientation(Uint8List imageBytes) {
+    img.Image? originalImage = img.decodeImage(imageBytes);
+    img.Image fixedImage = img.flipVertical(originalImage!);
+
+    return img.encodeJpg(fixedImage);
+  }
+
   Future<void> _capture(ImageSource source) async {
     var selectedPhoto = await _picker.pickImage(
       source: source,
       preferredCameraDevice: CameraDevice.front,
-      imageQuality: 100,
+      imageQuality: 99,
     );
 
     if (selectedPhoto != null) {

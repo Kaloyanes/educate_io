@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+// import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 
 import 'app/routes/app_pages.dart';
@@ -14,13 +14,13 @@ import 'app/routes/app_pages.dart';
 Future<void> main() async {
   var binding = WidgetsFlutterBinding.ensureInitialized();
 
-  FlutterNativeSplash.preserve(widgetsBinding: binding);
+  // FlutterNativeSplash.preserve(widgetsBinding: binding);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   runApp(const App());
-  FlutterNativeSplash.remove();
+  // FlutterNativeSplash.remove();
 }
 
 class App extends StatelessWidget {
@@ -62,6 +62,7 @@ class App extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           defaultTransition: Transition.native,
+
           smartManagement: SmartManagement.onlyBuilder,
           popGesture: false,
           // transitionDuration: const Duration(milliseconds: 400),

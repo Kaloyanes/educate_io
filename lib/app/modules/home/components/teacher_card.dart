@@ -15,9 +15,7 @@ class TeacherCard extends StatelessWidget {
   final Teacher teacher;
 
   void goToDetails() {
-    Get.to(
-      () => DetailsView(teacher),
-    );
+    Get.to(() => DetailsView(teacher), curve: Curves.easeInOutExpo);
   }
 
   @override

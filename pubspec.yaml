@@ -2,57 +2,56 @@ name: educate_io
 version: 1.0.0+1
 publish_to: none
 description: Platform to find private tutors
-environment: 
-  sdk: '>=2.18.0-106.0.dev <4.0.0'
+environment:
+  sdk: ">=2.18.0-106.0.dev <4.0.0"
 
-dependencies: 
+dependencies:
   cached_network_image: ^3.2.3
   cloud_firestore: ^4.3.0
+  crop_your_image:
+    git:
+      url: git@github.com:ravikant-paudel/crop_your_image.git
+      ref: 989f7799a2b8b1a08dd546cb94d1b82ae295abb1
   cupertino_icons: ^1.0.2
   dynamic_color: ^1.5.4
+  firebase_analytics: ^10.1.0
   firebase_auth: ^4.2.1
   firebase_core: ^2.4.0
   firebase_storage: ^11.0.8
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_phone_direct_caller: ^2.1.1
+  flutter_speed_dial: ^6.2.0
   flutter_svg: ^1.1.6
   get: 4.6.5
   google_fonts: ^3.0.1
   google_sign_in: ^5.4.2
+  image: ^4.0.6
   image_picker: 0.8.6
   path: ^1.8.1
   path_provider: 2.0.11
-  shimmer: 2.0.0
-  intl: ^0.17.0
-  flutter_native_splash: ^2.2.16
-  crop_your_image: ^0.7.3
-  flutter: 
-    sdk: flutter
-  flutter_localizations: 
-    sdk: flutter
-  flutter_speed_dial: ^6.2.0
-  device_preview: ^1.1.0
-  flutter_phone_direct_caller: ^2.1.1
 
-dev_dependencies: 
+dev_dependencies:
   flutter_lints: ^2.0.0
-  flutter_test: 
+  flutter_test:
     sdk: flutter
 
-flutter: 
-  assets: 
+flutter:
+  assets:
     - assets/images/google_logo.svg
   uses-material-design: true
-
-flutter_native_splash: 
-  image: assets/light_mode.png
-  color: '#ffffff'
-  image_dark: assets/dark_mode.png
-  color_dark: '#1a1a1a'
-  android_12: 
-    image: assets/android_12_light_mode.png
-    color: '#ffffff'
-    image_dark: assets/android_12_dark_mode.png
-    color_dark: '#1a1a1a'
-  android12: true
-  android: true
-  ios: true
-
+# flutter_native_splash:
+#   image: assets/light_mode.png
+#   color: "#ffffff"
+#   image_dark: assets/dark_mode.png
+#   color_dark: "#1a1a1a"
+#   android_12:
+#     image: assets/android_12_light_mode.png
+#     color: "#ffffff"
+#     image_dark: assets/android_12_dark_mode.png
+#     color_dark: "#1a1a1a"
+#   android12: true
+#   android: true
+#   ios: true

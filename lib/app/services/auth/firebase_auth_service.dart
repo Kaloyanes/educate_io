@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/user_model.dart';
-import 'package:educate_io/app/modules/auth/google_data/views/google_data_view.dart';
+import 'package:educate_io/app/modules/auth/register/views/google_data_view.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,27 +23,21 @@ class FirebaseAuthService {
 
   static Future<void> logOut() async => await FirebaseAuth.instance.signOut();
 
-  static Future<void> createAccount(UserModel createUser) async {
+  static Future<void> createAccount(
+      Map<String, dynamic> userData, String email, String password) async {
     var auth = FirebaseAuth.instance;
     var store = FirebaseFirestore.instance;
 
     var user = await auth.createUserWithEmailAndPassword(
-      email: createUser.email,
-      password: createUser.password,
+      email: email.trim(),
+      password: password.trim(),
     );
 
     user.user?.sendEmailVerification();
-    user.user?.updateDisplayName(createUser.name);
 
     var doc = store.collection("users").doc(user.user?.uid);
 
-    doc.set({
-      "name": createUser.name,
-      "age": createUser.age,
-      "birthday": createUser.birthDate,
-      "role": createUser.role,
-      "email": createUser.email,
-    });
+    doc.set(userData);
   }
 
   static Future<void> logInGoogle() async {

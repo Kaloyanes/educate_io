@@ -6,7 +6,6 @@ import 'package:educate_io/app/modules/home/components/category_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 
 class DetailsView extends GetView {
@@ -20,44 +19,62 @@ class DetailsView extends GetView {
     return Scaffold(
       body: CustomScrollView(slivers: [
         SliverAppBar.medium(
-          actions: [
-            IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.heart))
-          ],
-          title: Text(teacher.name),
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text(teacher.name),
+            expandedTitleScale: 1.4,
+            centerTitle: true,
+            collapseMode: CollapseMode.parallax,
+          ),
         ),
         SliverToBoxAdapter(
           child: ProfileView(context, teacher),
         ),
       ]),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      floatingActionButton: SpeedDial(
-        animationAngle: 20,
-        elevation: 0,
-        children: [
-          SpeedDialChild(
-            elevation: 5,
-            label: "Напиши съобщение",
-            labelBackgroundColor: Colors.transparent,
-            onTap: () {},
-            child: Icon(Icons.chat),
-          ),
-          SpeedDialChild(
-            elevation: 5,
-            label: "Обади се",
-            labelBackgroundColor: Colors.transparent,
-            onTap: () async =>
-                await FlutterPhoneDirectCaller.callNumber(teacher.phoneNumber),
-            child: Icon(Icons.phone),
-          )
-        ],
-        animationCurve: Curves.easeOutQuart,
-        animationDuration: Duration(milliseconds: 250),
-        animatedIcon: AnimatedIcons.menu_close,
-        childMargin: EdgeInsets.only(top: 10),
-        curve: Curves.easeOutQuart,
-        childrenButtonSize: Size(60, 60),
-        spaceBetweenChildren: 10,
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.heart)),
+            Spacer(),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.chat),
+            ),
+            IconButton(
+              onPressed: () async => await FlutterPhoneDirectCaller.callNumber(
+                  teacher.phoneNumber),
+              icon: Icon(Icons.phone),
+            )
+          ],
+        ),
       ),
+      // floatingActionButton: SpeedDial(
+      //   animationAngle: 20,
+      //   elevation: 0,
+      //   children: [
+      //     SpeedDialChild(
+      //       elevation: 5,
+      //       label: "Напиши съобщение",
+      //       labelBackgroundColor: Colors.transparent,
+      //       onTap: () {},
+      //       child: Icon(Icons.chat),
+      //     ),
+      //     SpeedDialChild(
+      //       elevation: 5,
+      //       label: "Обади се",
+      //       labelBackgroundColor: Colors.transparent,
+      //       onTap: () async =>
+      //           await FlutterPhoneDirectCaller.callNumber(teacher.phoneNumber),
+      //       child: Icon(Icons.phone),
+      //     )
+      //   ],
+      //   animationCurve: Curves.easeOutQuart,
+      //   animationDuration: Duration(milliseconds: 250),
+      //   animatedIcon: AnimatedIcons.menu_close,
+      //   childMargin: EdgeInsets.only(top: 10),
+      //   curve: Curves.easeOutQuart,
+      //   childrenButtonSize: Size(60, 60),
+      //   spaceBetweenChildren: 10,
+      // ),
     );
   }
 }

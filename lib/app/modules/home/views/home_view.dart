@@ -23,7 +23,7 @@ class HomeView extends GetView<HomeController> {
     Get.lazyPut(() => HomeController());
 
     return Scaffold(
-      drawer: DrawerComponent(),
+      drawer: const DrawerComponent(),
       body: CustomScrollView(
         slivers: [
           appBar(context),
@@ -85,10 +85,7 @@ class HomeView extends GetView<HomeController> {
                       );
                     }
 
-                    return GestureDetector(
-                      child: child,
-                      onTap: () => controller.showProfileSettings(),
-                    );
+                    return child;
                   },
                 ),
               );
@@ -112,16 +109,17 @@ class HomeView extends GetView<HomeController> {
             child: Container(
               margin: const EdgeInsets.only(bottom: 30, left: 10, top: 20),
               child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection("users")
-                      .doc(FirebaseAuth.instance.currentUser?.uid ?? "example")
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    return Text(
-                      "Добре дошъл\n${snapshot.data?["name"] ?? ""}",
-                      style: Get.textTheme.titleLarge,
-                    );
-                  }),
+                stream: FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(FirebaseAuth.instance.currentUser?.uid ?? "example")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  return Text(
+                    "Добре дошъл\n${snapshot.data?["name"] ?? ""}",
+                    style: Get.textTheme.titleLarge,
+                  );
+                },
+              ),
             ),
           ),
           teacher_category(controller: controller),

@@ -27,11 +27,9 @@ class ImageCropView extends StatelessWidget {
           inspect(value);
           Get.back(result: value);
         },
+        withCircleUi: true,
         baseColor: Theme.of(context).scaffoldBackgroundColor,
         maskColor: Colors.black.withAlpha(100),
-        aspectRatio: 4 / 3,
-        withCircleUi: true,
-        radius: 50,
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => cropController.crop(),
