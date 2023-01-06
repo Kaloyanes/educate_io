@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 
 import '../middleware/auth_middleware.dart';
-import '../modules/auth/google_data/bindings/google_data_binding.dart';
 import '../modules/auth/login/bindings/login_binding.dart';
 import '../modules/auth/login/views/login_view.dart';
 import '../modules/auth/register/bindings/register_binding.dart';
@@ -47,11 +46,6 @@ class AppPages {
           name: _Paths.REGISTER,
           page: () => const RegisterView(),
           binding: RegisterBinding(),
-        ),
-        GetPage(
-          name: _Paths.GOOGLE_DATA,
-          page: () => const GoogleDataView(),
-          binding: GoogleDataBinding(),
         ),
       ],
     ),
