@@ -5,14 +5,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 // import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 
 import 'app/routes/app_pages.dart';
 
 Future<void> main() async {
-  var binding = WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   // FlutterNativeSplash.preserve(widgetsBinding: binding);
   await Firebase.initializeApp(
@@ -56,11 +55,7 @@ class App extends StatelessWidget {
           darkTheme: Themes.theme(dark ?? defaultDark),
           debugShowCheckedModeBanner: false,
           scrollBehavior: const CupertinoScrollBehavior(),
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
+
           defaultTransition: Transition.native,
 
           smartManagement: SmartManagement.onlyBuilder,

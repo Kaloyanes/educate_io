@@ -1,13 +1,9 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:educate_io/app/models/teacher_model.dart';
-import 'package:educate_io/app/modules/home/views/details_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/routes/default_transitions.dart';
-import 'package:path/path.dart';
+
+import 'package:educate_io/app/models/teacher_model.dart';
+import 'package:educate_io/app/modules/home/views/details_view.dart';
 
 class TeacherCard extends StatelessWidget {
   const TeacherCard({Key? key, required this.teacher}) : super(key: key);
@@ -60,7 +56,7 @@ class TeacherCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    errorWidget: (context, url, error) => SizedBox(
+                    errorWidget: (context, url, error) => const SizedBox(
                       height: 200,
                       width: 200,
                       child: Icon(

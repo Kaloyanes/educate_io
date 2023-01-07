@@ -21,8 +21,6 @@ dependencies:
   flex_color_scheme: ^6.1.2
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
   flutter_phone_direct_caller: ^2.1.1
   flutter_speed_dial: ^6.2.0
   flutter_svg: ^1.1.6
@@ -31,6 +29,7 @@ dependencies:
   google_sign_in: ^5.4.2
   image: ^4.0.6
   image_picker: 0.8.6
+  intl: ^0.18.0
   path: ^1.8.1
   path_provider: 2.0.11
 

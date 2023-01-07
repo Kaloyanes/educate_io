@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:educate_io/app/modules/home/components/drawer/content/anon_content.dart';
 import 'package:educate_io/app/modules/home/components/drawer/content/user_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,7 +58,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
               if (snapshot.hasData) {
                 return const UserContent();
               } else {
-                return AnonContent();
+                return const AnonContent();
               }
             },
           ),

@@ -1,8 +1,8 @@
-import 'dart:developer';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:educate_io/app/models/teacher_model.dart';
+import 'package:educate_io/app/modules/chats/views/chat_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -19,11 +19,14 @@ class ChatsView extends GetView<ChatsController> {
           centerTitle: true,
         ),
         body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection("chats").snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection("chats")
+              .orderBy("messages", descending: true)
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting ||
                 snapshot.data == null) {
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             }
 
             var user = snapshot.data!.docs.where(
@@ -32,23 +35,64 @@ class ChatsView extends GetView<ChatsController> {
             );
 
             if (user.isEmpty) {
-              return Center(
+              return const Center(
                 child: Text("Няма чатове"),
               );
             }
 
             return ListView.builder(
-              itemCount: 15,
+              itemCount: user.length,
               itemBuilder: (context, index) {
-                // var doc = user.elementAt(index);
+                var doc = user.elementAt(index);
 
-                // var otherPersonId = doc.id.split(".");
-                // (otherPersonId);
+                var ids = doc.id.split(".");
 
-                return ListTile(
-                  leading: CircleAvatar(child: Text("KS")),
-                  title: Text("Kaloyan Stoyanov"),
-                  onTap: () {},
+                var otherPersonids =
+                    ids[0] == FirebaseAuth.instance.currentUser!.uid
+                        ? ids[1]
+                        : ids[0];
+
+                return FutureBuilder(
+                  future: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(otherPersonids)
+                      .get(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData ||
+                        snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    var teacherData = snapshot.data!.data()!;
+                    var teacher = Teacher.fromMap(teacherData);
+
+                    return ListTile(
+                      leading: Hero(
+                        tag: teacher.photoUrl,
+                        child: CircleAvatar(
+                          foregroundImage:
+                              CachedNetworkImageProvider(teacher.photoUrl),
+                        ),
+                      ),
+                      title: Hero(
+                        flightShuttleBuilder: (flightContext,
+                                animation,
+                                flightDirection,
+                                fromHeroContext,
+                                toHeroContext) =>
+                            toHeroContext.widget,
+                        tag: teacher.uid ?? "teacher-name",
+                        child: Text(
+                          teacher.name,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                      onTap: () => Get.to(
+                        () => ChatView(teacher),
+                        preventDuplicates: true,
+                      ),
+                    );
+                  },
                 );
               },
             );

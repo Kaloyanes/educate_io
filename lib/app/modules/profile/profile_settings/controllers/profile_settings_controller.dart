@@ -1,21 +1,16 @@
-import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/modules/profile/profile_settings/components/photo_bottom_sheet.dart';
-import 'package:educate_io/app/modules/profile/profile_settings/views/image_crop_view.dart';
-import 'package:educate_io/app/routes/app_pages.dart';
-import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
-import 'package:flutter/services.dart';
 import "package:path/path.dart" as p;
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image/image.dart' as img;
+
+import 'package:educate_io/app/modules/profile/profile_settings/components/photo_bottom_sheet.dart';
+import 'package:educate_io/app/modules/profile/profile_settings/views/image_crop_view.dart';
 
 class ProfileSettingsController extends GetxController {
   //TODO: Implement SettingsController
@@ -84,13 +79,6 @@ class ProfileSettingsController extends GetxController {
         imageSource == "camera" ? ImageSource.camera : ImageSource.gallery);
   }
 
-  Uint8List _fixOrientation(Uint8List imageBytes) {
-    img.Image? originalImage = img.decodeImage(imageBytes);
-    img.Image fixedImage = img.flipVertical(originalImage!);
-
-    return img.encodeJpg(fixedImage);
-  }
-
   Future<void> _capture(ImageSource source) async {
     var selectedPhoto = await _picker.pickImage(
       source: source,
@@ -120,7 +108,6 @@ class ProfileSettingsController extends GetxController {
 
   Future<void> savePhoto() async {
     HapticFeedback.selectionClick();
-    print("Saving photo");
 
     var file = File(photo.value.path);
     var ext = p.extension(photo.value.path);
@@ -155,7 +142,6 @@ class ProfileSettingsController extends GetxController {
   void changeDisplayName() {}
 
   Future<void> deletePhotoSetting() async {
-    print("deleting photo");
     var doc = store.collection("users").doc(auth.currentUser?.uid);
     var getDoc = await doc.get();
 

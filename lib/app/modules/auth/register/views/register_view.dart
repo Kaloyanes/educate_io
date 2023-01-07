@@ -1,6 +1,5 @@
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
@@ -39,7 +38,7 @@ class RegisterView extends GetView<RegisterController> {
                     const SizedBox(
                       height: 20,
                     ),
-                    RegisterForm(),
+                    registerForm(),
                     const SizedBox(
                       height: 30,
                     ),
@@ -73,7 +72,7 @@ class RegisterView extends GetView<RegisterController> {
     );
   }
 
-  Form RegisterForm() {
+  Form registerForm() {
     return Form(
       key: controller.formKey,
       child: Column(

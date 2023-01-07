@@ -1,6 +1,5 @@
 import 'package:educate_io/app/modules/auth/register/controllers/register_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
@@ -32,7 +31,7 @@ class GoogleDataView extends GetView<RegisterController> {
                     const SizedBox(
                       height: 20,
                     ),
-                    GoogleForm(),
+                    googleForm(),
                     const SizedBox(
                       height: 30,
                     ),
@@ -53,7 +52,7 @@ class GoogleDataView extends GetView<RegisterController> {
     );
   }
 
-  Form GoogleForm() {
+  Form googleForm() {
     return Form(
       key: controller.formKey,
       child: Column(

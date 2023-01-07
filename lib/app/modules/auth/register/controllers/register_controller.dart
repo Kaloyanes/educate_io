@@ -1,17 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/modules/home/views/home_view.dart';
-import 'package:educate_io/app/routes/app_pages.dart';
-import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class RegisterController extends GetxController {
-  //TODO: Implement RegisterController
+import 'package:educate_io/app/routes/app_pages.dart';
+import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 
+class RegisterController extends GetxController {
   final sizeStyle = ButtonStyle(
     elevation: MaterialStateProperty.resolveWith(
       (states) {
@@ -60,7 +57,7 @@ class RegisterController extends GetxController {
   }
 
   Future<void> changeDate() async {
-    FocusScope.of(Get.context!).requestFocus(new FocusNode());
+    FocusScope.of(Get.context!).requestFocus(FocusNode());
     var date = DateTime.now();
     setBirthDate = await showDatePicker(
       context: Get.context!,
@@ -87,7 +84,6 @@ class RegisterController extends GetxController {
       "birthDay": birthDate.value,
       "subjects": subjects,
       "likedTeachers": [],
-      "photoUrl": "",
     };
 
     if (role.value.trim() == "teacher") {
@@ -140,7 +136,6 @@ class RegisterController extends GetxController {
       "name": nameController.text.trim(),
       "role": role.value.trim(),
       "likedTeachers": [],
-      "photoUrl": "",
     };
 
     if (role.value.trim() == "teacher") {
@@ -183,6 +178,8 @@ class RegisterController extends GetxController {
                 18) {
           return "Няма завършени 18 години";
         }
+
+        return null;
       },
       readOnly: true,
     );

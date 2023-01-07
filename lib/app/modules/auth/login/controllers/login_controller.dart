@@ -1,14 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/auth/login/components/forgot_password_dialog.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
-  //TODO: Implement LoginController
+  //
 
   final sizeStyle = const ButtonStyle(
     minimumSize: MaterialStatePropertyAll(

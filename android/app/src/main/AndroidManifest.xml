@@ -2,12 +2,15 @@
     package="com.denoic.educate_io">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    
     <permission-group android:name="android.permission-group.PHONE_CALLS"/>
 
    <application
         android:label="EducateIO"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
+    
         <activity
             android:name=".MainActivity"
             android:exported="true"

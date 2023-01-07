@@ -1,20 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/modules/auth/register/views/google_data_view.dart';
-import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import 'package:educate_io/app/modules/auth/register/views/google_data_view.dart';
 
 class FirebaseAuthService {
   static Future<void> login(String email, String password) async {
     var auth = FirebaseAuth.instance;
-    UserCredential? credential;
 
     try {
-      credential = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       throw e.message!;
     }

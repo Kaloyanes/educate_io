@@ -1,19 +1,15 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/home/components/category_card.dart';
-import 'package:educate_io/app/services/database/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
 
 class DetailsView extends GetView {
-  DetailsView(this.teacher, {Key? key}) : super(key: key);
+  const DetailsView(this.teacher, {Key? key}) : super(key: key);
 
   final Teacher teacher;
 
@@ -115,7 +111,7 @@ SingleChildScrollView profileView(BuildContext context, Teacher teacher) {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              CategoryCard(category: "Описание", value: ""),
+              const CategoryCard(category: "Описание", value: ""),
               for (int i = 0; i < teacher.subjects.length; i++)
                 Text(
                   teacher.subjects[i],
@@ -142,11 +138,22 @@ Future<void> favoriteTeacher(Teacher teacher) async {
 
   if (teachers.contains(teacher.uid)) {
     teachers.remove(teacher.uid);
+
+    ScaffoldMessenger.of(Get.context!).showSnackBar(
+      const SnackBar(
+        content: Text("Премахнат учител от любими учители"),
+        duration: Duration(seconds: 2),
+      ),
+    );
   } else {
     teachers.add(teacher.uid);
+    ScaffoldMessenger.of(Get.context!).showSnackBar(
+      const SnackBar(
+        content: Text("Успешно добавен учител към любими учители"),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   doc.update({"likedTeachers": teachers});
-  ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
-      content: Text("Успешно добавен учител към любими учители")));
 }

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:educate_io/app/services/database/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +28,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 profilePicture(),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 TextField(
@@ -46,7 +45,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
                         MaterialStatePropertyAll(Colors.red.withAlpha(20)),
                   ),
                   onPressed: () {},
-                  child: Text("Изтрий профила"),
+                  child: const Text("Изтрий профила"),
                 ),
                 SizedBox(height: Get.mediaQuery.padding.bottom),
               ],
@@ -55,10 +54,11 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
         ),
         floatingActionButton: Obx(
           () => AnimatedSlide(
-            duration: Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 500),
             curve: Curves.easeInOutExpo,
-            offset:
-                controller.savedSettings.value ? Offset(0, 0) : Offset(0, 3),
+            offset: controller.savedSettings.value
+                ? const Offset(0, 0)
+                : const Offset(0, 3),
             child: FloatingActionButton(
               onPressed: () => controller.saveSettings(),
               heroTag: "saveButton",
@@ -108,7 +108,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
                     radius: 100,
                     child: Text(
                       data!["initials"] ?? "",
-                      style: TextStyle(fontSize: 60),
+                      style: const TextStyle(fontSize: 60),
                     ),
                   );
 
@@ -137,7 +137,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
             ),
             child: IconButton(
               onPressed: () => controller.selectPhoto(),
-              icon: Icon(Icons.add_a_photo),
+              icon: const Icon(Icons.add_a_photo),
               iconSize: 30,
             ),
           ),

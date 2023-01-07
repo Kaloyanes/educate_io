@@ -8,10 +8,13 @@ class Themes {
       // snackBarTheme:
       //     const SnackBarThemeData(behavior: SnackBarBehavior.floating),
       appBarTheme: AppBarTheme(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
-        ),
-        centerTitle: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          centerTitle: true,
+          scrolledUnderElevation: 1),
+      bottomAppBarTheme: const BottomAppBarTheme(
+        elevation: 1,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -23,7 +26,7 @@ class Themes {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.red),
+          borderSide: const BorderSide(color: Colors.red),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),

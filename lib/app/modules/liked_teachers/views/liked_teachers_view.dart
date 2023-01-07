@@ -45,10 +45,6 @@ class LikedTeachersView extends GetView<LikedTeachersController> {
                 crossAxisCount: 2, mainAxisExtent: 280, mainAxisSpacing: 15),
             itemCount: data.length,
             itemBuilder: (context, index) {
-              var teacherData = FirebaseFirestore.instance
-                  .collection("users")
-                  .doc(data[index]);
-
               return FutureBuilder(
                 future: FirebaseFirestore.instance
                     .collection("users")

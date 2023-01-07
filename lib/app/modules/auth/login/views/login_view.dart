@@ -82,7 +82,7 @@ class LoginView extends GetView<LoginController> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () => controller.forgotPassword(),
-                            child: Text("Забравил си паролата?"),
+                            child: const Text("Забравил си паролата?"),
                           ),
                         ),
                         ElevatedButton.icon(

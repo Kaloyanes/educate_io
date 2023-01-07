@@ -1,16 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/modules/home/components/drawer/content/user_content.dart';
 import 'package:educate_io/app/modules/home/components/drawer/drawer_component.dart';
-import 'package:educate_io/app/modules/home/components/drawer/drawer_destination.dart';
-import 'package:educate_io/app/modules/home/components/teacher_card.dart';
 import 'package:educate_io/app/modules/home/components/teacher_category.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:educate_io/app/services/database/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -47,7 +42,6 @@ class HomeView extends GetView<HomeController> {
               }
 
               if (snapshot.hasError) {
-                print(snapshot.error);
                 return const CircularProgressIndicator();
               }
 

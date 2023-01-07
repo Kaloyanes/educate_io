@@ -1,11 +1,7 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/home/components/teacher_card.dart';
-import 'package:educate_io/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class TeacherSubject extends StatefulWidget {
   const TeacherSubject({
@@ -27,17 +23,16 @@ class _TeacherSubjectState extends State<TeacherSubject> {
         .collection("users")
         .where("role", isEqualTo: "teacher")
         .where("subjects", arrayContains: widget.subject)
+        .where("photoUrl", isNull: false)
         .get();
 
-    teachersQuery.docs.forEach((element) {
-      print("getting elements");
-
+    for (var element in teachersQuery.docs) {
       var data = element.data();
       data.addAll({"uid": element.id});
       var teacher = Teacher.fromMap(data);
 
       teachers.add(teacher);
-    });
+    }
     (teachers);
     return teachers;
   }
@@ -49,7 +44,7 @@ class _TeacherSubjectState extends State<TeacherSubject> {
         Align(
           alignment: Alignment.centerLeft,
           child: Container(
-            margin: EdgeInsets.only(left: 20),
+            margin: const EdgeInsets.only(left: 20),
             child: Text(
               widget.subject,
               style: Theme.of(context).textTheme.titleLarge,
@@ -63,12 +58,12 @@ class _TeacherSubjectState extends State<TeacherSubject> {
           future: getTeachers(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
             var list = snapshot.data;
             (list);
             if (list == null) {
-              return Text("null");
+              return const Text("null");
             }
 
             return SizedBox(
