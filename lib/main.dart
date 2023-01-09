@@ -55,12 +55,13 @@ class App extends StatelessWidget {
           darkTheme: Themes.theme(dark ?? defaultDark),
           debugShowCheckedModeBanner: false,
           scrollBehavior: const CupertinoScrollBehavior(),
+          locale: Locale("bg"),
 
           defaultTransition: Transition.native,
 
-          smartManagement: SmartManagement.onlyBuilder,
           popGesture: false,
           // transitionDuration: const Duration(milliseconds: 400),
+          smartManagement: SmartManagement.full,
         );
       },
     );

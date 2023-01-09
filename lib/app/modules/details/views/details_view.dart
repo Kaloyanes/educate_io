@@ -1,20 +1,26 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
-import 'package:educate_io/app/modules/home/components/category_card.dart';
+import 'package:educate_io/app/modules/details/components/category_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+
 import 'package:get/get.dart';
 
-class DetailsView extends GetView {
+import '../controllers/details_controller.dart';
+
+class DetailsView extends GetView<DetailsController> {
   const DetailsView(this.teacher, {Key? key}) : super(key: key);
 
   final Teacher teacher;
 
   @override
   Widget build(BuildContext context) {
+    Get.lazyPut(
+      () => DetailsController(),
+    );
     return Scaffold(
       body: CustomScrollView(slivers: [
         SliverAppBar.medium(
@@ -53,6 +59,10 @@ class DetailsView extends GetView {
   }
 
   Widget favouriteButton() {
+    if (FirebaseAuth.instance.currentUser?.uid == null) {
+      return Container();
+    }
+
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection("users")

@@ -2,12 +2,15 @@ import 'package:educate_io/app/modules/auth/register/controllers/register_contro
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class GoogleDataView extends GetView<RegisterController> {
   const GoogleDataView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => RegisterController());
+    initializeDateFormatting();
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [

@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 import 'package:get/get.dart';
 
 import '../middleware/auth_middleware.dart';
@@ -9,6 +7,8 @@ import '../modules/auth/register/bindings/register_binding.dart';
 import '../modules/auth/register/views/register_view.dart';
 import '../modules/chats/bindings/chats_binding.dart';
 import '../modules/chats/views/chats_view.dart';
+import '../modules/details/bindings/details_binding.dart';
+import '../modules/details/views/details_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/liked_teachers/bindings/liked_teachers_binding.dart';
@@ -17,6 +17,10 @@ import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/profile_settings/bindings/profile_settings_bindings.dart';
 import '../modules/profile/profile_settings/views/profile_settings_view.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/teachers_nearby/bindings/teachers_nearby_binding.dart';
+import '../modules/teachers_nearby/views/teachers_nearby_view.dart';
+
+// ignore_for_file: constant_identifier_names
 
 part 'app_routes.dart';
 
@@ -71,6 +75,11 @@ class AppPages {
       name: _Paths.LIKED_TEACHERS,
       page: () => const LikedTeachersView(),
       binding: LikedTeachersBinding(),
+    ),
+    GetPage(
+      name: _Paths.TEACHERS_NEARBY,
+      page: () => TeachersNearbyView(),
+      binding: TeachersNearbyBinding(),
     ),
   ];
 }

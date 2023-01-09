@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import '../controllers/register_controller.dart';
 
@@ -13,6 +14,7 @@ class RegisterView extends GetView<RegisterController> {
     Get.lazyPut(
       () => RegisterController(),
     );
+    initializeDateFormatting();
 
     return Scaffold(
       body: CustomScrollView(

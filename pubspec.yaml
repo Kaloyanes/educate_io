@@ -6,6 +6,7 @@ environment:
   sdk: ">=2.18.0-106.0.dev <4.0.0"
 
 dependencies:
+  bottom_sheet: ^3.1.2
   cached_network_image: ^3.2.3
   cloud_firestore: ^4.3.0
   crop_your_image:
@@ -24,8 +25,10 @@ dependencies:
   flutter_phone_direct_caller: ^2.1.1
   flutter_speed_dial: ^6.2.0
   flutter_svg: ^1.1.6
+  geolocator: ^9.0.2
   get: 4.6.5
   google_fonts: ^3.0.1
+  google_maps_flutter: ^2.2.3
   google_sign_in: ^5.4.2
   image: ^4.0.6
   image_picker: 0.8.6
@@ -42,6 +45,7 @@ flutter:
   assets:
     - assets/images/google_logo.svg
   uses-material-design: true
+
 # flutter_native_splash:
 #   image: assets/light_mode.png
 #   color: "#ffffff"

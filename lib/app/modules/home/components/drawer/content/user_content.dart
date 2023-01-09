@@ -23,6 +23,11 @@ class UserContent extends StatelessWidget {
           label: "Чатове",
           onTap: () => Get.toNamed(Routes.CHATS),
         ),
+        DrawerDestination(
+          icon: Icons.person_pin_circle,
+          label: "Учители на близо",
+          onTap: () => Get.toNamed(Routes.TEACHERS_NEARBY),
+        ),
         const Spacer(),
         DrawerDestination(
           icon: Icons.person,

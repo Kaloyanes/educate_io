@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
+import 'package:educate_io/app/modules/chats/bindings/chats_binding.dart';
+import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
 import 'package:educate_io/app/modules/chats/views/chat_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +21,7 @@ class ChatsView extends GetView<ChatsController> {
           centerTitle: true,
         ),
         body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection("chats")
-              .orderBy("messages", descending: true)
-              .snapshots(),
+          stream: FirebaseFirestore.instance.collection("chats").snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting ||
                 snapshot.data == null) {
@@ -58,8 +57,7 @@ class ChatsView extends GetView<ChatsController> {
                       .doc(otherPersonids)
                       .get(),
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData ||
-                        snapshot.connectionState == ConnectionState.waiting) {
+                    if (!snapshot.hasData) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
@@ -81,16 +79,18 @@ class ChatsView extends GetView<ChatsController> {
                                 fromHeroContext,
                                 toHeroContext) =>
                             toHeroContext.widget,
-                        tag: teacher.uid ?? "teacher-name",
+                        tag: doc.id,
                         child: Text(
                           teacher.name,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
-                      onTap: () => Get.to(
-                        () => ChatView(teacher),
-                        preventDuplicates: true,
-                      ),
+                      onTap: () async {
+                        Get.to(
+                          () => const ChatView(),
+                          arguments: {"docId": doc.id, "teacher": teacher},
+                        );
+                      },
                     );
                   },
                 );
