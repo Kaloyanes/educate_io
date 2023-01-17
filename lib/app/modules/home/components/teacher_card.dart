@@ -6,12 +6,19 @@ import 'package:get/get.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 
 class TeacherCard extends StatelessWidget {
-  const TeacherCard({Key? key, required this.teacher}) : super(key: key);
+  const TeacherCard({Key? key, required this.teacher, required this.subject})
+      : super(key: key);
 
+  final String subject;
   final Teacher teacher;
 
   void goToDetails() {
-    Get.to(() => DetailsView(teacher), curve: Curves.easeInOutExpo);
+    Get.to(
+      () => const DetailsView(),
+      arguments: {
+        "teacher": teacher,
+      },
+    );
   }
 
   @override
@@ -24,7 +31,7 @@ class TeacherCard extends StatelessWidget {
       onTap: () => goToDetails(),
       child: Padding(
         // padding: EdgeInsets.zero,
-        padding: const EdgeInsets.only(bottom: 10.0, left: 5, right: 5),
+        padding: const EdgeInsets.only(left: 5, right: 5),
         child: Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -78,8 +85,12 @@ class TeacherCard extends StatelessWidget {
                     .copyWith(fontSize: 20),
               ),
               Text(
-                teacher.subjects[0],
+                subject,
                 style: Get.textTheme.titleMedium,
+              ),
+              Text(
+                teacher.role == "teacher" ? "Учител" : "Ученик",
+                style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
           ),

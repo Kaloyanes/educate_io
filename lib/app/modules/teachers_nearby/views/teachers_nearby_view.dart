@@ -59,44 +59,49 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
             );
           }
 
-          return GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: snapshot.data ??
-                  const LatLng(37.42796133580664, -122.085749655962),
-              zoom: 16,
-            ),
-            zoomControlsEnabled: false,
-            onMapCreated: (mapController) =>
-                controller.configureMap(mapController),
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            zoomGesturesEnabled: true,
-            rotateGesturesEnabled: false,
-            compassEnabled: false,
-            mapToolbarEnabled: false,
-            markers: controller.teachers
-                .map(
-                  (latlng) => Marker(
-                    markerId: MarkerId(latlng.toString()),
-                    position: latlng,
-                    flat: false,
-                    icon: BitmapDescriptor.defaultMarkerWithHue(
-                        BitmapDescriptor.hueMagenta),
-                    onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: Colors.grey.shade800,
-                        content: const Text(
-                          "Учител",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+          return Obx(() {
+            if (!controller.isVisible.value) return Container();
+
+            return GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: snapshot.data ??
+                    const LatLng(37.42796133580664, -122.085749655962),
+                zoom: 16,
+              ),
+              zoomControlsEnabled: false,
+              onMapCreated: (mapController) =>
+                  controller.configureMap(mapController),
+              mapType: MapType.normal,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              zoomGesturesEnabled: true,
+              rotateGesturesEnabled: false,
+              compassEnabled: false,
+              mapToolbarEnabled: false,
+              onCameraMove: (position) {},
+              markers: controller.teachers
+                  .map(
+                    (latlng) => Marker(
+                      markerId: MarkerId(latlng.toString()),
+                      position: latlng,
+                      flat: false,
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                          BitmapDescriptor.hueMagenta),
+                      onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.grey.shade800,
+                          content: const Text(
+                            "Учител",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
                         ),
                       ),
+                      consumeTapEvents: false,
                     ),
-                    consumeTapEvents: false,
-                  ),
-                )
-                .toSet(),
-          );
+                  )
+                  .toSet(),
+            );
+          });
         },
       ),
     );

@@ -1,11 +1,9 @@
-import 'dart:async';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/chats/components/chat_message.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
-import 'package:educate_io/app/modules/chats/models/message_model.dart';
+import 'package:educate_io/app/models/message_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,17 +21,22 @@ class ChatView extends GetView<ChatController> {
 
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 40,
         title: Row(
           children: [
             Hero(
-              tag: controller.teacher.photoUrl,
+              flightShuttleBuilder: (flightContext, animation, flightDirection,
+                      fromHeroContext, toHeroContext) =>
+                  fromHeroContext.widget,
+              tag: (Get.arguments["docId"] as String).substring(10),
               child: CircleAvatar(
                 foregroundImage:
-                    CachedNetworkImageProvider(controller.teacher.photoUrl),
+                    CachedNetworkImageProvider(Get.arguments["photoUrl"] ?? ""),
+                child: Text(Get.arguments["initials"]),
               ),
             ),
             const SizedBox(
-              width: 20,
+              width: 15,
             ),
             Hero(
               flightShuttleBuilder: (flightContext, animation, flightDirection,
@@ -41,12 +44,11 @@ class ChatView extends GetView<ChatController> {
                   fromHeroContext.widget,
               tag: Get.arguments["docId"],
               child: Text(
-                controller.teacher.name,
+                Get.arguments["name"],
               ),
             ),
           ],
         ),
-        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -56,30 +58,32 @@ class ChatView extends GetView<ChatController> {
               builder: (context, snapshot) {
                 if (!snapshot.hasData ||
                     snapshot.connectionState == ConnectionState.waiting) {
-                  return Container();
+                  return const Center(child: CircularProgressIndicator());
                 }
-                var doc = snapshot.data!.docs.last;
 
+                controller.messages.removeWhere((element) =>
+                    element.msgId == snapshot.data!.docChanges.first.doc.id);
+
+                var doc = snapshot.data!.docs.last;
                 var data = doc.data();
 
-                if (doc.data().isEmpty || doc.id == "example") {
+                if (data.isEmpty || doc.id == "example") {
                   return Container();
                 }
-
-                print("new message");
 
                 data.addAll({"msgId": doc.id});
 
                 var msg = Message.fromMap(data);
 
-                if (controller.messages.isEmpty ||
-                    msg != controller.messages.last) {
-                  printInfo(info: "new message 100%");
-                  controller.messages.add(msg);
-                }
+                controller.messages.addIf(
+                  !controller.messages.contains(msg),
+                  msg,
+                );
 
                 return Obx(
                   () => CupertinoScrollbar(
+                    thicknessWhileDragging: 5,
+                    controller: controller.listController,
                     child: ListView.builder(
                       reverse: true,
                       controller: controller.listController,
@@ -87,11 +91,13 @@ class ChatView extends GetView<ChatController> {
                       itemBuilder: (context, index) {
                         var item =
                             controller.messages.reversed.elementAt(index);
+                        bool isMessageMine = item.sender ==
+                            FirebaseAuth.instance.currentUser!.uid;
 
                         return ChatMessage(
+                          doc: controller.collection.doc(item.msgId),
                           message: item,
-                          ownMessage: item.sender ==
-                              FirebaseAuth.instance.currentUser!.uid,
+                          ownMessage: isMessageMine,
                         );
                       },
                     ),

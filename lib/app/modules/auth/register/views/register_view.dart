@@ -40,7 +40,7 @@ class RegisterView extends GetView<RegisterController> {
                     const SizedBox(
                       height: 20,
                     ),
-                    registerForm(),
+                    controller.registerForm(false),
                     const SizedBox(
                       height: 30,
                     ),
@@ -101,15 +101,30 @@ class RegisterView extends GetView<RegisterController> {
           ),
 
           // Role selection
+          // Рождена дата
+          controller.birthDayField(),
+          const SizedBox(
+            height: 15,
+          ),
+          controller.phoneField(),
+          const SizedBox(
+            height: 15,
+          ),
           controller.roleSelectionField(),
           const SizedBox(
             height: 15,
           ),
-          // Рождена дата
-          controller.birthDayField(),
+          Obx(() {
+            if (controller.role.value == "teacher") {
+              return controller.teacherSettings();
+            }
 
-          // Teacher categories
-          controller.teacherSettings(),
+            if (controller.role.value == "student") {
+              return controller.studentSettings();
+            }
+
+            return Container();
+          }),
         ],
       ),
     );

@@ -1,6 +1,12 @@
+import 'dart:developer';
+
 import 'package:educate_io/app/modules/home/components/drawer/content/anon_content.dart';
 import 'package:educate_io/app/modules/home/components/drawer/content/user_content.dart';
+import 'package:educate_io/app/modules/home/components/drawer/drawer_destination.dart';
+import 'package:educate_io/app/routes/app_pages.dart';
+import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,55 +24,51 @@ class _DrawerComponentState extends State<DrawerComponent> {
 
   @override
   void initState() {
-    authStream = FirebaseAuth.instance.authStateChanges();
     super.initState();
+    authStream = FirebaseAuth.instance.authStateChanges();
   }
 
   @override
   Widget build(BuildContext context) {
-    return NavigationDrawer(
-      selectedIndex: -1,
-      children: [
-        SizedBox(
-          height: Get.mediaQuery.padding.top + 20,
+    return Drawer(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(
+          right: Radius.circular(50),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Text(
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: Get.mediaQuery.padding.top + 20,
+          ),
+          Text(
             "EducateIO",
             style: TextStyle(
               fontSize: 30,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-        ),
-        // Content
 
-        Expanded(
-          child: StreamBuilder(
-            stream: authStream,
-            initialData: FirebaseAuth.instance.currentUser,
+          // Content
+          StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              }
-
               if (snapshot.hasError) {
                 return const CircularProgressIndicator();
               }
 
               if (snapshot.hasData) {
                 return const UserContent();
-              } else {
-                return const AnonContent();
               }
+
+              return const AnonContent();
             },
           ),
-        ),
-        SizedBox(
-          height: Get.mediaQuery.padding.bottom,
-        ),
-      ],
+          SizedBox(
+            height: Get.mediaQuery.padding.bottom,
+          ),
+        ],
+      ),
     );
   }
 }

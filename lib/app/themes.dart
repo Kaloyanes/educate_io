@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 class Themes {
@@ -5,8 +6,6 @@ class Themes {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colors,
-      // snackBarTheme:
-      //     const SnackBarThemeData(behavior: SnackBarBehavior.floating),
       appBarTheme: AppBarTheme(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(0),

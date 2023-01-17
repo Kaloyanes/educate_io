@@ -12,7 +12,7 @@ class DrawerDestination extends StatelessWidget {
   final GestureTapCallback onTap;
 
   @override
-  Padding build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: ListTile(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
@@ -21,10 +23,13 @@ class ChatsView extends GetView<ChatsController> {
           centerTitle: true,
         ),
         body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection("chats").snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection("chats")
+              .orderBy("lastMessage", descending: true)
+              .snapshots(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting ||
-                snapshot.data == null) {
+            if (snapshot.data == null ||
+                snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
             }
 
@@ -32,7 +37,6 @@ class ChatsView extends GetView<ChatsController> {
               (element) =>
                   element.id.contains(FirebaseAuth.instance.currentUser!.uid),
             );
-
             if (user.isEmpty) {
               return const Center(
                 child: Text("Няма чатове"),
@@ -45,7 +49,6 @@ class ChatsView extends GetView<ChatsController> {
                 var doc = user.elementAt(index);
 
                 var ids = doc.id.split(".");
-
                 var otherPersonids =
                     ids[0] == FirebaseAuth.instance.currentUser!.uid
                         ? ids[1]
@@ -57,19 +60,33 @@ class ChatsView extends GetView<ChatsController> {
                       .doc(otherPersonids)
                       .get(),
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
+                    if (snapshot.data == null ||
+                        snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    var teacherData = snapshot.data!.data()!;
-                    var teacher = Teacher.fromMap(teacherData);
+                    var personData = snapshot.data!.data() ?? {};
+
+                    if (personData.isEmpty) {
+                      return Container();
+                    }
+
+                    personData.addAll({"uid": otherPersonids});
+                    String initials = "";
+
+                    if (personData["photoUrl"] == null) {
+                      personData["name"].split(' ').forEach((element) {
+                        initials += element[0];
+                      });
+                    }
 
                     return ListTile(
                       leading: Hero(
-                        tag: teacher.photoUrl,
+                        tag: doc.id.substring(10),
                         child: CircleAvatar(
-                          foregroundImage:
-                              CachedNetworkImageProvider(teacher.photoUrl),
+                          foregroundImage: CachedNetworkImageProvider(
+                              personData["photoUrl"] ?? ""),
+                          child: Text(initials),
                         ),
                       ),
                       title: Hero(
@@ -81,14 +98,19 @@ class ChatsView extends GetView<ChatsController> {
                             toHeroContext.widget,
                         tag: doc.id,
                         child: Text(
-                          teacher.name,
+                          personData["name"] ?? "",
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
                       onTap: () async {
                         Get.to(
                           () => const ChatView(),
-                          arguments: {"docId": doc.id, "teacher": teacher},
+                          arguments: {
+                            "docId": doc.id,
+                            "photoUrl": personData["photoUrl"],
+                            "initials": initials,
+                            "name": personData["name"],
+                          },
                         );
                       },
                     );

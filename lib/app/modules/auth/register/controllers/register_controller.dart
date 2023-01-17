@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -56,11 +57,15 @@ class RegisterController extends GetxController {
     ),
   );
   final subjectController = TextEditingController();
+  final badsubjectController = TextEditingController();
   final phoneNumController = TextEditingController();
   final subjects = <String>[].obs;
-  set addSubject(String val) {
-    subjects.add(val.capitalizeFirst!);
-  }
+  set addSubject(String val) => subjects.add(val.capitalizeFirst!);
+
+  final badSubjects = <String>[].obs;
+  set addbadSubject(String val) => badSubjects.add(val.capitalizeFirst!);
+
+  final showProfile = true.obs;
 
   Future<void> changeDate() async {
     FocusScope.of(Get.context!).requestFocus(FocusNode());
@@ -90,12 +95,13 @@ class RegisterController extends GetxController {
       "birthDay": birthDate.value,
       "subjects": subjects,
       "likedTeachers": [],
+      "phone": "+359${phoneNumController.text}",
+      "showProfile": showProfile.value,
     };
 
-    if (role.value.trim() == "teacher") {
+    if (role.value.trim() == "student") {
       data.addAll({
-        "phone": "+359${phoneNumController.text}",
-        "subjects": subjects,
+        "badSubjects": badSubjects,
       });
     }
 
@@ -191,110 +197,216 @@ class RegisterController extends GetxController {
     );
   }
 
-  Obx teacherSettings() {
-    return Obx(() {
-      if (role.value == "teacher") {
-        return Column(
-          children: [
-            const SizedBox(
-              height: 15,
+  Column teacherSettings() {
+    return Column(
+      children: [
+        TextFormField(
+          controller: subjectController,
+          decoration: InputDecoration(
+            label: const Text(
+              "Предмети",
             ),
-            TextFormField(
-              controller: phoneNumController,
-              decoration: const InputDecoration(
-                prefix: Text("+359"),
-                label: Text("Телефонен номер"),
-                prefixIcon: Icon(Icons.phone),
+            hintText: "Програмиране",
+            suffixIcon: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(
+                Icons.add,
               ),
-              keyboardType: TextInputType.phone,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Добавете телефонен номер";
+              onPressed: () {
+                if (subjectController.text.isNotEmpty) {
+                  addSubject = subjectController.text;
+                  subjectController.clear();
+                  return;
                 }
 
-                return null;
+                throw Exception("Category text is empty");
               },
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(
-                  9,
-                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                )
-              ],
             ),
-            const SizedBox(
-              height: 15,
-            ),
-            TextFormField(
-              controller: subjectController,
-              decoration: InputDecoration(
-                label: const Text(
-                  "Предмети",
-                ),
-                hintText: "Програмиране",
-                suffixIcon: IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(
-                    Icons.add,
-                  ),
-                  onPressed: () {
-                    if (subjectController.text.isNotEmpty) {
-                      addSubject = subjectController.text;
-                      subjectController.clear();
-                      return;
-                    }
+            prefixIcon: const Icon(Icons.menu_book),
+          ),
+          validator: (value) {
+            if (subjects.isEmpty) {
+              return "Добави категория";
+            }
 
-                    throw Exception("Category text is empty");
-                  },
+            return null;
+          },
+        ),
+        Obx(() {
+          return ReorderableListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: subjects.length,
+            itemBuilder: (context, index) => ListTile(
+              key: Key("$index"),
+              contentPadding: EdgeInsets.zero,
+              title: Text(subjects[index]),
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.remove,
+                  color: Colors.red,
                 ),
-                prefixIcon: const Icon(Icons.menu_book),
+                onPressed: () => subjects.removeAt(index),
               ),
-              validator: (value) {
-                if (subjects.isEmpty) {
-                  return "Добави категория";
-                }
-
-                return null;
-              },
-            ),
-            Obx(() {
-              return ReorderableListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: subjects.length,
-                itemBuilder: (context, index) => ListTile(
-                  key: Key("$index"),
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(subjects[index]),
-                  leading: IconButton(
-                    icon: const Icon(
-                      Icons.remove,
-                      color: Colors.red,
-                    ),
-                    onPressed: () => subjects.removeAt(index),
-                  ),
-                  trailing: ReorderableDragStartListener(
-                    index: index,
-                    child: const Icon(
-                      Icons.drag_handle,
-                    ),
-                  ),
+              trailing: ReorderableDragStartListener(
+                index: index,
+                child: const Icon(
+                  Icons.drag_handle,
                 ),
-                onReorder: (int oldIndex, int newIndex) {
-                  if (oldIndex < newIndex) {
-                    newIndex -= 1;
-                  }
-                  final item = subjects.removeAt(oldIndex);
-                  subjects.insert(newIndex, item);
-                },
-              );
-            }),
-          ],
-        );
-      }
+              ),
+            ),
+            onReorder: (int oldIndex, int newIndex) {
+              if (oldIndex < newIndex) {
+                newIndex -= 1;
+              }
+              final item = subjects.removeAt(oldIndex);
+              subjects.insert(newIndex, item);
+            },
+          );
+        }),
+      ],
+    );
+  }
 
-      return Container();
-    });
+  Column studentSettings() {
+    return Column(children: [
+      Obx(
+        () => SwitchListTile(
+          value: showProfile.value,
+          onChanged: (val) => showProfile.value = val,
+          title: const Text("Да се показва ли профила на други ученици?"),
+        ),
+      ),
+      const SizedBox(
+        height: 15,
+      ),
+      TextFormField(
+        controller: subjectController,
+        onFieldSubmitted: (value) {
+          addSubject = value;
+          subjectController.clear();
+        },
+        decoration: InputDecoration(
+          label: const Text(
+            "Предмети по които си добър",
+          ),
+          hintText: "Програмиране",
+          suffixIcon: IconButton(
+            padding: EdgeInsets.zero,
+            icon: const Icon(
+              Icons.add,
+            ),
+            onPressed: () {
+              if (subjectController.text.isNotEmpty) {
+                addSubject = subjectController.text;
+                subjectController.clear();
+                return;
+              }
+
+              throw Exception("Category text is empty");
+            },
+          ),
+          prefixIcon: const Icon(CupertinoIcons.check_mark),
+        ),
+        validator: (value) {
+          if (subjects.isEmpty && showProfile.value) {
+            return "Добави 1 предмет в който си добър";
+          }
+
+          return null;
+        },
+      ),
+      if (subjects.isNotEmpty)
+        ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: subjects.length,
+          itemBuilder: (context, index) => subjectTile(index, subjects),
+        ),
+      const SizedBox(
+        height: 15,
+      ),
+      TextFormField(
+        controller: badsubjectController,
+        onFieldSubmitted: (value) {
+          addbadSubject = value;
+          badsubjectController.clear();
+        },
+        decoration: InputDecoration(
+          label: const Text(
+            "Предмети по които НЕ си добър",
+          ),
+          hintText: "Програмиране",
+          suffixIcon: IconButton(
+            padding: EdgeInsets.zero,
+            icon: const Icon(
+              Icons.add,
+            ),
+            onPressed: () {
+              if (badsubjectController.text.isNotEmpty) {
+                addbadSubject = badsubjectController.text;
+                badsubjectController.clear();
+                return;
+              }
+
+              throw Exception("Category text is empty");
+            },
+          ),
+          prefixIcon: const Icon(CupertinoIcons.xmark),
+        ),
+        validator: (value) {
+          if (badSubjects.isEmpty && showProfile.value) {
+            return "Добави 1 предмет в който не си добър";
+          }
+
+          return null;
+        },
+      ),
+      if (badSubjects.isNotEmpty)
+        ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: badSubjects.length,
+          itemBuilder: (context, index) => subjectTile(index, badSubjects),
+        ),
+    ]);
+  }
+
+  ListTile subjectTile(int index, List subjects) {
+    return ListTile(
+      contentPadding: EdgeInsets.symmetric(horizontal: 5),
+      title: Text(subjects[index]),
+      trailing: IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: () => subjects.removeAt(index),
+      ),
+    );
+  }
+
+  TextFormField phoneField() {
+    return TextFormField(
+      controller: phoneNumController,
+      decoration: const InputDecoration(
+        prefix: Text("+359"),
+        label: Text("Телефонен номер"),
+        prefixIcon: Icon(Icons.phone),
+      ),
+      keyboardType: TextInputType.phone,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Добавете телефонен номер";
+        }
+
+        return null;
+      },
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(
+          9,
+          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+        )
+      ],
+    );
   }
 
   TextFormField emailField() {
@@ -370,10 +482,6 @@ class RegisterController extends GetxController {
           value: "teacher",
           child: Text("Учител"),
         ),
-        DropdownMenuItem(
-          value: "parent",
-          child: Text("Родител"),
-        ),
       ],
       onChanged: (value) => setRole = value,
     );
@@ -437,6 +545,62 @@ class RegisterController extends GetxController {
           ),
         ),
         obscureText: !showPassword.value,
+      ),
+    );
+  }
+
+  Form registerForm(bool isGoogle) {
+    return Form(
+      key: formKey,
+      child: Column(
+        children: [
+          // Name
+          nameField(),
+          const SizedBox(
+            height: 15,
+          ),
+          // Email
+          if (!isGoogle) emailField(),
+          const SizedBox(
+            height: 15,
+          ),
+          // Password
+          passwordField(),
+          const SizedBox(
+            height: 15,
+          ),
+          // Password verification
+          confirmPasswordField(),
+          const SizedBox(
+            height: 15,
+          ),
+
+          // Role selection
+          // Рождена дата
+          birthDayField(),
+          const SizedBox(
+            height: 15,
+          ),
+          phoneField(),
+          const SizedBox(
+            height: 15,
+          ),
+          roleSelectionField(),
+          const SizedBox(
+            height: 15,
+          ),
+          Obx(() {
+            if (role.value == "teacher") {
+              return teacherSettings();
+            }
+
+            if (role.value == "student") {
+              return studentSettings();
+            }
+
+            return Container();
+          }),
+        ],
       ),
     );
   }

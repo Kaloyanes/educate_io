@@ -21,9 +21,9 @@ class _TeacherSubjectState extends State<TeacherSubject> {
 
     var teachersQuery = await FirebaseFirestore.instance
         .collection("users")
-        .where("role", isEqualTo: "teacher")
         .where("subjects", arrayContains: widget.subject)
         .where("photoUrl", isNull: false)
+        .limit(5)
         .get();
 
     for (var element in teachersQuery.docs) {
@@ -33,7 +33,6 @@ class _TeacherSubjectState extends State<TeacherSubject> {
 
       teachers.add(teacher);
     }
-    (teachers);
     return teachers;
   }
 
@@ -55,27 +54,44 @@ class _TeacherSubjectState extends State<TeacherSubject> {
           height: 15,
         ),
         FutureBuilder(
-          future: getTeachers(),
+          future: FirebaseFirestore.instance
+              .collection("users")
+              .where("subjects", arrayContains: widget.subject)
+              .where("photoUrl", isNull: false)
+              .where("showProfile", isEqualTo: true)
+              .limit(5)
+              .get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-            var list = snapshot.data;
-            (list);
-            if (list == null) {
-              return const Text("null");
+            var list = snapshot.data!.docs;
+
+            if (list.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Center(
+                    child: Text(
+                  "Няма учители или ученици по " + widget.subject,
+                  style: Theme.of(context).textTheme.titleMedium,
+                )),
+              );
             }
 
             return SizedBox(
-              height: 300,
+              height: 330,
               child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: list.length,
-                itemBuilder: (BuildContext context, int index) => TeacherCard(
-                  teacher: list[index],
-                ),
-              ),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: list.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    var data = list.elementAt(index).data();
+
+                    return TeacherCard(
+                      subject: widget.subject,
+                      teacher: Teacher.fromMap(list.elementAt(index).data()),
+                    );
+                  }),
             );
           },
         ),

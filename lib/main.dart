@@ -56,9 +56,7 @@ class App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           scrollBehavior: const CupertinoScrollBehavior(),
           locale: Locale("bg"),
-
           defaultTransition: Transition.native,
-
           popGesture: false,
           // transitionDuration: const Duration(milliseconds: 400),
           smartManagement: SmartManagement.full,

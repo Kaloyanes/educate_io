@@ -34,7 +34,7 @@ class GoogleDataView extends GetView<RegisterController> {
                     const SizedBox(
                       height: 20,
                     ),
-                    googleForm(),
+                    controller.registerForm(true),
                     const SizedBox(
                       height: 30,
                     ),

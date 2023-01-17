@@ -64,6 +64,7 @@ class LikedTeachersView extends GetView<LikedTeachersController> {
                     () => HeroMode(
                       enabled: controller.heroTransition.value,
                       child: TeacherCard(
+                        subject: mapData["subjects"][0],
                         teacher: Teacher.fromMap(mapData),
                       ),
                     ),

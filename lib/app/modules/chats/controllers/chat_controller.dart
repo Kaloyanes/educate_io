@@ -1,27 +1,18 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:educate_io/app/models/message_model.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
-import 'package:educate_io/app/modules/chats/models/chat_model.dart';
-import 'package:educate_io/app/modules/chats/models/message_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChatController extends GetxController {
-  @override
-  void onClose() {
-    messages.clear();
-    super.onClose();
-  }
-
   var collection = FirebaseFirestore.instance
       .collection("chats")
       .doc(Get.arguments["docId"])
       .collection("messages");
-
-  Teacher teacher = Get.arguments["teacher"];
 
   @override
   void onInit() {
@@ -30,8 +21,7 @@ class ChatController extends GetxController {
   }
 
   Future<void> _feedMessages() async {
-    var messageCollection =
-        await collection.orderBy("time", descending: true).get();
+    var messageCollection = await collection.orderBy("time").get();
 
     var msgs = <Message>[];
 
@@ -40,18 +30,28 @@ class ChatController extends GetxController {
       var data = doc.data();
       data.addAll({"msgId": doc.id});
 
-      msgs.add(Message.fromMap(data));
+      var msg = Message.fromMap(data);
+
+      msgs.addIf(!msgs.contains(msg), msg);
     }
 
     messages.addAll(msgs);
+    messages.removeAt(0);
   }
 
   var messages = <Message>[].obs;
 
-  final listController = ScrollController(keepScrollOffset: true);
+  final listController = ScrollController();
   final messageController = TextEditingController();
 
   Future<void> sendMessage() async {
+    FirebaseFirestore.instance
+        .collection("chats")
+        .doc(Get.arguments["docId"])
+        .update({
+      "lastMessage": Timestamp.now(),
+    });
+
     var value = messageController.text;
     if (value.isEmpty) {
       return;
@@ -60,27 +60,13 @@ class ChatController extends GetxController {
 
     collection.add({
       "sender": FirebaseAuth.instance.currentUser!.uid,
-      "value": value.trim(),
+      "value": value,
       "time": Timestamp.fromDate(DateTime.now()),
     });
-  }
-
-  void newMessage(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
-    var data = doc.data();
-
-    if (doc.data().isEmpty) {
-      return;
-    }
-
-    print("new message");
-
-    data.addAll({"msgId": doc.id});
-
-    var msg = Message.fromMap(data);
-
-    if (msg != messages.last) {
-      printInfo(info: "new message 100%");
-      messages.add(msg);
-    }
+    listController.animateTo(
+      0,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeOutExpo,
+    );
   }
 }

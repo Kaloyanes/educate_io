@@ -6,7 +6,6 @@ environment:
   sdk: ">=2.18.0-106.0.dev <4.0.0"
 
 dependencies:
-  bottom_sheet: ^3.1.2
   cached_network_image: ^3.2.3
   cloud_firestore: ^4.3.0
   crop_your_image:
@@ -23,7 +22,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_phone_direct_caller: ^2.1.1
-  flutter_speed_dial: ^6.2.0
+  flutter_rating_bar: ^4.0.1
   flutter_svg: ^1.1.6
   geolocator: ^9.0.2
   get: 4.6.5

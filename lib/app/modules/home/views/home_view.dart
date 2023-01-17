@@ -37,11 +37,8 @@ class HomeView extends GetView<HomeController> {
             initialData: FirebaseAuth.instance.currentUser,
             stream: FirebaseAuth.instance.userChanges(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              }
-
-              if (snapshot.hasError) {
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  snapshot.hasError) {
                 return const CircularProgressIndicator();
               }
 
@@ -52,11 +49,11 @@ class HomeView extends GetView<HomeController> {
                 );
               }
 
-              return StreamBuilder(
-                stream: FirebaseFirestore.instance
+              return FutureBuilder(
+                future: FirebaseFirestore.instance
                     .collection("users")
                     .doc(snapshot.data?.uid ?? "")
-                    .snapshots(),
+                    .get(),
                 builder: (context, snapshot) => FutureBuilder(
                   future: FirestoreProfileService.getUserData(),
                   builder: (context, snapshot) {
@@ -87,8 +84,9 @@ class HomeView extends GetView<HomeController> {
           ),
         )
       ],
-      title: const Text(
-        "Учители",
+      flexibleSpace: FlexibleSpaceBar(
+        title: Text("Учители"),
+        centerTitle: true,
       ),
       stretch: true,
     );
@@ -99,20 +97,41 @@ class HomeView extends GetView<HomeController> {
       child: Column(
         children: <Widget>[
           welcomeText(),
-          const TeacherSubject(
-            subject: "Програмиране",
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          const TeacherSubject(
-            subject: "C# програмиране",
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          const TeacherSubject(
-            subject: "Unity",
+          StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (FirebaseAuth.instance.currentUser == null) {
+                return Column(
+                  children: [
+                    TeacherSubject(subject: "Програмиране"),
+                  ],
+                );
+              }
+
+              return FutureBuilder(
+                future: FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(FirebaseAuth.instance.currentUser?.uid)
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.data == null) {
+                    return Text("maika ti");
+                  }
+
+                  var list =
+                      snapshot.data!.data()?["badSubjects"] as List<dynamic>;
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: list.length,
+                    itemBuilder: (context, index) => TeacherSubject(
+                      subject: list.elementAt(index),
+                    ),
+                  );
+                },
+              );
+            },
           ),
           ElevatedButton(
               onPressed: () => FirebaseAuthService.logOut(),
