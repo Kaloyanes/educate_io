@@ -123,7 +123,9 @@ class DetailsView extends GetView<DetailsController> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                const CategoryCard(category: "Описание", value: ""),
+                if (teacher.description != null)
+                  CategoryCard(
+                      category: "Описание", value: teacher.description!),
                 for (int i = 0; i < teacher.subjects.length; i++)
                   Text(
                     teacher.subjects[i],
@@ -168,39 +170,69 @@ class DetailsView extends GetView<DetailsController> {
                 "id": teacher.uid,
               },
             ),
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                RatingBar.builder(
-                  itemBuilder: (context, index) => Icon(
-                    Icons.star,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  onRatingUpdate: (value) => print(value),
-                  ignoreGestures: true,
-                  allowHalfRating: true,
-                  initialRating: 4.5,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "4.6",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: 20,
-                  ),
-                )
-              ],
-            ),
+            title: FutureBuilder(
+                future: FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(teacher.uid)
+                    .collection("reviews")
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  var docs = snapshot.data!.docs;
+
+                  var rating = 0.0;
+                  if (docs.isNotEmpty) {
+                    for (var element in docs) {
+                      rating += element.data()["rating"] as num;
+                    }
+
+                    rating /= docs.length;
+                  }
+
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RatingBar.builder(
+                            itemBuilder: (context, index) => Icon(
+                              Icons.star,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            onRatingUpdate: (value) => print(value),
+                            ignoreGestures: true,
+                            allowHalfRating: true,
+                            initialRating: rating,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            rating.toStringAsFixed(1),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        "${docs.length} ${docs.length == 1 ? "ревю" : "ревюта"}",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 20,
+                        ),
+                      )
+                    ],
+                  );
+                }),
           ),
-
-          // Column(
-          //   children: [
-          //     for (int i = 0; i < 10; i++)
-
-          //   ],
-          // ),
           const SizedBox(
             height: 20,
           ),

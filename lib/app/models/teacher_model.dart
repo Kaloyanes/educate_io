@@ -9,6 +9,7 @@ class Teacher {
   String email;
   String name;
   String? phone;
+  String? description;
   String photoUrl;
   String role;
   DateTime birthDay;
@@ -19,6 +20,7 @@ class Teacher {
     required this.email,
     required this.name,
     this.phone,
+    this.description,
     required this.photoUrl,
     required this.role,
     required this.birthDay,
@@ -33,9 +35,11 @@ class Teacher {
     String? phone,
     String? photoUrl,
     String? role,
+    double? rating,
     DateTime? birthDay,
     List<String>? subjects,
     List<String>? badSubjects,
+    String? description,
   }) {
     return Teacher(
       uid: uid ?? this.uid,
@@ -47,6 +51,7 @@ class Teacher {
       birthDay: birthDay ?? this.birthDay,
       subjects: subjects ?? this.subjects,
       badSubjects: badSubjects ?? this.badSubjects,
+      description: description ?? this.description,
     );
   }
 
@@ -61,24 +66,26 @@ class Teacher {
       'birthDay': birthDay.millisecondsSinceEpoch,
       'subjects': subjects,
       'badSubjects': badSubjects,
+      'description': description,
     };
   }
 
   factory Teacher.fromMap(Map<String, dynamic> map) {
     return Teacher(
-      uid: map['uid'] != null ? map['uid'] as String : null,
-      email: map['email'] as String,
-      name: map['name'] as String,
-      phone: map['phone'] != null ? map['phone'] as String : null,
-      photoUrl: map['photoUrl'] as String,
-      role: map['role'] as String,
-      birthDay: DateTime.fromMillisecondsSinceEpoch(
-          (map['birthDay'] as Timestamp).millisecondsSinceEpoch),
-      subjects: List.castFrom(map["subjects"] as List),
-      badSubjects: map["badSubjects"] != null
-          ? List.castFrom(map["badSubjects"] as List)
-          : null,
-    );
+        uid: map['uid'] != null ? map['uid'] as String : null,
+        email: map['email'] as String,
+        name: map['name'] as String,
+        phone: map['phone'] != null ? map['phone'] as String : null,
+        photoUrl: map['photoUrl'] as String,
+        role: map['role'] as String,
+        birthDay: DateTime.fromMillisecondsSinceEpoch(
+            (map['birthDay'] as Timestamp).millisecondsSinceEpoch),
+        subjects: List<String>.from(map['subjects'] as List),
+        badSubjects: map['badSubjects'] != null
+            ? List<String>.from((map['badSubjects'] as List))
+            : null,
+        description:
+            map['description'] != null ? map['description'] as String : null);
   }
 
   String toJson() => json.encode(toMap());

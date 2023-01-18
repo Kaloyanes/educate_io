@@ -133,9 +133,6 @@ class HomeView extends GetView<HomeController> {
               );
             },
           ),
-          ElevatedButton(
-              onPressed: () => FirebaseAuthService.logOut(),
-              child: const Text("log out")),
           SizedBox(
             height: Get.mediaQuery.padding.bottom,
           )

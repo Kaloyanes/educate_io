@@ -109,7 +109,7 @@ class ChatView extends GetView<ChatController> {
           BottomAppBar(
             clipBehavior: Clip.hardEdge,
             elevation: 1,
-            height: 120,
+            // height: 120,
             child: Container(
               alignment: Alignment.topCenter,
               child: Row(

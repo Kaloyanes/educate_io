@@ -18,8 +18,9 @@ dependencies:
   firebase_auth: ^4.2.1
   firebase_core: ^2.4.0
   firebase_storage: ^11.0.8
-  flex_color_scheme: ^6.1.2
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
   flutter_phone_direct_caller: ^2.1.1
   flutter_rating_bar: ^4.0.1
@@ -31,9 +32,10 @@ dependencies:
   google_sign_in: ^5.4.2
   image: ^4.0.6
   image_picker: 0.8.6
-  intl: ^0.18.0
+  intl: ^0.17.0
   path: ^1.8.1
   path_provider: 2.0.11
+  
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -44,7 +46,6 @@ flutter:
   assets:
     - assets/images/google_logo.svg
   uses-material-design: true
-
 # flutter_native_splash:
 #   image: assets/light_mode.png
 #   color: "#ffffff"

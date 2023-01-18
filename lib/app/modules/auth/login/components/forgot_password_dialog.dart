@@ -53,7 +53,7 @@ class ForgotPasswordDialog extends StatelessWidget {
 
             await FirebaseAuthService.forgotPassword(forEmailController.text);
 
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
               content: Text("Проверете си пощата"),
               duration: Duration(seconds: 5),
             ));

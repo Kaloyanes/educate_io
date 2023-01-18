@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
@@ -28,11 +27,6 @@ class RegisterController extends GetxController {
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
     ),
   );
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   final formatter = DateFormat.yMd("bg");
 
@@ -374,7 +368,7 @@ class RegisterController extends GetxController {
 
   ListTile subjectTile(int index, List subjects) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 5),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 5),
       title: Text(subjects[index]),
       trailing: IconButton(
         icon: const Icon(Icons.delete),

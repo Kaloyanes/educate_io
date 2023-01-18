@@ -86,10 +86,11 @@ class _TeacherSubjectState extends State<TeacherSubject> {
                   itemCount: list.length,
                   itemBuilder: (BuildContext context, int index) {
                     var data = list.elementAt(index).data();
+                    data.addAll({"uid": list.elementAt(index).id});
 
                     return TeacherCard(
                       subject: widget.subject,
-                      teacher: Teacher.fromMap(list.elementAt(index).data()),
+                      teacher: Teacher.fromMap(data),
                     );
                   }),
             );

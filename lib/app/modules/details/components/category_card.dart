@@ -13,6 +13,7 @@ class CategoryCard extends StatelessWidget {
       child: Column(
         children: [
           Text(category, style: Theme.of(context).textTheme.titleLarge),
+          Divider(),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Center(
