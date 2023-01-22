@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/message_model.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -68,10 +67,9 @@ class ChatMessage extends StatelessWidget {
           );
         },
         onTap: () => HapticFeedback.selectionClick(),
-        child: Container(
+        child: AnimatedContainer(
           padding: const EdgeInsets.all(20),
           width: Get.width / 2,
-          // height: Get.height / 10,
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
@@ -88,6 +86,7 @@ class ChatMessage extends StatelessWidget {
                 ? Theme.of(context).colorScheme.primaryContainer
                 : Theme.of(context).colorScheme.secondaryContainer,
           ),
+          duration: const Duration(milliseconds: 400),
           child: Text(message.value),
         ),
       ),

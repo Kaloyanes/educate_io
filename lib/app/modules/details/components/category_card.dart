@@ -5,20 +5,23 @@ class CategoryCard extends StatelessWidget {
       : super(key: key);
 
   final String category;
-  final String value;
+  final Widget value;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(
         children: [
+          const SizedBox(
+            height: 10,
+          ),
           Text(category, style: Theme.of(context).textTheme.titleLarge),
-          Divider(),
+          const Divider(),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Center(
-                child:
-                    Text(value, style: Theme.of(context).textTheme.bodyLarge)),
+              child: value,
+            ),
           ),
         ],
       ),

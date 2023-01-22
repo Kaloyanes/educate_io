@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/home/components/drawer/drawer_component.dart';
 import 'package:educate_io/app/modules/home/components/teacher_category.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
-import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:educate_io/app/services/database/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -118,8 +117,10 @@ class HomeView extends GetView<HomeController> {
                     return Text("maika ti");
                   }
 
-                  var list =
-                      snapshot.data!.data()?["badSubjects"] as List<dynamic>;
+                  var list = snapshot.data!.data()?[
+                      snapshot.data!.get("role") == "teacher"
+                          ? "subjects"
+                          : "badSubjects"] as List<dynamic>;
 
                   return ListView.builder(
                     shrinkWrap: true,

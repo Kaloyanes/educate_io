@@ -1,12 +1,6 @@
-import 'dart:developer';
-
 import 'package:educate_io/app/modules/home/components/drawer/content/anon_content.dart';
 import 'package:educate_io/app/modules/home/components/drawer/content/user_content.dart';
-import 'package:educate_io/app/modules/home/components/drawer/drawer_destination.dart';
-import 'package:educate_io/app/routes/app_pages.dart';
-import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -31,6 +25,9 @@ class _DrawerComponentState extends State<DrawerComponent> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      width: MediaQuery.of(context).size.width > 600
+          ? MediaQuery.of(context).size.width / 2
+          : MediaQuery.of(context).size.width / 1.4,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.horizontal(
           right: Radius.circular(50),

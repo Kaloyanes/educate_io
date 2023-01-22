@@ -41,6 +41,7 @@ class App extends StatelessWidget {
           const SystemUiOverlayStyle(
             systemNavigationBarColor: Colors.transparent,
             statusBarColor: Colors.transparent,
+            systemNavigationBarContrastEnforced: false,
           ),
         );
         SystemChrome.setPreferredOrientations(
@@ -64,7 +65,6 @@ class App extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          // transitionDuration: const Duration(milliseconds: 400),
           smartManagement: SmartManagement.full,
         );
       },

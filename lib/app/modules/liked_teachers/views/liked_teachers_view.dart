@@ -41,8 +41,11 @@ class LikedTeachersView extends GetView<LikedTeachersController> {
           }
 
           return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, mainAxisExtent: 280, mainAxisSpacing: 15),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+              mainAxisExtent: 300,
+              mainAxisSpacing: 15,
+            ),
             itemCount: data.length,
             itemBuilder: (context, index) {
               return FutureBuilder(

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DetailsController extends GetxController {
-  //TODO: Implement DetailsController
   final Teacher teacher = Get.arguments["teacher"];
 
   Future<void> favoriteTeacher(Teacher teacher) async {

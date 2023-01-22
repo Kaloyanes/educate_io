@@ -10,7 +10,7 @@ abstract class Routes {
   static const LOGIN = _Paths.AUTH + _Paths.LOGIN;
   static const REGISTER = _Paths.AUTH + _Paths.REGISTER;
   static const PROFILE = _Paths.PROFILE;
-  static const PROFILE_SETTINGS = _Paths.PROFILE + _Paths.PROFILE_SETTINGS;
+  static const PROFILE_SETTINGS = _Paths.PROFILE_SETTINGS;
   static const GOOGLE_DATA = _Paths.AUTH + _Paths.GOOGLE_DATA;
   static const CHATS = _Paths.CHATS;
   static const LIKED_TEACHERS = _Paths.LIKED_TEACHERS;

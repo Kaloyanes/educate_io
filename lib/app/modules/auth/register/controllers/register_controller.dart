@@ -122,7 +122,7 @@ class RegisterController extends GetxController {
     } finally {
       ScaffoldMessenger.of(Get.context!).showSnackBar(
         const SnackBar(
-          content: Text("Вече можете да си влезете в акаунта"),
+          content: Text("Влязохте в акаунта си"),
         ),
       );
       Get.offAllNamed(Routes.HOME);
@@ -142,12 +142,14 @@ class RegisterController extends GetxController {
       "name": nameController.text.trim(),
       "role": role.value.trim(),
       "likedTeachers": [],
+      "phone": "+359${phoneNumController.text}",
+      "showProfile": showProfile.value,
+      "subjects": subjects,
     };
 
-    if (role.value.trim() == "teacher") {
+    if (role.value.trim() == "student") {
       data.addAll({
-        "phone": "+359${phoneNumController.text}",
-        "subjects": subjects,
+        "badSubjects": badSubjects,
       });
     }
 
@@ -292,7 +294,7 @@ class RegisterController extends GetxController {
             ),
             onPressed: () {
               if (subjectController.text.isNotEmpty) {
-                addSubject = subjectController.text;
+                addSubject = subjectController.text.trim();
                 subjectController.clear();
                 return;
               }

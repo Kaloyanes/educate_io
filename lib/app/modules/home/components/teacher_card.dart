@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/details/views/details_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'package:educate_io/app/models/teacher_model.dart';
 
 class TeacherCard extends StatelessWidget {
   const TeacherCard({Key? key, required this.teacher, required this.subject})

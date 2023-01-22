@@ -40,6 +40,7 @@ class DetailsView extends GetView<DetailsController> {
         ]),
       ),
       bottomNavigationBar: BottomAppBar(
+        height: MediaQuery.of(context).padding.bottom + 60,
         child: Row(
           children: [
             favouriteButton(),
@@ -106,6 +107,7 @@ class DetailsView extends GetView<DetailsController> {
                   borderRadius: BorderRadius.circular(20),
                   child: Image(
                     fit: BoxFit.fitWidth,
+                    width: 350,
                     image: imageProvider,
                   ),
                 ),
@@ -125,39 +127,52 @@ class DetailsView extends GetView<DetailsController> {
               children: [
                 if (teacher.description != null)
                   CategoryCard(
-                      category: "Описание", value: teacher.description!),
-                for (int i = 0; i < teacher.subjects.length; i++)
-                  Text(
-                    teacher.subjects[i],
-                    style: Get.textTheme.headlineSmall,
+                    category: "Описание",
+                    value: Text(
+                      teacher.description!,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (teacher.badSubjects != null)
+                      Expanded(
+                        child: CategoryCard(
+                          category: "Търси",
+                          value: Column(
+                            children: [
+                              for (var badSubject in teacher.badSubjects!)
+                                Text(
+                                  badSubject,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                )
+                            ],
+                          ),
+                        ),
+                      ),
+                    Expanded(
+                      child: CategoryCard(
+                        category: "Обучава",
+                        value: Column(
+                          children: [
+                            for (var subject in teacher.subjects)
+                              Text(
+                                subject,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(
                   height: 10,
                 ),
               ],
-            ),
-          ),
-          GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-            ),
-            itemCount: 5,
-            itemBuilder: (context, index) => Center(
-              child: Card(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(CupertinoIcons.money_dollar),
-                      const Text("200"),
-                    ],
-                  ),
-                ),
-              ),
             ),
           ),
           const SizedBox(

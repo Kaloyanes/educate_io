@@ -1,3 +1,5 @@
+import 'package:educate_io/app/modules/profile_settings/bindings/profile_settings_bindings.dart';
+import 'package:educate_io/app/modules/profile_settings/views/profile_settings_view.dart';
 import 'package:get/get.dart';
 
 import '../middleware/auth_middleware.dart';
@@ -7,15 +9,11 @@ import '../modules/auth/register/bindings/register_binding.dart';
 import '../modules/auth/register/views/register_view.dart';
 import '../modules/chats/bindings/chats_binding.dart';
 import '../modules/chats/views/chats_view.dart';
-import '../modules/details/bindings/details_binding.dart';
-import '../modules/details/views/details_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/liked_teachers/bindings/liked_teachers_binding.dart';
 import '../modules/liked_teachers/views/liked_teachers_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
-import '../modules/profile/profile_settings/bindings/profile_settings_bindings.dart';
-import '../modules/profile/profile_settings/views/profile_settings_view.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/teachers_nearby/bindings/teachers_nearby_binding.dart';
 import '../modules/teachers_nearby/views/teachers_nearby_view.dart';
@@ -58,13 +56,12 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
-      children: [
-        GetPage(
-          name: _Paths.PROFILE_SETTINGS,
-          page: () => const ProfileSettingsView(),
-          binding: ProfileSettingsBinding(),
-        ),
-      ],
+      children: [],
+    ),
+    GetPage(
+      name: _Paths.PROFILE_SETTINGS,
+      page: () => const ProfileSettingsView(),
+      binding: ProfileSettingsBinding(),
     ),
     GetPage(
       name: _Paths.CHATS,
