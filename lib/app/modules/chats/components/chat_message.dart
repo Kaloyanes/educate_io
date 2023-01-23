@@ -4,9 +4,10 @@ import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class ChatMessage extends StatelessWidget {
-  const ChatMessage(
+  ChatMessage(
       {super.key,
       required this.message,
       required this.ownMessage,
@@ -15,6 +16,8 @@ class ChatMessage extends StatelessWidget {
   final Message message;
   final bool ownMessage;
   final DocumentReference doc;
+
+  DateFormat formatter = DateFormat("H:m \nd/MM");
 
   @override
   Widget build(BuildContext context) {
@@ -67,27 +70,46 @@ class ChatMessage extends StatelessWidget {
           );
         },
         onTap: () => HapticFeedback.selectionClick(),
-        child: AnimatedContainer(
-          padding: const EdgeInsets.all(20),
-          width: Get.width / 2,
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: ownMessage
-                  ? const Radius.circular(40)
-                  : const Radius.circular(10),
-              bottomRight: const Radius.circular(40),
-              topLeft: const Radius.circular(40),
-              topRight: ownMessage
-                  ? const Radius.circular(10)
-                  : const Radius.circular(40),
-            ),
-            color: ownMessage
-                ? Theme.of(context).colorScheme.primaryContainer
-                : Theme.of(context).colorScheme.secondaryContainer,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 7),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment:
+                ownMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: ownMessage
+                        ? const Radius.circular(40)
+                        : const Radius.circular(10),
+                    bottomRight: const Radius.circular(40),
+                    topLeft: const Radius.circular(40),
+                    topRight: ownMessage
+                        ? const Radius.circular(10)
+                        : const Radius.circular(40),
+                  ),
+                  color: ownMessage
+                      ? Theme.of(context).colorScheme.primaryContainer
+                      : Theme.of(context).colorScheme.secondaryContainer,
+                ),
+                child: Text(
+                  message.value,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Align(
+                alignment:
+                    ownMessage ? Alignment.centerRight : Alignment.centerLeft,
+                child: Text(
+                  formatter.format(message.time),
+                  textAlign: ownMessage ? TextAlign.right : TextAlign.left,
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+              ),
+            ],
           ),
-          duration: const Duration(milliseconds: 400),
-          child: Text(message.value),
         ),
       ),
     );

@@ -1,14 +1,8 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/models/teacher_model.dart';
-import 'package:educate_io/app/modules/chats/bindings/chats_binding.dart';
-import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
 import 'package:educate_io/app/modules/chats/views/chat_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 import '../controllers/chats_controller.dart';
@@ -82,7 +76,7 @@ class ChatsView extends GetView<ChatsController> {
 
                     return ListTile(
                       leading: Hero(
-                        tag: doc.id.substring(10),
+                        tag: personData["photoUrl"],
                         child: CircleAvatar(
                           foregroundImage: CachedNetworkImageProvider(
                               personData["photoUrl"] ?? ""),

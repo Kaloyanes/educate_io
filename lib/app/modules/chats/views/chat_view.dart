@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/message_model.dart';
 import 'package:educate_io/app/modules/chats/components/chat_message.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
@@ -25,11 +26,11 @@ class ChatView extends GetView<ChatController> {
               flightShuttleBuilder: (flightContext, animation, flightDirection,
                       fromHeroContext, toHeroContext) =>
                   fromHeroContext.widget,
-              tag: (Get.arguments["docId"] as String).substring(10),
+              tag: controller.photoUrl,
               child: CircleAvatar(
                 foregroundImage:
-                    CachedNetworkImageProvider(Get.arguments["photoUrl"] ?? ""),
-                child: Text(Get.arguments["initials"]),
+                    CachedNetworkImageProvider(controller.photoUrl ?? ""),
+                child: Text(controller.initials),
               ),
             ),
             const SizedBox(
@@ -39,9 +40,9 @@ class ChatView extends GetView<ChatController> {
               flightShuttleBuilder: (flightContext, animation, flightDirection,
                       fromHeroContext, toHeroContext) =>
                   fromHeroContext.widget,
-              tag: Get.arguments["docId"],
+              tag: controller.docId,
               child: Text(
-                Get.arguments["name"],
+                controller.name,
               ),
             ),
           ],
@@ -58,24 +59,21 @@ class ChatView extends GetView<ChatController> {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                controller.messages.removeWhere((element) =>
-                    element.msgId == snapshot.data!.docChanges.first.doc.id);
+                var lastDoc = snapshot.data!.docChanges.last;
+                var data = lastDoc.doc.data()!;
 
-                var doc = snapshot.data!.docs.last;
-                var data = doc.data();
+                data.addAll({"msgId": lastDoc.doc.id});
+                var message = Message.fromMap(data);
 
-                if (data.isEmpty || doc.id == "example") {
-                  return Container();
+                switch (lastDoc.type) {
+                  case DocumentChangeType.added:
+                    controller.messages.add(message);
+                    break;
+
+                  case DocumentChangeType.removed:
+                    controller.messages.remove(message);
+                    break;
                 }
-
-                data.addAll({"msgId": doc.id});
-
-                var msg = Message.fromMap(data);
-
-                controller.messages.addIf(
-                  !controller.messages.contains(msg),
-                  msg,
-                );
 
                 return Obx(
                   () => CupertinoScrollbar(
@@ -113,10 +111,6 @@ class ChatView extends GetView<ChatController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // IconButton(
-                  //   onPressed: () => controller.sendMessage(),
-                  //   icon: const Icon(Icons.camera_alt),
-                  // ),
                   Flexible(
                     flex: 1,
                     fit: FlexFit.loose,

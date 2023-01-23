@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/message_model.dart';
-import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,9 +12,18 @@ class ChatController extends GetxController {
       .doc(Get.arguments["docId"])
       .collection("messages");
 
+  late String photoUrl;
+  late String docId;
+  late String name;
+  late String initials;
+
   @override
   void onInit() {
     _feedMessages();
+    photoUrl = Get.arguments["photoUrl"];
+    docId = Get.arguments["docId"];
+    name = Get.arguments["name"];
+    initials = Get.arguments["initials"];
     super.onInit();
   }
 
@@ -36,7 +43,6 @@ class ChatController extends GetxController {
     }
 
     messages.addAll(msgs);
-    messages.removeAt(0);
   }
 
   var messages = <Message>[].obs;
@@ -60,7 +66,7 @@ class ChatController extends GetxController {
 
     collection.add({
       "sender": FirebaseAuth.instance.currentUser!.uid,
-      "value": value,
+      "value": value.trim(),
       "time": Timestamp.fromDate(DateTime.now()),
     });
     listController.animateTo(
