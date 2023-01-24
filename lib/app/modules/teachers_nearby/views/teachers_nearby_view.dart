@@ -1,10 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:educate_io/app/modules/teachers_nearby/components/filter_bottom_sheet.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -59,10 +54,8 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
             );
           }
 
-          return Obx(() {
-            if (!controller.isVisible.value) return Container();
-
-            return GoogleMap(
+          return Obx(
+            () => GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: snapshot.data ??
                     const LatLng(37.42796133580664, -122.085749655962),
@@ -78,32 +71,14 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
               rotateGesturesEnabled: false,
               compassEnabled: false,
               mapToolbarEnabled: false,
-              onCameraMove: (position) {},
-              markers: controller.teachers
-                  .map(
-                    (latlng) => Marker(
-                      markerId: MarkerId(latlng.toString()),
-                      position: latlng,
-                      flat: false,
-                      icon: BitmapDescriptor.defaultMarkerWithHue(
-                          BitmapDescriptor.hueMagenta),
-                      onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Colors.grey.shade800,
-                          content: const Text(
-                            "Учител",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                        ),
-                      ),
-                      consumeTapEvents: false,
-                    ),
-                  )
-                  .toSet(),
-            );
-          });
+              markers: controller.markers.toSet(),
+            ),
+          );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => controller.centerCamera(),
+          child: Icon(Icons.navigation_rounded)),
     );
   }
 }

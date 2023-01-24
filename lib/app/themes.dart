@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class Themes {
   static ThemeData theme(ColorScheme colors) {
@@ -14,6 +13,21 @@ class Themes {
           scrolledUnderElevation: 1),
       bottomAppBarTheme: const BottomAppBarTheme(
         elevation: 1,
+      ),
+      snackBarTheme: SnackBarThemeData(
+        insetPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+        // behavior: SnackBarBehavior.floating,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          side: BorderSide(
+            width: 1,
+            color: Colors.white,
+          ),
+        ),
+
+        backgroundColor: colors.background,
+        contentTextStyle:
+            const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,

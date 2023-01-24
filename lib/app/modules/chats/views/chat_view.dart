@@ -51,55 +51,58 @@ class ChatView extends GetView<ChatController> {
       body: Column(
         children: [
           Expanded(
-            child: StreamBuilder(
-              stream: controller.collection.orderBy("time").snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData ||
-                    snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            child: Obx(() {
+              return StreamBuilder(
+                stream: controller.collectionStream.value,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData ||
+                      snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                var lastDoc = snapshot.data!.docChanges.last;
-                var data = lastDoc.doc.data()!;
+                  var lastDoc = snapshot.data!.docChanges.last;
+                  var data = lastDoc.doc.data()!;
 
-                data.addAll({"msgId": lastDoc.doc.id});
-                var message = Message.fromMap(data);
+                  data.addAll({"msgId": lastDoc.doc.id});
+                  var message = Message.fromMap(data);
 
-                switch (lastDoc.type) {
-                  case DocumentChangeType.added:
-                    controller.messages.add(message);
-                    break;
+                  switch (lastDoc.type) {
+                    case DocumentChangeType.added:
+                      controller.messages.addIf(
+                          !controller.messages.contains(message), message);
+                      break;
 
-                  case DocumentChangeType.removed:
-                    controller.messages.remove(message);
-                    break;
-                }
+                    case DocumentChangeType.removed:
+                      controller.messages.remove(message);
+                      break;
+                  }
 
-                return Obx(
-                  () => CupertinoScrollbar(
-                    thicknessWhileDragging: 5,
-                    controller: controller.listController,
-                    child: ListView.builder(
-                      reverse: true,
+                  return Obx(
+                    () => CupertinoScrollbar(
+                      thicknessWhileDragging: 5,
                       controller: controller.listController,
-                      itemCount: controller.messages.length,
-                      itemBuilder: (context, index) {
-                        var item =
-                            controller.messages.reversed.elementAt(index);
-                        bool isMessageMine = item.sender ==
-                            FirebaseAuth.instance.currentUser!.uid;
+                      child: ListView.builder(
+                        reverse: true,
+                        controller: controller.listController,
+                        itemCount: controller.messages.length,
+                        itemBuilder: (context, index) {
+                          var item =
+                              controller.messages.reversed.elementAt(index);
+                          bool isMessageMine = item.sender ==
+                              FirebaseAuth.instance.currentUser!.uid;
 
-                        return ChatMessage(
-                          doc: controller.collection.doc(item.msgId),
-                          message: item,
-                          ownMessage: isMessageMine,
-                        );
-                      },
+                          return ChatMessage(
+                            doc: controller.collection.doc(item.msgId),
+                            message: item,
+                            ownMessage: isMessageMine,
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
+                  );
+                },
+              );
+            }),
           ),
           BottomAppBar(
             clipBehavior: Clip.hardEdge,

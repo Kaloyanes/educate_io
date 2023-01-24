@@ -23,7 +23,6 @@ class _TeacherSubjectState extends State<TeacherSubject> {
         .collection("users")
         .where("subjects", arrayContains: widget.subject)
         .where("photoUrl", isNull: false)
-        .limit(5)
         .get();
 
     for (var element in teachersQuery.docs) {
@@ -59,7 +58,7 @@ class _TeacherSubjectState extends State<TeacherSubject> {
               .where("subjects", arrayContains: widget.subject)
               .where("photoUrl", isNull: false)
               .where("showProfile", isEqualTo: true)
-              .limit(5)
+              .limit(10)
               .get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:educate_io/app/services/database/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -94,13 +93,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
                 height: 10,
               ),
               TextButton(
-                onPressed: () async {
-                  await FirebaseAuthService.forgotPassword(
-                      controller.emailController.text);
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Проверете си имейла")));
-                },
+                onPressed: () => controller.forgotPassword(),
                 child: const Text("Промени паролата"),
               ),
               TextButton(

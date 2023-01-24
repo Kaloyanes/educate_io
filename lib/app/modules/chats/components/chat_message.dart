@@ -17,7 +17,7 @@ class ChatMessage extends StatelessWidget {
   final bool ownMessage;
   final DocumentReference doc;
 
-  DateFormat formatter = DateFormat("H:m \nd/MM");
+  DateFormat formatter = DateFormat("H:mm \nd/MM");
 
   @override
   Widget build(BuildContext context) {

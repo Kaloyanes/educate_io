@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/teachers_nearby/components/filter_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,12 +8,9 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class TeachersNearbyController extends GetxController {
-  Set<LatLng> teachers = {
-    LatLng(42.526659, 27.463060),
-    LatLng(42.517423, 27.452975),
-  };
-
   late GoogleMapController mapController;
+
+  final RxList<Marker> markers = <Marker>[].obs;
 
   final isVisible = true.obs;
 
@@ -21,8 +21,45 @@ class TeachersNearbyController extends GetxController {
     super.onClose();
   }
 
-  void configureMap(GoogleMapController controller) {
-    mapController = controller;
+  @override
+  void onInit() {
+    getLocations();
+    super.onInit();
+  }
+
+  void configureMap(GoogleMapController controller) =>
+      mapController = controller;
+
+  Marker template(LatLng latlng) {
+    return Marker(
+      markerId: MarkerId(latlng.toString()),
+      position: latlng,
+      flat: false,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta),
+      onTap: () => ScaffoldMessenger.of(Get.context!).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.grey.shade800,
+          content: const Text(
+            "Учител",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+      ),
+      consumeTapEvents: false,
+    );
+  }
+
+  Future<void> getLocations() async {
+    var collection =
+        await FirebaseFirestore.instance.collection("locations").get();
+
+    for (var doc in collection.docs) {
+      var value = doc.get("place") as GeoPoint;
+
+      inspect(value);
+
+      markers.add(template(LatLng(value.latitude, value.longitude)));
+    }
   }
 
   Future<LatLng> getLocation() async {
@@ -58,6 +95,9 @@ class TeachersNearbyController extends GetxController {
     var position = await Geolocator.getCurrentPosition();
     return Future.value(LatLng(position.latitude, position.longitude));
   }
+
+  Future<void> centerCamera() async => await mapController
+      .animateCamera(CameraUpdate.newLatLngZoom(await getLocation(), 16));
 
   void showFilters() {
     showModalBottomSheet(

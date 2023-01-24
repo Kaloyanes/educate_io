@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import "package:path/path.dart" as p;
 
@@ -195,6 +196,8 @@ class ProfileSettingsController extends GetxController {
 
   set addbadSubject(String val) => badSubjects.add(val.capitalizeFirst!);
 
+  final Rx<LatLng?> currentLocation = null.obs;
+
   Future<void> getInfo() async {
     var doc = await FirebaseFirestore.instance
         .collection("users")
@@ -217,6 +220,19 @@ class ProfileSettingsController extends GetxController {
           List.castFrom<dynamic, String>(data["badSubjects"] as List<dynamic>);
     }
     showRoleSettings.value = true;
+
+    var locDoc = await FirebaseFirestore.instance
+        .collection("locations")
+        .doc(auth.currentUser!.uid)
+        .get();
+
+    var locationData = locDoc.data() ?? {};
+
+    if (locationData.containsKey("position")) {
+      var geo = locationData["position"] as GeoPoint;
+
+      currentLocation.value = LatLng(geo.latitude, geo.longitude);
+    }
   }
 
   Future<void> saveInfo() async {
@@ -241,6 +257,20 @@ class ProfileSettingsController extends GetxController {
     }
 
     doc.update(data);
+  }
+
+  Future<void> forgotPassword() async {
+    // auth.sendPasswordResetEmail(email: auth.currentUser!.email ?? "");
+
+    ScaffoldMessenger.of(Get.context!).showSnackBar(
+      const SnackBar(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+        content: Text(
+          "Погледнете си имейла",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      ),
+    );
   }
 
   Column teacherSettings() {

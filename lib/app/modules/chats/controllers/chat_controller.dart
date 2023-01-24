@@ -12,18 +12,17 @@ class ChatController extends GetxController {
       .doc(Get.arguments["docId"])
       .collection("messages");
 
-  late String photoUrl;
-  late String docId;
-  late String name;
-  late String initials;
+  final collectionStream = Stream.empty().obs;
+
+  String photoUrl = Get.arguments["photoUrl"];
+  String docId = Get.arguments["docId"];
+  String name = Get.arguments["name"];
+  String initials = Get.arguments["initials"];
 
   @override
   void onInit() {
     _feedMessages();
-    photoUrl = Get.arguments["photoUrl"];
-    docId = Get.arguments["docId"];
-    name = Get.arguments["name"];
-    initials = Get.arguments["initials"];
+    collectionStream.value = collection.orderBy("time").snapshots();
     super.onInit();
   }
 
@@ -59,7 +58,7 @@ class ChatController extends GetxController {
     });
 
     var value = messageController.text;
-    if (value.isEmpty) {
+    if (value.trim() == "") {
       return;
     }
     messageController.clear();
