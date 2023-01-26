@@ -3,6 +3,7 @@ import 'package:educate_io/app/models/message_model.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -112,6 +113,15 @@ class ChatMessage extends StatelessWidget {
           ),
         ),
       ),
-    );
+    )
+        .animate()
+        .slideY(begin: 20, duration: 400.ms, curve: Curves.easeInOut)
+        .scaleXY(
+          begin: 0,
+          end: 1,
+          curve: Curves.easeOutExpo,
+          duration: 400.ms,
+          delay: 350.ms,
+        );
   }
 }

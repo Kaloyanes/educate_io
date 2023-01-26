@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/home/components/teacher_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class TeacherSubject extends StatefulWidget {
   const TeacherSubject({
@@ -80,18 +81,19 @@ class _TeacherSubjectState extends State<TeacherSubject> {
             return SizedBox(
               height: 330,
               child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: list.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    var data = list.elementAt(index).data();
-                    data.addAll({"uid": list.elementAt(index).id});
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: list.length,
+                itemBuilder: (BuildContext context, int index) {
+                  var data = list.elementAt(index).data();
+                  data.addAll({"uid": list.elementAt(index).id});
 
-                    return TeacherCard(
-                      subject: widget.subject,
-                      teacher: Teacher.fromMap(data),
-                    );
-                  }),
+                  return TeacherCard(
+                    subject: widget.subject,
+                    teacher: Teacher.fromMap(data),
+                  );
+                },
+              ),
             );
           },
         ),

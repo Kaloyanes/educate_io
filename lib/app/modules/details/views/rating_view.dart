@@ -22,12 +22,12 @@ class RatingView extends GetView<RatingController> {
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
-          // if (notification is UserScrollNotification &&
-          //     notification.direction != ScrollDirection.idle) {
-          //   controller.showFAB.value =
-          //       notification.direction == ScrollDirection.forward &&
-          //           !notification.metrics.atEdge;
-          // }
+          if (notification is UserScrollNotification &&
+              notification.direction != ScrollDirection.idle) {
+            controller.showFAB.value =
+                notification.direction == ScrollDirection.forward &&
+                    !notification.metrics.atEdge;
+          }
 
           return false;
         },
@@ -142,19 +142,34 @@ class RatingView extends GetView<RatingController> {
           ],
         ),
       ),
-      floatingActionButton: Obx(() => AnimatedSlide(
-            duration: const Duration(milliseconds: 800),
-            curve: Curves.easeOutExpo,
-            offset: controller.showFAB.value
-                ? const Offset(0, 0)
-                : const Offset(0, 4),
-            child: FloatingActionButton(
-              onPressed: () => controller.scrollToTop(),
-              child: const Icon(
-                Icons.arrow_upward,
-              ),
+      floatingActionButton: Obx(
+        () => FloatingActionButton(
+          onPressed: () => controller.scrollToTop(),
+          child: const Icon(
+            Icons.arrow_upward,
+          ),
+        )
+            .animate(target: controller.showFAB.value ? 1 : 0)
+            .scaleXY(
+              curve: Curves.easeOutCubic,
+              duration: 400.ms,
+              delay: 150.ms,
+              begin: -1,
+              end: 1,
+            )
+            .slideY(
+              begin: 4,
+              end: 0,
+              curve: Curves.easeInOutExpo,
+              duration: 800.ms,
+            )
+            .blurXY(
+              begin: 3,
+              end: 0,
+              duration: 450.ms,
+              curve: Curves.easeOut,
             ),
-          )),
+      ),
     );
   }
 

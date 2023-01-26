@@ -25,93 +25,93 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              profilePicture(),
-              const SizedBox(
-                height: 20,
-              ),
-              Form(
-                autovalidateMode: AutovalidateMode.always,
-                key: controller.formKey,
-                child: Column(
-                  children: [
-                    profileTextField(
-                      label: "Име",
-                      controller: controller.displayNameController,
-                      profileController: controller,
-                    ),
-                    const SizedBox(height: 15),
-                    profileTextField(
-                      label: "Описание",
-                      controller: controller.descriptionController,
-                      profileController: controller,
-                      canBeEmpty: true,
-                    ),
-                    const SizedBox(height: 15),
-                    profileTextField(
-                      addedDecoration: InputDecoration(prefixText: "+359"),
-                      label: "Телефон",
-                      type: TextInputType.phone,
-                      controller: controller.phoneController,
-                      profileController: controller,
-                      formatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(
-                          9,
-                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    profileTextField(
-                      label: "Имейл",
-                      controller: controller.emailController,
-                      profileController: controller,
-                      validator: (value) {
-                        if (!value.isEmail) {
-                          return "Невалиден имейл";
-                        }
-
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    Obx(() {
-                      switch (controller.role.value) {
-                        case "teacher":
-                          return controller.teacherSettings();
-
-                        case "student":
-                          return controller.studentSettings();
-
-                        default:
-                          return Container();
-                      }
-                    }),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            profilePicture(),
+            const SizedBox(
+              height: 20,
+            ),
+            Form(
+              autovalidateMode: AutovalidateMode.always,
+              key: controller.formKey,
+              child: Column(children: [
+                profileTextField(
+                  label: "Име",
+                  controller: controller.displayNameController,
+                  profileController: controller,
+                ),
+                const SizedBox(height: 15),
+                profileTextField(
+                  label: "Описание",
+                  controller: controller.descriptionController,
+                  profileController: controller,
+                  canBeEmpty: true,
+                ),
+                const SizedBox(height: 15),
+                profileTextField(
+                  addedDecoration: InputDecoration(prefixText: "+359"),
+                  label: "Телефон",
+                  type: TextInputType.phone,
+                  controller: controller.phoneController,
+                  profileController: controller,
+                  formatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(
+                      9,
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                    )
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextButton(
-                onPressed: () => controller.forgotPassword(),
-                child: const Text("Промени паролата"),
-              ),
-              TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all(Colors.red),
-                  overlayColor:
-                      MaterialStatePropertyAll(Colors.red.withAlpha(20)),
+                const SizedBox(height: 15),
+                profileTextField(
+                  label: "Имейл",
+                  controller: controller.emailController,
+                  profileController: controller,
+                  validator: (value) {
+                    if (!value.isEmail) {
+                      return "Невалиден имейл";
+                    }
+
+                    return null;
+                  },
                 ),
-                onPressed: () {},
-                child: const Text("Изтрий профила"),
+                const SizedBox(height: 15),
+                Obx(() {
+                  switch (controller.role.value) {
+                    case "teacher":
+                      return controller.teacherSettings();
+
+                    case "student":
+                      return controller.studentSettings();
+
+                    default:
+                      return Container();
+                  }
+                }),
+              ]),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            OutlinedButton(
+              onPressed: () => controller.updateLocation(),
+              child: const Text("Поднови локацията"),
+            ),
+            OutlinedButton(
+              onPressed: () => controller.forgotPassword(),
+              child: const Text("Промени паролата"),
+            ),
+            OutlinedButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all(Colors.red),
+                overlayColor:
+                    MaterialStatePropertyAll(Colors.red.withAlpha(20)),
               ),
-              SizedBox(height: Get.mediaQuery.padding.bottom),
-            ],
-          ),
+              onPressed: () {},
+              child: const Text("Изтрий профила"),
+            ),
+            SizedBox(height: Get.mediaQuery.padding.bottom),
+          ]),
         ),
         floatingActionButton: Obx(
           () => FloatingActionButton(
@@ -123,16 +123,24 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
               .animate(
                 target: controller.savedSettings.value ? 1 : 0,
               )
+              .scaleXY(
+                curve: Curves.easeOutCubic,
+                duration: 400.ms,
+                // delay: 150.ms,
+                begin: -0.5,
+                end: 1,
+              )
               .slideY(
                 end: 0,
-                begin: 3,
+                begin: 5,
                 curve: Curves.easeOutCubic,
                 duration: 400.ms,
               )
+              .then()
               .blurXY(
                 begin: 3,
                 end: 0,
-                duration: 450.ms,
+                duration: 350.ms,
                 curve: Curves.easeOut,
               ),
         ),

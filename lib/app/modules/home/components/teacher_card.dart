@@ -73,23 +73,28 @@ class TeacherCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              Text(
-                teacher.name,
-                style: Theme.of(Get.context!)
-                    .textTheme
-                    .titleLarge!
-                    .copyWith(fontSize: 20),
-              ),
-              Text(
-                subject,
-                style: Get.textTheme.titleMedium,
-              ),
-              Text(
-                teacher.role == "teacher" ? "Учител" : "Ученик",
-                style: Theme.of(context).textTheme.titleMedium,
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      teacher.name,
+                      style: Theme.of(Get.context!)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(fontSize: 20),
+                    ),
+                    Text(
+                      subject,
+                      style: Get.textTheme.titleMedium,
+                    ),
+                    Text(
+                      teacher.role == "teacher" ? "Учител" : "Ученик",
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

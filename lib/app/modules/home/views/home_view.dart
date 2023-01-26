@@ -6,6 +6,7 @@ import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/database/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
@@ -84,7 +85,7 @@ class HomeView extends GetView<HomeController> {
         )
       ],
       flexibleSpace: FlexibleSpaceBar(
-        title: Text("Учители"),
+        title: Text("Учители").animate().fade(),
         centerTitle: true,
       ),
       stretch: true,
@@ -137,12 +138,14 @@ class HomeView extends GetView<HomeController> {
           SizedBox(
             height: Get.mediaQuery.padding.bottom,
           )
-        ],
+        ].animate(interval: 100.ms).fadeIn(
+              curve: Curves.easeOut,
+            ),
       ),
     );
   }
 
-  Align welcomeText() {
+  Widget welcomeText() {
     return Align(
       alignment: Alignment.topLeft,
       child: Container(
@@ -160,6 +163,6 @@ class HomeView extends GetView<HomeController> {
           },
         ),
       ),
-    );
+    ).animate().fade();
   }
 }

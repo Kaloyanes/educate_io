@@ -1,10 +1,12 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:educate_io/app/firebase_options.dart';
 import 'package:educate_io/app/themes.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 // import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -20,6 +22,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  var analytics = FirebaseAnalytics.instance;
+  analytics.logEvent(name: "hello world");
   runApp(const App());
   // FlutterNativeSplash.remove();
 }

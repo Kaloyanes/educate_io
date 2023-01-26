@@ -34,6 +34,7 @@ dependencies:
   intl: ^0.17.0
   path: ^1.8.1
   path_provider: 2.0.11
+  url_launcher: ^6.1.8
   
 
 

@@ -51,9 +51,7 @@ class DetailsView extends GetView<DetailsController> {
             ),
             if (controller.teacher.phone != null)
               IconButton(
-                onPressed: () async =>
-                    await FlutterPhoneDirectCaller.callNumber(
-                        controller.teacher.phone!),
+                onPressed: () => controller.callTeacher(),
                 icon: const Icon(Icons.phone),
               )
           ],

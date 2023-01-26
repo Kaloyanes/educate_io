@@ -1,4 +1,6 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Themes {
   static ThemeData theme(ColorScheme colors) {
@@ -6,24 +8,23 @@ class Themes {
       useMaterial3: true,
       colorScheme: colors,
       appBarTheme: AppBarTheme(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
-          centerTitle: true,
-          scrolledUnderElevation: 1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+        ),
+        centerTitle: true,
+        scrolledUnderElevation: 1,
+      ),
       bottomAppBarTheme: const BottomAppBarTheme(
         elevation: 1,
       ),
       snackBarTheme: SnackBarThemeData(
         insetPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-        // behavior: SnackBarBehavior.floating,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         showCloseIcon: true,
-
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: colors.background,
+        behavior: SnackBarBehavior.fixed,
+        backgroundColor: colors.onInverseSurface,
         contentTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ),
@@ -56,6 +57,7 @@ class Themes {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
+      fontFamily: "Rubik",
     );
   }
 }

@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/chats/views/chat_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class DetailsController extends GetxController {
   final Teacher teacher = Get.arguments["teacher"];
@@ -86,5 +91,16 @@ class DetailsController extends GetxController {
       "photoUrl": teacher.photoUrl,
       "name": teacher.name,
     });
+  }
+
+  Future<void> callTeacher() async {
+    if (Platform.isAndroid) {
+      await FlutterPhoneDirectCaller.callNumber(teacher.phone!);
+      return;
+    }
+
+    Uri url = Uri.parse("tel:${teacher.phone}");
+
+    await launchUrl(url);
   }
 }
