@@ -8,6 +8,7 @@ import 'package:educate_io/app/modules/details/controllers/rating_controller.dar
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:get/get.dart';
@@ -203,7 +204,7 @@ class RatingView extends GetView<RatingController> {
                           height: 0,
                         )
                       : const BoxConstraints.tightFor(
-                          width: 300,
+                          width: 400,
                           height: 120,
                         ),
                   child: Form(
@@ -219,9 +220,14 @@ class RatingView extends GetView<RatingController> {
                         if (value == null || value.isEmpty) {
                           return "Попълнете полето";
                         }
+
+                        return null;
                       },
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 500),

@@ -107,6 +107,8 @@ class ProfileSettingsController extends GetxController {
     HapticFeedback.selectionClick();
 
     var file = File(photo.value.path);
+    if (!file.existsSync()) return;
+
     var ext = p.extension(photo.value.path);
     try {
       final ref = storage.ref("/profile_pictures/${auth.currentUser!.uid}$ext");
@@ -154,7 +156,7 @@ class ProfileSettingsController extends GetxController {
     } else {
       savePhoto();
     }
-    await Get.forceAppUpdate();
+    Get.appUpdate();
 
     setSavedSettings = false;
     ScaffoldMessenger.of(Get.context!).showSnackBar(
@@ -260,7 +262,7 @@ class ProfileSettingsController extends GetxController {
   }
 
   Future<void> forgotPassword() async {
-    // auth.sendPasswordResetEmail(email: auth.currentUser!.email ?? "");
+    auth.sendPasswordResetEmail(email: auth.currentUser!.email ?? "");
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       const SnackBar(

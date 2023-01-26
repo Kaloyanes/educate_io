@@ -6,6 +6,7 @@ import 'package:educate_io/app/services/database/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 import '../controllers/profile_settings_controller.dart';
@@ -46,6 +47,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
                       label: "Описание",
                       controller: controller.descriptionController,
                       profileController: controller,
+                      canBeEmpty: true,
                     ),
                     const SizedBox(height: 15),
                     profileTextField(
@@ -71,6 +73,8 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
                         if (!value.isEmail) {
                           return "Невалиден имейл";
                         }
+
+                        return null;
                       },
                     ),
                     const SizedBox(height: 15),
@@ -110,18 +114,27 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
           ),
         ),
         floatingActionButton: Obx(
-          () => AnimatedSlide(
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOutExpo,
-            offset: controller.savedSettings.value
-                ? const Offset(0, 0)
-                : const Offset(0, 3),
-            child: FloatingActionButton(
-              onPressed: () => controller.saveSettings(),
-              heroTag: "saveButton",
-              child: const Icon(Icons.save),
-            ),
-          ),
+          () => FloatingActionButton(
+            elevation: 3,
+            onPressed: () => controller.saveSettings(),
+            heroTag: "saveButton",
+            child: const Icon(Icons.save),
+          )
+              .animate(
+                target: controller.savedSettings.value ? 1 : 0,
+              )
+              .slideY(
+                end: 0,
+                begin: 3,
+                curve: Curves.easeOutCubic,
+                duration: 400.ms,
+              )
+              .blurXY(
+                begin: 3,
+                end: 0,
+                duration: 450.ms,
+                curve: Curves.easeOut,
+              ),
         ),
       ),
     );

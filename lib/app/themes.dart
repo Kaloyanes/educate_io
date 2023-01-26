@@ -19,12 +19,10 @@ class Themes {
         // behavior: SnackBarBehavior.floating,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          side: BorderSide(
-            width: 1,
-            color: Colors.white,
-          ),
         ),
+        showCloseIcon: true,
 
+        behavior: SnackBarBehavior.floating,
         backgroundColor: colors.background,
         contentTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),

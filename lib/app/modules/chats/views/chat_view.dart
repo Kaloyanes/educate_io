@@ -29,7 +29,7 @@ class ChatView extends GetView<ChatController> {
               tag: controller.photoUrl,
               child: CircleAvatar(
                 foregroundImage:
-                    CachedNetworkImageProvider(controller.photoUrl ?? ""),
+                    CachedNetworkImageProvider(controller.photoUrl),
                 child: Text(controller.initials),
               ),
             ),

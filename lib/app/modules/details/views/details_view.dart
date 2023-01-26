@@ -147,7 +147,8 @@ class DetailsView extends GetView<DetailsController> {
                               for (var badSubject in teacher.badSubjects!)
                                 Text(
                                   badSubject,
-                                  style: Theme.of(context).textTheme.titleLarge,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                 )
                             ],
                           ),
@@ -161,7 +162,7 @@ class DetailsView extends GetView<DetailsController> {
                             for (var subject in teacher.subjects)
                               Text(
                                 subject,
-                                style: Theme.of(context).textTheme.titleLarge,
+                                style: Theme.of(context).textTheme.titleMedium,
                               )
                           ],
                         ),

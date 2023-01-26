@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:crop_your_image/crop_your_image.dart';
+import 'package:educate_io/app/modules/profile_settings/controllers/profile_settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -31,7 +32,11 @@ class ImageCropView extends StatelessWidget {
         maskColor: Colors.black.withAlpha(100),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => cropController.crop(),
+        onPressed: () {
+          var control = Get.find<ProfileSettingsController>();
+          control.setSavedSettings = true;
+          cropController.crop();
+        },
         icon: const Icon(Icons.save_rounded),
         label: const Text("Запази"),
         elevation: 2,

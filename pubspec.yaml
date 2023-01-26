@@ -8,10 +8,7 @@ environment:
 dependencies:
   cached_network_image: ^3.2.3
   cloud_firestore: ^4.3.0
-  crop_your_image:
-    git:
-      url: git@github.com:ravikant-paudel/crop_your_image.git
-      ref: 989f7799a2b8b1a08dd546cb94d1b82ae295abb1
+  crop_your_image: ^0.7.4
   cupertino_icons: ^1.0.2
   dynamic_color: ^1.5.4
   firebase_analytics: ^10.1.0
@@ -20,8 +17,10 @@ dependencies:
   firebase_storage: ^11.0.8
   flutter:
     sdk: flutter
+  flutter_animate: ^3.0.0
   flutter_localizations:
     sdk: flutter
+  flutter_native_splash: ^2.2.17
   flutter_phone_direct_caller: ^2.1.1
   flutter_rating_bar: ^4.0.1
   flutter_svg: ^1.1.6
@@ -31,11 +30,13 @@ dependencies:
   google_maps_flutter: ^2.2.3
   google_sign_in: ^5.4.2
   image: ^4.0.6
-  image_picker: 0.8.6
+  image_picker: ^0.8.6+1
   intl: ^0.17.0
   path: ^1.8.1
   path_provider: 2.0.11
   
+
+
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -46,16 +47,17 @@ flutter:
   assets:
     - assets/images/google_logo.svg
   uses-material-design: true
-# flutter_native_splash:
-#   image: assets/light_mode.png
-#   color: "#ffffff"
-#   image_dark: assets/dark_mode.png
-#   color_dark: "#1a1a1a"
-#   android_12:
-#     image: assets/android_12_light_mode.png
-#     color: "#ffffff"
-#     image_dark: assets/android_12_dark_mode.png
-#     color_dark: "#1a1a1a"
-#   android12: true
-#   android: true
-#   ios: true
+
+flutter_native_splash:
+  image: assets/light_mode.png
+  color: "#ffffff"
+  image_dark: assets/dark_mode.png
+  color_dark: "#1a1a1a"
+  android_12:
+    image: assets/android_12_light_mode.png
+    color: "#ffffff"
+    image_dark: assets/android_12_dark_mode.png
+    color_dark: "#1a1a1a"
+  android12: true
+  android: true
+  ios: true

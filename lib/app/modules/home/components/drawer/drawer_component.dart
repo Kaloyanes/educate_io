@@ -25,9 +25,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: MediaQuery.of(context).size.width > 600
-          ? MediaQuery.of(context).size.width / 2
-          : MediaQuery.of(context).size.width / 1.4,
+      width: MediaQuery.of(context).size.width / 1.2,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.horizontal(
           right: Radius.circular(50),
