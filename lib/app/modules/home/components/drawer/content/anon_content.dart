@@ -22,7 +22,8 @@ class AnonContent extends StatelessWidget {
             icon: Icons.app_registration_rounded,
             label: "Създай акаунт",
             onTap: () => Get.toNamed(Routes.REGISTER),
-          )
+          ),
+          Spacer(),
         ],
       ),
     );

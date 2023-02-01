@@ -1,12 +1,14 @@
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Themes {
   static ThemeData theme(ColorScheme colors) {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: colors,
+      colorScheme: colors.harmonized(),
       appBarTheme: AppBarTheme(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(0),
@@ -57,7 +59,7 @@ class Themes {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-      fontFamily: "Rubik",
+      // fontFamily: "Noto",
     );
   }
 }

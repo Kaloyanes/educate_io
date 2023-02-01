@@ -1,5 +1,3 @@
-import 'package:educate_io/app/modules/profile_settings/bindings/profile_settings_bindings.dart';
-import 'package:educate_io/app/modules/profile_settings/views/profile_settings_view.dart';
 import 'package:get/get.dart';
 
 import '../middleware/auth_middleware.dart';
@@ -15,6 +13,10 @@ import '../modules/liked_teachers/bindings/liked_teachers_binding.dart';
 import '../modules/liked_teachers/views/liked_teachers_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/profile_settings/bindings/profile_settings_bindings.dart';
+import '../modules/profile_settings/views/profile_settings_view.dart';
+import '../modules/settings/bindings/settings_binding.dart';
+import '../modules/settings/views/settings_view.dart';
 import '../modules/teachers_nearby/bindings/teachers_nearby_binding.dart';
 import '../modules/teachers_nearby/views/teachers_nearby_view.dart';
 
@@ -77,6 +79,11 @@ class AppPages {
       name: _Paths.TEACHERS_NEARBY,
       page: () => TeachersNearbyView(),
       binding: TeachersNearbyBinding(),
+    ),
+    GetPage(
+      name: _Paths.SETTINGS,
+      page: () => const SettingsView(),
+      binding: SettingsBinding(),
     ),
   ];
 }

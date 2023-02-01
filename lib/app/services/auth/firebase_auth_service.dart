@@ -1,18 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:educate_io/app/modules/auth/register/views/google_data_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'package:educate_io/app/modules/auth/register/views/google_data_view.dart';
-
 class FirebaseAuthService {
   static Future<void> login(String email, String password) async {
-    var auth = FirebaseAuth.instance;
-
     try {
-      auth.signInWithEmailAndPassword(email: email, password: password);
-    } on FirebaseAuthException catch (e) {
-      throw e.message!;
+      var auth = FirebaseAuth.instance;
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException {
+      rethrow;
     }
   }
 
@@ -20,19 +18,23 @@ class FirebaseAuthService {
 
   static Future<void> createAccount(
       Map<String, dynamic> userData, String email, String password) async {
-    var auth = FirebaseAuth.instance;
-    var store = FirebaseFirestore.instance;
+    try {
+      var auth = FirebaseAuth.instance;
+      var store = FirebaseFirestore.instance;
 
-    var user = await auth.createUserWithEmailAndPassword(
-      email: email.trim(),
-      password: password.trim(),
-    );
+      var user = await auth.createUserWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
 
-    user.user?.sendEmailVerification();
+      user.user?.sendEmailVerification();
 
-    var doc = store.collection("users").doc(user.user?.uid);
+      var doc = store.collection("users").doc(user.user?.uid);
 
-    doc.set(userData);
+      doc.set(userData);
+    } on FirebaseAuthException {
+      rethrow;
+    }
   }
 
   static Future<void> logInGoogle() async {

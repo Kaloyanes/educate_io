@@ -22,15 +22,12 @@ class TeacherCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (teacher.photoUrl == "") {
-      return Container();
-    }
-
     return GestureDetector(
       onTap: () => goToDetails(),
       child: Padding(
         // padding: EdgeInsets.zero,
         padding: const EdgeInsets.only(left: 5, right: 5),
+
         child: Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -41,21 +38,19 @@ class TeacherCard extends StatelessWidget {
                 child: Hero(
                   tag: teacher,
                   child: CachedNetworkImage(
-                    imageUrl: teacher.photoUrl,
+                    imageUrl: teacher.photoUrl ?? "",
                     imageBuilder: (context, imageProvider) => ClipRRect(
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(20),
                       ),
                       child: Image(
                         fit: BoxFit.fitWidth,
-                        width: 200,
                         image: imageProvider,
                       ),
                     ),
                     progressIndicatorBuilder: (context, url, progress) =>
                         SizedBox(
                       width: 200,
-                      height: 180,
                       child: Center(
                         child: CircularProgressIndicator(
                           value: progress.progress,

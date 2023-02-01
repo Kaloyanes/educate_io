@@ -194,11 +194,11 @@ class ProfileSettingsController extends GetxController {
 
   final subjects = <String>[].obs;
 
-  set addSubject(String val) => subjects.add(val.capitalizeFirst!);
+  set addSubject(String val) => subjects.add(val.trim().capitalizeFirst!);
 
   final badSubjects = <String>[].obs;
 
-  set addbadSubject(String val) => badSubjects.add(val.capitalizeFirst!);
+  set addbadSubject(String val) => badSubjects.add(val.trim().capitalizeFirst!);
 
   final Rx<LatLng?> currentLocation = null.obs;
 
@@ -278,78 +278,72 @@ class ProfileSettingsController extends GetxController {
   }
 
   Column teacherSettings() {
-    return Column(
-      children: [
-        TextFormField(
-          controller: subjectController,
-          decoration: InputDecoration(
-            label: const Text(
-              "Предмети",
-            ),
-            hintText: "Програмиране",
-            suffixIcon: IconButton(
-              padding: EdgeInsets.zero,
-              icon: const Icon(
-                Icons.add,
-              ),
-              onPressed: () {
-                if (subjectController.text.isNotEmpty) {
-                  addSubject = subjectController.text;
-                  subjectController.clear();
-                  return;
-                }
-
-                throw Exception("Category text is empty");
-              },
-            ),
-            prefixIcon: const Icon(Icons.menu_book),
+    return Column(children: [
+      TextFormField(
+        controller: subjectController,
+        decoration: InputDecoration(
+          label: const Text(
+            "Предмети",
           ),
-          validator: (value) {
-            if (subjects.isEmpty) {
-              return "Добави категория";
-            }
+          hintText: "Програмиране",
+          suffixIcon: IconButton(
+            padding: EdgeInsets.zero,
+            icon: const Icon(
+              Icons.add,
+            ),
+            onPressed: () {
+              if (subjectController.text.isNotEmpty) {
+                addSubject = subjectController.text;
+                subjectController.clear();
+                return;
+              }
 
-            return null;
-          },
+              throw Exception("Category text is empty");
+            },
+          ),
+          prefixIcon: const Icon(Icons.menu_book),
         ),
-        Obx(() {
-          return ReorderableListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: subjects.length,
-            itemBuilder: (context, index) => ListTile(
-              key: Key("$index"),
-              contentPadding: EdgeInsets.zero,
-              title: Text(subjects[index]),
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.remove,
-                  color: Colors.red,
-                ),
-                onPressed: () => subjects.removeAt(index),
+        validator: (value) {
+          if (subjects.isEmpty) {
+            return "Добави категория";
+          }
+
+          return null;
+        },
+      ),
+      Obx(() {
+        return ReorderableListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: subjects.length,
+          itemBuilder: (context, index) => ListTile(
+            key: Key("$index"),
+            contentPadding: EdgeInsets.zero,
+            title: Text(subjects[index]),
+            leading: IconButton(
+              icon: const Icon(
+                Icons.remove,
+                color: Colors.red,
               ),
-              trailing: ReorderableDragStartListener(
-                index: index,
-                child: const Icon(
-                  Icons.drag_handle,
-                ),
+              onPressed: () => subjects.removeAt(index),
+            ),
+            trailing: ReorderableDragStartListener(
+              index: index,
+              child: const Icon(
+                Icons.drag_handle,
               ),
             ),
-            onReorder: (int oldIndex, int newIndex) {
-              if (oldIndex < newIndex) {
-                newIndex -= 1;
-              }
-              final item = subjects.removeAt(oldIndex);
-              subjects.insert(newIndex, item);
-            },
-          );
-        }),
-      ]
-          .animate(
-            interval: 150.ms,
-          )
-          .scaleXY(duration: 600.ms, curve: Curves.easeOut, delay: 600.ms),
-    );
+          ),
+          onReorder: (int oldIndex, int newIndex) {
+            if (oldIndex < newIndex) {
+              newIndex -= 1;
+            }
+            final item = subjects.removeAt(oldIndex);
+            subjects.insert(newIndex, item);
+          },
+        );
+      }),
+    ]);
   }
 
   Column studentSettings() {

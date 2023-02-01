@@ -106,30 +106,37 @@ class RatingView extends GetView<RatingController> {
                               }
                               return false;
                             },
-                            child: ListView.builder(
+                            child: ListView(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: docs.length,
-                              itemBuilder: (context, index) {
-                                var docId = docs[index].id;
+                              children: [
+                                for (int i = 0; i < docs.length; i++)
+                                  Builder(
+                                    builder: (context) {
+                                      var docId = docs[i].id;
 
-                                if (docId ==
-                                    FirebaseAuth.instance.currentUser) {}
+                                      var data = docs[i].data();
 
-                                var data = docs[index].data();
-
-                                return ReviewCard(
-                                  docId: docId,
-                                  name: data["name"],
-                                  review: data["rating"] as double,
-                                  reviewText: data["message"],
-                                  photoUrl: data["photoUrl"],
-                                  date: DateTime.fromMillisecondsSinceEpoch(
-                                    (data["date"] as Timestamp)
-                                        .millisecondsSinceEpoch,
+                                      return ReviewCard(
+                                        docId: docId,
+                                        name: data["name"],
+                                        review: data["rating"] as double,
+                                        reviewText: data["message"],
+                                        photoUrl: data["photoUrl"],
+                                        date:
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                          (data["date"] as Timestamp)
+                                              .millisecondsSinceEpoch,
+                                        ),
+                                      );
+                                    },
+                                  )
+                              ].animate(interval: 70.ms).scaleXY(
+                                    end: 1,
+                                    begin: 0,
+                                    duration: 600.ms,
+                                    curve: Curves.easeInOutQuint,
                                   ),
-                                );
-                              },
                             ),
                           );
                         },

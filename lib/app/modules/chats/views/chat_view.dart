@@ -1,11 +1,18 @@
+import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:animated_list_plus/animated_list_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/message_model.dart';
 import 'package:educate_io/app/modules/chats/components/chat_message.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
+import 'package:educate_io/app/services/get_storage_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 class ChatView extends GetView<ChatController> {
@@ -29,7 +36,7 @@ class ChatView extends GetView<ChatController> {
               tag: controller.photoUrl,
               child: CircleAvatar(
                 foregroundImage:
-                    CachedNetworkImageProvider(controller.photoUrl),
+                    CachedNetworkImageProvider(controller.photoUrl.toString()),
                 child: Text(controller.initials),
               ),
             ),
@@ -60,8 +67,12 @@ class ChatView extends GetView<ChatController> {
                     return const Center(child: CircularProgressIndicator());
                   }
 
+                  if (snapshot.hasError) {
+                    return Container();
+                  }
+
                   var lastDoc = snapshot.data!.docChanges.last;
-                  var data = lastDoc.doc.data()!;
+                  var data = lastDoc.doc.data() ?? {};
 
                   data.addAll({"msgId": lastDoc.doc.id});
                   var message = Message.fromMap(data);
@@ -69,7 +80,11 @@ class ChatView extends GetView<ChatController> {
                   switch (lastDoc.type) {
                     case DocumentChangeType.added:
                       controller.messages.addIf(
-                          !controller.messages.contains(message), message);
+                        !controller.messages.contains(message) &&
+                            message.msgId != "example",
+                        message,
+                      );
+
                       break;
 
                     case DocumentChangeType.removed:
@@ -79,24 +94,43 @@ class ChatView extends GetView<ChatController> {
 
                   return Obx(
                     () => CupertinoScrollbar(
-                      thicknessWhileDragging: 5,
-                      controller: controller.listController,
-                      child: ListView.builder(
+                      child: ImplicitlyAnimatedList(
+                        items: controller.messages.reversed.toList(),
                         reverse: true,
                         controller: controller.listController,
-                        itemCount: controller.messages.length,
-                        itemBuilder: (context, index) {
-                          var item =
-                              controller.messages.reversed.elementAt(index);
-                          bool isMessageMine = item.sender ==
-                              FirebaseAuth.instance.currentUser!.uid;
-
-                          return ChatMessage(
-                            doc: controller.collection.doc(item.msgId),
-                            message: item,
-                            ownMessage: isMessageMine,
-                          );
-                        },
+                        areItemsTheSame: (oldItem, newItem) =>
+                            newItem.msgId == oldItem.msgId,
+                        insertDuration: 350.ms,
+                        removeDuration: 400.ms,
+                        itemBuilder: (context, animation, item, i) =>
+                            ChatMessage(
+                          doc: controller.collection.doc(item.msgId),
+                          message: item,
+                          ownMessage: item.sender ==
+                              FirebaseAuth.instance.currentUser!.uid,
+                        )
+                                .animate()
+                                .slideX(
+                                  begin: item.sender ==
+                                          FirebaseAuth.instance.currentUser!.uid
+                                      ? 2
+                                      : -2,
+                                  end: 0,
+                                  curve: Curves.easeOutQuad,
+                                  duration: 300.ms,
+                                )
+                                .scaleXY(
+                                  delay: 150.ms,
+                                  begin: 1.5,
+                                  end: 1,
+                                  curve: Curves.easeOutExpo,
+                                  duration: 400.ms,
+                                )
+                                .blurXY(
+                                  begin: 4,
+                                  end: 0,
+                                  delay: 300.ms,
+                                ),
                       ),
                     ),
                   );
@@ -126,6 +160,14 @@ class ChatView extends GetView<ChatController> {
                       textInputAction: TextInputAction.send,
                       textAlignVertical: TextAlignVertical.top,
                       onSubmitted: (value) => controller.sendMessage(),
+                      // onTap: () => Timer(
+                      //   350.ms,
+                      //   () => controller.listController.animateTo(
+                      //     controller.listController.position.maxScrollExtent,
+                      //     duration: const Duration(seconds: 1),
+                      //     curve: Curves.easeOutExpo,
+                      //   ),
+                      // ),
                       expands: true,
                       maxLines: null,
                       minLines: null,

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/message_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 class ChatController extends GetxController {
@@ -14,15 +15,18 @@ class ChatController extends GetxController {
 
   final collectionStream = Stream.empty().obs;
 
-  String photoUrl = Get.arguments["photoUrl"];
+  Object photoUrl = Get.arguments["photoUrl"];
   String docId = Get.arguments["docId"];
   String name = Get.arguments["name"];
   String initials = Get.arguments["initials"];
+
+  var messagesCount = 0;
 
   @override
   void onInit() {
     _feedMessages();
     collectionStream.value = collection.orderBy("time").snapshots();
+    Timer.periodic(NumDurationExtensions(60).seconds, (timer) {});
     super.onInit();
   }
 
@@ -30,9 +34,12 @@ class ChatController extends GetxController {
     var messageCollection = await collection.orderBy("time").get();
 
     var msgs = <Message>[];
+    var docs = messageCollection.docs;
 
-    for (var doc
-        in messageCollection.docs.where((element) => element.id != "example")) {
+    docs.removeWhere((element) => element.id == "example");
+    docs.removeLast();
+
+    for (var doc in docs) {
       var data = doc.data();
       data.addAll({"msgId": doc.id});
 
@@ -50,6 +57,30 @@ class ChatController extends GetxController {
   final messageController = TextEditingController();
 
   Future<void> sendMessage() async {
+    if (messagesCount++ >= 60) {
+      showDialog(
+          barrierDismissible: false,
+          context: Get.context!,
+          builder: (context) {
+            FocusScope.of(context).unfocus();
+
+            return AlertDialog(
+              icon: Icon(Icons.warning),
+              title: Text(
+                "Намали малко скороста ве момче",
+              ),
+              actionsAlignment: MainAxisAlignment.center,
+              actions: [
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: Text("Ок"),
+                ),
+              ],
+            );
+          });
+      return;
+    }
+
     FirebaseFirestore.instance
         .collection("chats")
         .doc(Get.arguments["docId"])
@@ -68,6 +99,16 @@ class ChatController extends GetxController {
       "value": value.trim(),
       "time": Timestamp.fromDate(DateTime.now()),
     });
+
+    // Timer(
+    //   100.ms,
+    //   () => listController.animateTo(
+    //     listController.position.maxScrollExtent,
+    //     duration: const Duration(seconds: 1),
+    //     curve: Curves.easeOutExpo,
+    //   ),
+    // );
+
     listController.animateTo(
       0,
       duration: const Duration(seconds: 1),

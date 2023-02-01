@@ -3,21 +3,25 @@ version: 1.0.0+1
 publish_to: none
 description: Platform to find private tutors
 environment:
-  sdk: ">=2.18.0-106.0.dev <4.0.0"
+  sdk: ">=2.90.0 <4.0.0"
+
 
 dependencies:
+  animated_list_plus: ^0.4.5
   cached_network_image: ^3.2.3
-  cloud_firestore: ^4.3.0
+  cloud_firestore: ^4.3.1
   crop_your_image: ^0.7.4
-  cupertino_icons: ^1.0.2
-  dynamic_color: ^1.5.4
+  cupertino_icons: ^1.0.5
+  dynamic_color: ^1.6.0
   firebase_analytics: ^10.1.0
-  firebase_auth: ^4.2.1
-  firebase_core: ^2.4.0
-  firebase_storage: ^11.0.8
+  firebase_auth: ^4.2.5
+  firebase_core: ^2.4.1
+  firebase_storage: ^11.0.10
+  flex_color_picker: ^3.1.0
+  flex_color_scheme: ^6.1.2
   flutter:
     sdk: flutter
-  flutter_animate: ^3.0.0
+  flutter_animate: ^3.1.0
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.2.17
@@ -26,14 +30,15 @@ dependencies:
   flutter_svg: ^1.1.6
   geolocator: ^9.0.2
   get: 4.6.5
-  google_fonts: ^3.0.1
+  get_storage: ^2.0.3
+  google_fonts: ^4.0.1
   google_maps_flutter: ^2.2.3
-  google_sign_in: ^5.4.2
-  image: ^4.0.6
+  google_sign_in: ^5.4.4
+  image: ^4.0.13
   image_picker: ^0.8.6+1
   intl: ^0.17.0
-  path: ^1.8.1
-  path_provider: 2.0.11
+  path: ^1.8.3
+  path_provider: 2.0.12
   url_launcher: ^6.1.8
   
 
@@ -48,6 +53,11 @@ flutter:
   assets:
     - assets/images/google_logo.svg
   uses-material-design: true
+
+  fonts:
+    - family: Noto
+      fonts:
+        - asset: assets\fonts\NotoSans-Regular.ttf
 
 flutter_native_splash:
   image: assets/light_mode.png

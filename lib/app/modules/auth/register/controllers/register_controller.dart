@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:educate_io/app/routes/app_pages.dart';
+import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
-import 'package:educate_io/app/routes/app_pages.dart';
-import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 
 class RegisterController extends GetxController {
   final sizeStyle = ButtonStyle(
@@ -54,10 +53,10 @@ class RegisterController extends GetxController {
   final badsubjectController = TextEditingController();
   final phoneNumController = TextEditingController();
   final subjects = <String>[].obs;
-  set addSubject(String val) => subjects.add(val.capitalizeFirst!);
+  set addSubject(String val) => subjects.add(val.trim().capitalizeFirst!);
 
   final badSubjects = <String>[].obs;
-  set addbadSubject(String val) => badSubjects.add(val.capitalizeFirst!);
+  set addbadSubject(String val) => badSubjects.add(val.trim().capitalizeFirst!);
 
   final showProfile = true.obs;
 
@@ -80,7 +79,7 @@ class RegisterController extends GetxController {
     birthDayController.text = formatter.format(birthDate.value);
   }
 
-  void createAccount() {
+  Future<void> createAccount() async {
     if (!formKey.currentState!.validate()) return;
     var data = <String, dynamic>{
       "name": nameController.text.trim(),
@@ -99,8 +98,10 @@ class RegisterController extends GetxController {
       });
     }
 
+    print(data);
+
     try {
-      FirebaseAuthService.createAccount(
+      await FirebaseAuthService.createAccount(
         data,
         emailController.text,
         passwordController.text,

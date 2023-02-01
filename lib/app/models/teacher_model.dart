@@ -10,7 +10,7 @@ class Teacher {
   String name;
   String? phone;
   String? description;
-  String photoUrl;
+  String? photoUrl;
   String role;
   DateTime birthDay;
   List<String> subjects;
@@ -21,7 +21,7 @@ class Teacher {
     required this.name,
     this.phone,
     this.description,
-    required this.photoUrl,
+    this.photoUrl,
     required this.role,
     required this.birthDay,
     required this.subjects,
@@ -76,7 +76,7 @@ class Teacher {
         email: map['email'] as String,
         name: map['name'] as String,
         phone: map['phone'] != null ? map['phone'] as String : null,
-        photoUrl: map['photoUrl'] as String,
+        photoUrl: map['photoUrl'] != null ? map['photoUrl'] as String : null,
         role: map['role'] as String,
         birthDay: DateTime.fromMillisecondsSinceEpoch(
             (map['birthDay'] as Timestamp).millisecondsSinceEpoch),

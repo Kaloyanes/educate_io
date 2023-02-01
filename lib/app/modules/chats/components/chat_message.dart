@@ -7,7 +7,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class ChatMessage extends StatelessWidget {
+class ChatMessage extends StatefulWidget {
   ChatMessage(
       {super.key,
       required this.message,
@@ -18,15 +18,30 @@ class ChatMessage extends StatelessWidget {
   final bool ownMessage;
   final DocumentReference doc;
 
+  @override
+  State<ChatMessage> createState() => _ChatMessageState();
+}
+
+class _ChatMessageState extends State<ChatMessage>
+    with TickerProviderStateMixin {
   DateFormat formatter = DateFormat("H:mm \nd/MM");
+
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    controller = AnimationController(vsync: this);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: ownMessage ? Alignment.centerRight : Alignment.centerLeft,
+      alignment:
+          widget.ownMessage ? Alignment.centerRight : Alignment.centerLeft,
       child: GestureDetector(
         onLongPress: () async {
-          if (!ownMessage) return;
+          if (!widget.ownMessage) return;
           HapticFeedback.lightImpact();
 
           var result = await showModalBottomSheet<String>(
@@ -53,10 +68,9 @@ class ChatMessage extends StatelessWidget {
                       title: const Text("Изтрийте съобщението"),
                       onTap: () {
                         Get.back();
-                        Get.find<ChatController>()
-                            .messages
-                            .removeWhere((element) => element.msgId == doc.id);
-                        doc.delete();
+                        Get.find<ChatController>().messages.removeWhere(
+                            (element) => element.msgId == widget.doc.id);
+                        widget.doc.delete();
                       },
                       tileColor:
                           Theme.of(context).colorScheme.tertiaryContainer,
@@ -75,37 +89,40 @@ class ChatMessage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 7),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment:
-                ownMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment: widget.ownMessage
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
             children: [
               Container(
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    bottomLeft: ownMessage
+                    bottomLeft: widget.ownMessage
                         ? const Radius.circular(40)
                         : const Radius.circular(10),
                     bottomRight: const Radius.circular(40),
                     topLeft: const Radius.circular(40),
-                    topRight: ownMessage
+                    topRight: widget.ownMessage
                         ? const Radius.circular(10)
                         : const Radius.circular(40),
                   ),
-                  color: ownMessage
+                  color: widget.ownMessage
                       ? Theme.of(context).colorScheme.primaryContainer
                       : Theme.of(context).colorScheme.secondaryContainer,
                 ),
                 child: Text(
-                  message.value,
+                  widget.message.value,
                   textAlign: TextAlign.center,
                 ),
               ),
               Align(
-                alignment:
-                    ownMessage ? Alignment.centerRight : Alignment.centerLeft,
+                alignment: widget.ownMessage
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
                 child: Text(
-                  formatter.format(message.time),
-                  textAlign: ownMessage ? TextAlign.right : TextAlign.left,
+                  formatter.format(widget.message.time),
+                  textAlign:
+                      widget.ownMessage ? TextAlign.right : TextAlign.left,
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
               ),
@@ -113,15 +130,18 @@ class ChatMessage extends StatelessWidget {
           ),
         ),
       ),
-    )
-        .animate()
-        .slideY(begin: 20, duration: 400.ms, curve: Curves.easeInOut)
-        .scaleXY(
-          begin: 0,
-          end: 1,
-          curve: Curves.easeOutExpo,
-          duration: 400.ms,
-          delay: 350.ms,
-        );
+    );
+    // .animate(delay: 100.ms)
+    // .then()
+    // .scaleXY(
+    //   begin: 2,
+    //   end: 1,
+    //   curve: Curves.easeOutExpo,
+    //   duration: 400.ms,
+    // )
+    // .blurXY(
+    //   begin: 4,
+    //   end: 0,
+    // );
   }
 }

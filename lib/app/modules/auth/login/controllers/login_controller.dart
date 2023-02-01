@@ -47,6 +47,7 @@ class LoginController extends GetxController {
       rethrow;
     }
 
+    Get.appUpdate();
     Get.offAllNamed(Routes.HOME)!;
     Future.delayed(
       const Duration(milliseconds: 600),

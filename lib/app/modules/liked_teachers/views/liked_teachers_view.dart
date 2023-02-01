@@ -41,41 +41,111 @@ class LikedTeachersView extends GetView<LikedTeachersController> {
             );
           }
 
-          return GridView.builder(
+          return GridView(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
               mainAxisExtent: 300,
               mainAxisSpacing: 15,
             ),
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              return FutureBuilder(
-                future: FirebaseFirestore.instance
-                    .collection("users")
-                    .doc(data[index])
-                    .get(),
-                builder: (context, snapshot) {
-                  var teacherData = snapshot.data;
-                  if (teacherData == null) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+            children: [
+              for (var index = 0; index < data.length; index++)
+                FutureBuilder(
+                  future: FirebaseFirestore.instance
+                      .collection("users")
+                      .doc(data[index])
+                      .get(),
+                  builder: (context, snapshot) {
+                    var teacherData = snapshot.data;
+                    if (teacherData == null) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
 
-                  var mapData = teacherData.data() ?? {};
-                  mapData.addAll({"uid": data[index]});
-                  return Obx(
-                    () => HeroMode(
-                      enabled: controller.heroTransition.value,
-                      child: TeacherCard(
-                        subject: mapData["subjects"][0],
-                        teacher: Teacher.fromMap(mapData),
+                    var mapData = teacherData.data() ?? {};
+                    mapData.addAll({"uid": data[index]});
+                    return Obx(
+                      () => HeroMode(
+                        enabled: controller.heroTransition.value,
+                        child: TeacherCard(
+                          subject: mapData["subjects"][0],
+                          teacher: Teacher.fromMap(mapData),
+                        ),
                       ),
-                    ),
-                  );
-                },
-              );
-            },
+                    );
+                  },
+                ),
+            ]
+                .animate(
+                  interval: 100.ms,
+                )
+                .scaleXY(
+                  begin: 0,
+                  end: 1,
+                  curve: Curves.easeInOutCubic,
+                  duration: 350.ms,
+                )
+                .slideY(
+                  begin: 1,
+                  end: 0,
+                  curve: Curves.easeInOutCubic,
+                  duration: 300.ms,
+                  delay: 100.ms,
+                )
+                .blurXY(
+                  begin: 4,
+                  curve: Curves.easeOutExpo,
+                  delay: 250.ms,
+                  duration: 400.ms,
+                ),
+            // itemBuilder: (context, index) {
+            //   return FutureBuilder(
+            //     future: FirebaseFirestore.instance
+            //         .collection("users")
+            //         .doc(data[index])
+            //         .get(),
+            //     builder: (context, snapshot) {
+            //       var teacherData = snapshot.data;
+            //       if (teacherData == null) {
+            //         return const Center(
+            //           child: CircularProgressIndicator(),
+            //         );
+            //       }
+
+            //       var mapData = teacherData.data() ?? {};
+            //       mapData.addAll({"uid": data[index]});
+            //       return Obx(
+            //         () => HeroMode(
+            //           enabled: controller.heroTransition.value,
+            //           child: TeacherCard(
+            //             subject: mapData["subjects"][0],
+            //             teacher: Teacher.fromMap(mapData),
+            //           )
+            //               .animate()
+            //               .scaleXY(
+            //                 begin: 0,
+            //                 end: 1,
+            //                 curve: Curves.easeInOutCubic,
+            //                 duration: 350.ms,
+            //               )
+            //               .slideY(
+            //                 begin: 1,
+            //                 end: 0,
+            //                 curve: Curves.easeInOutCubic,
+            //                 duration: 500.ms,
+            //                 delay: 100.ms,
+            //               )
+            //               .blurXY(
+            //                 begin: 2,
+            //                 curve: Curves.easeOutExpo,
+            //                 delay: 250.ms,
+            //                 duration: 400.ms,
+            //               ),
+            //         ),
+            //       );
+            //     },
+            //   );
+            // },
           );
         },
       ),

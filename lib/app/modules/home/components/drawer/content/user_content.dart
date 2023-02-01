@@ -39,7 +39,7 @@ class UserContent extends StatelessWidget {
           DrawerDestination(
             icon: Icons.settings,
             label: "Настройки",
-            onTap: () => Get.toNamed(Routes.PROFILE_SETTINGS),
+            onTap: () => Get.toNamed(Routes.SETTINGS),
           ),
           const SizedBox(height: 10),
           DrawerDestination(

@@ -36,11 +36,27 @@ class _DrawerComponentState extends State<DrawerComponent> {
           SizedBox(
             height: Get.mediaQuery.padding.top + 20,
           ),
-          Text(
-            "EducateIO",
-            style: TextStyle(
-              fontSize: 30,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.person_pin_circle,
+                  size: 50,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "EducateIO",
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
 

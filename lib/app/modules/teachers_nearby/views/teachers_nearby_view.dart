@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -30,20 +31,30 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Get.back(),
           ),
-        ),
-        actions: [
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(50),
+        )
+            .animate(
+              delay: 100.ms,
+            )
+            .scaleXY(
+              curve: Curves.easeOutCubic,
+              duration: 400.ms,
+              delay: 150.ms,
+              begin: -2,
+              end: 1,
+            )
+            .slideX(
+              end: 0,
+              begin: -5,
+              curve: Curves.easeOutQuint,
+              duration: 400.ms,
+            )
+            .then()
+            .blurXY(
+              begin: 3,
+              end: 0,
+              duration: 300.ms,
+              curve: Curves.easeOut,
             ),
-            margin: const EdgeInsets.all(10),
-            child: IconButton(
-              icon: const Icon(Icons.filter_list),
-              onPressed: () => controller.showFilters(),
-            ),
-          ),
-        ],
       ),
       body: FutureBuilder(
         future: controller.getLocation(),
@@ -77,8 +88,31 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () => controller.centerCamera(),
-          child: Icon(Icons.navigation_rounded)),
+              onPressed: () => controller.centerCamera(),
+              child: Icon(Icons.navigation_rounded))
+          .animate(
+            delay: 100.ms,
+          )
+          .scaleXY(
+            curve: Curves.easeOutCubic,
+            duration: 400.ms,
+            delay: 150.ms,
+            begin: -2,
+            end: 1,
+          )
+          .slideY(
+            end: 0,
+            begin: 5,
+            curve: Curves.easeOutQuint,
+            duration: 400.ms,
+          )
+          .then()
+          .blurXY(
+            begin: 3,
+            end: 0,
+            duration: 300.ms,
+            curve: Curves.easeOut,
+          ),
     );
   }
 }

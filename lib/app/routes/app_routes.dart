@@ -16,6 +16,7 @@ abstract class Routes {
   static const LIKED_TEACHERS = _Paths.LIKED_TEACHERS;
   static const TEACHERS_NEARBY = _Paths.TEACHERS_NEARBY;
   static const DETAILS = _Paths.DETAILS;
+  static const SETTINGS = _Paths.SETTINGS;
 }
 
 abstract class _Paths {
@@ -25,10 +26,11 @@ abstract class _Paths {
   static const LOGIN = '/login';
   static const REGISTER = '/register';
   static const PROFILE = '/profile';
-  static const PROFILE_SETTINGS = '/settings';
+  static const PROFILE_SETTINGS = '/profile-settings';
   static const GOOGLE_DATA = '/google-data';
   static const CHATS = '/chats';
   static const LIKED_TEACHERS = '/liked-teachers';
   static const TEACHERS_NEARBY = '/teachers-nearby';
   static const DETAILS = '/details';
+  static const SETTINGS = '/settings';
 }
