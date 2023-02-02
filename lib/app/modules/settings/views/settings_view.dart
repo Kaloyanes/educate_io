@@ -73,28 +73,50 @@ class SettingsView extends GetView<SettingsController> {
                 .copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           Divider(thickness: 2, color: Theme.of(context).colorScheme.primary),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // Text("Лист"),
-              const Icon(
-                Icons.list,
-                size: 30,
-              ),
-              Obx(
-                () => Switch(
-                  value: controller.isGrid.value!,
-                  onChanged: (val) => controller.changeList(val),
+          Text(
+            "Как да бъдат показани учителите на началната страница?",
+            style: TextStyle(
+              fontSize: 20,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          Obx(
+            () => Column(
+              children: [
+                RadioListTile(
+                  value: false,
+                  groupValue: controller.isGrid.value,
+                  onChanged: (value) => controller.changeList(value!),
+                  title: Text("Списък"),
                 ),
-              ),
-              const Icon(
-                Icons.grid_4x4,
-                size: 30,
-              ),
-
-              // Text("Решетка"),
-            ],
-          )
+                RadioListTile(
+                  value: true,
+                  groupValue: controller.isGrid.value,
+                  onChanged: (value) => controller.changeList(value!),
+                  title: Text("Решетка"),
+                ),
+              ],
+            ),
+          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //   children: [
+          //     const Icon(
+          //       Icons.list_rounded,
+          //       size: 30,
+          //     ),
+          //     Obx(
+          //       () => Switch(
+          //         value: controller.isGrid.value!,
+          //         onChanged: (val) => controller.changeList(val),
+          //       ),
+          //     ),
+          //     const Icon(
+          //       Icons.grid_4x4_rounded,
+          //       size: 30,
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

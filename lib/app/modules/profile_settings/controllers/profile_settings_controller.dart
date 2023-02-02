@@ -260,6 +260,14 @@ class ProfileSettingsController extends GetxController {
       auth.currentUser!.updateEmail(email);
     }
 
+    var locationDoc = store.collection("locations").doc(auth.currentUser!.uid);
+
+    if ((await locationDoc.get()).exists) {
+      locationDoc.update({
+        "show": showProfile.value,
+      });
+    }
+
     doc.update(data);
   }
 
@@ -526,6 +534,7 @@ class ProfileSettingsController extends GetxController {
 
     locationDoc.set({
       "place": GeoPoint(position.latitude, position.longitude),
+      "show": showProfile.value,
     });
   }
 }
