@@ -1,23 +1,29 @@
 import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:educate_io/app/models/teacher_model.dart';
+import 'package:educate_io/app/modules/details/views/details_view.dart';
 import 'package:educate_io/app/modules/teachers_nearby/components/filter_bottom_sheet.dart';
+import 'package:fast_image_resizer/fast_image_resizer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:ui' as ui;
 
 class TeachersNearbyController extends GetxController {
   late GoogleMapController mapController;
 
   final RxList<Marker> markers = <Marker>[].obs;
 
-  final isVisible = true.obs;
+  final showControls = false.obs;
 
   @override
   void onClose() {
-    isVisible.value = false;
     mapController.dispose();
     super.onClose();
   }
@@ -28,25 +34,132 @@ class TeachersNearbyController extends GetxController {
     super.onInit();
   }
 
-  void configureMap(GoogleMapController controller) =>
-      mapController = controller;
+  void configureMap(GoogleMapController controller) {
+    showControls.value = true;
+    mapController = controller;
+  }
 
-  Marker template(LatLng latlng) {
+  Future<Marker> template(LatLng latlng, String docId) async {
+    var imageRef =
+        await FirebaseStorage.instance.ref("profile_pictures/").listAll();
+
+    var imageBytes = await imageRef.items
+        .where((element) => element.name.contains(docId))
+        .first
+        .getData();
+
+    imageBytes ??= Uint8List(0);
+
+    var doc =
+        await FirebaseFirestore.instance.collection("users").doc(docId).get();
+
+    var teacher = Teacher.fromMap(doc.data() ?? {});
+
     return Marker(
       markerId: MarkerId(latlng.toString()),
       position: latlng,
       flat: false,
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta),
-      onTap: () => ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.grey.shade800,
-          content: const Text(
-            "Учител",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-        ),
+      icon: await convertImageFileToCustomBitmapDescriptor(
+        imageBytes,
+        title: teacher.name,
+        size: 150,
+        titleBackgroundColor:
+            Theme.of(Get.context!).colorScheme.primaryContainer,
+        addBorder: true,
+        borderColor: Theme.of(Get.context!).colorScheme.primaryContainer,
+        borderSize: 20,
       ),
+      onTap: () => showDetails(teacher),
       consumeTapEvents: false,
+    );
+  }
+
+  Future<BitmapDescriptor> convertImageFileToCustomBitmapDescriptor(
+      Uint8List imageUint8List,
+      {int size = 150,
+      bool addBorder = false,
+      Color borderColor = Colors.white,
+      double borderSize = 10,
+      required String title,
+      Color titleColor = Colors.white,
+      Color titleBackgroundColor = Colors.black}) async {
+    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
+    final Canvas canvas = Canvas(pictureRecorder);
+    final Paint paint = Paint()..color;
+    final TextPainter textPainter = TextPainter(
+      textDirection: TextDirection.ltr,
+    );
+    final double radius = size / 2;
+
+    //make canvas clip path to prevent image drawing over the circle
+    final Path clipPath = Path();
+    clipPath.addRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
+        Radius.circular(100)));
+    clipPath.addRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10),
+        Radius.circular(100)));
+    canvas.clipPath(clipPath);
+
+    //paintImage
+    final ui.Codec codec = await ui.instantiateImageCodec(imageUint8List);
+    final ui.FrameInfo imageFI = await codec.getNextFrame();
+    paintImage(
+        canvas: canvas,
+        rect: Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
+        image: imageFI.image);
+
+    if (addBorder) {
+      //draw Border
+      paint..color = borderColor;
+      paint..style = PaintingStyle.stroke;
+      paint..strokeWidth = borderSize;
+      canvas.drawCircle(Offset(radius, radius), radius, paint);
+    }
+
+    if (title != null) {
+      if (title.split(" ").length > 1) {
+        title = title.split(" ")[0];
+      }
+      // //draw Title background
+      paint..color = titleBackgroundColor;
+      paint..style = PaintingStyle.fill;
+      canvas.drawRRect(
+          RRect.fromRectAndRadius(
+              Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10),
+              Radius.circular(100)),
+          paint);
+
+      //draw Title
+      textPainter.text = TextSpan(
+          text: title,
+          style: TextStyle(
+            fontSize: radius / 2.5,
+            fontWeight: FontWeight.bold,
+            color: titleColor,
+          ));
+      textPainter.layout();
+      textPainter.paint(
+          canvas,
+          Offset(radius - textPainter.width / 2,
+              size * 9.5 / 10 - textPainter.height / 2));
+    }
+
+    //convert canvas as PNG bytes
+    final _image = await pictureRecorder
+        .endRecording()
+        .toImage(size, (size * 1.1).toInt());
+    final data = await _image.toByteData(format: ui.ImageByteFormat.png);
+
+    //convert PNG bytes as BitmapDescriptor
+    return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
+  }
+
+  Future<void> showDetails(Teacher teacher) async {
+    Get.to(
+      DetailsView(),
+      arguments: {"teacher": teacher},
+      fullscreenDialog: true,
     );
   }
 
@@ -54,13 +167,17 @@ class TeachersNearbyController extends GetxController {
     var collection =
         await FirebaseFirestore.instance.collection("locations").get();
 
-    for (var doc in collection.docs) {
+    for (var doc in collection.docs.where(
+      (element) =>
+          element.id != FirebaseAuth.instance.currentUser?.uid &&
+          element.get("show") == true,
+    )) {
       var value = doc.get("place") as GeoPoint;
-      if (doc.id == FirebaseAuth.instance.currentUser?.uid) continue;
 
       inspect(value);
 
-      markers.add(template(LatLng(value.latitude, value.longitude)));
+      markers
+          .add(await template(LatLng(value.latitude, value.longitude), doc.id));
     }
   }
 
@@ -100,11 +217,4 @@ class TeachersNearbyController extends GetxController {
 
   Future<void> centerCamera() async => await mapController
       .animateCamera(CameraUpdate.newLatLngZoom(await getLocation(), 16));
-
-  void showFilters() {
-    showModalBottomSheet(
-      context: Get.context!,
-      builder: (context) => FilterBottomSheet(),
-    );
-  }
 }

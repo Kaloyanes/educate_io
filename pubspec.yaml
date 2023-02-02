@@ -8,11 +8,13 @@ environment:
 
 dependencies:
   animated_list_plus: ^0.4.5
+  bitmap: ^0.1.3
   cached_network_image: ^3.2.3
   cloud_firestore: ^4.3.1
   crop_your_image: ^0.7.4
   cupertino_icons: ^1.0.5
   dynamic_color: ^1.6.0
+  fast_image_resizer: ^0.0.2
   firebase_analytics: ^10.1.0
   firebase_auth: ^4.2.5
   firebase_core: ^2.4.1
@@ -22,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_animate: ^3.1.0
+  flutter_cache_manager: ^3.3.0
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.2.17
