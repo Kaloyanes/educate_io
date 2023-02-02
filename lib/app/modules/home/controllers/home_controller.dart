@@ -6,10 +6,7 @@ import 'package:get/get.dart';
 class HomeController extends GetxController {
   final authStream = FirebaseAuth.instance.authStateChanges();
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
+  final isGrid = (GetStorageService().read<bool>("isGrid") ?? false).obs;
 
   Future<String> getName() async {
     var data = await FirestoreProfileService.getUserData();

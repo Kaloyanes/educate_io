@@ -20,9 +20,9 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
   Future<void> changeThemeColor(
       {bool dynamicColor = false, bool save = false}) async {
     mainController.dynamicColor.value = dynamicColor;
+    await GetStorageService().writeSettings("dynamic", dynamicColor);
 
     if (dynamicColor) {
-      await GetStorageService().writeSettings("dynamic", dynamicColor);
       Get.back();
       return;
     }

@@ -33,10 +33,14 @@ class HomeView extends GetView<HomeController> {
   }
 
   SliverAppBar appBar(BuildContext context, bool scrolled) {
-    return SliverAppBar.medium(
+    return SliverAppBar.large(
       forceElevated: scrolled,
-      actions: const [
-        Padding(
+      actions: [
+        IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+        SizedBox(
+          width: 10,
+        ),
+        const Padding(
           padding: EdgeInsets.only(right: 20),
           child: ProfilePicture(),
         )
@@ -48,6 +52,7 @@ class HomeView extends GetView<HomeController> {
         ),
         centerTitle: true,
       ),
+      expandedHeight: 120,
       stretch: true,
     );
   }
@@ -72,7 +77,7 @@ class HomeView extends GetView<HomeController> {
             children: const [
               TeacherSubject(
                 subject: "Програмиране",
-                isGrid: true,
+                isGrid: false,
               ),
             ],
           );
@@ -92,23 +97,27 @@ class HomeView extends GetView<HomeController> {
 
             var list = user.badSubjects ?? user.subjects;
 
-            return PageView.builder(
-              itemCount: list.length,
-              itemBuilder: (context, index) => TeacherSubject(
-                isGrid: true,
-                subject: list.elementAt(index),
-              ),
-            );
+            return Obx(() {
+              if (controller.isGrid.value) {
+                return PageView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (context, index) => TeacherSubject(
+                    isGrid: true,
+                    subject: list.elementAt(index),
+                  ),
+                );
+              }
 
-            return ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: list.length,
-              itemBuilder: (context, index) => TeacherSubject(
-                isGrid: false,
-                subject: list.elementAt(index),
-              ),
-            );
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: list.length < 10 ? list.length : 10,
+                itemBuilder: (context, index) => TeacherSubject(
+                  isGrid: false,
+                  subject: list.elementAt(index),
+                ),
+              );
+            });
           },
         );
       },

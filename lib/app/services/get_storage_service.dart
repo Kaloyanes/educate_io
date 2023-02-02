@@ -52,7 +52,7 @@ class GetStorageService {
   }
 
   Color getColor() {
-    var color = Color(_box.read<int>("color") ?? Colors.deepPurple.value);
+    var color = Color(_box.read<int>("color") ?? Colors.orange.value);
 
     printInfo(info: color.toString());
 

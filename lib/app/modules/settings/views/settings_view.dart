@@ -1,4 +1,5 @@
 import 'package:educate_io/app/services/get_storage_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -27,7 +28,6 @@ class SettingsView extends GetView<SettingsController> {
           ),
           Divider(thickness: 2, color: Theme.of(context).colorScheme.primary),
           ListTile(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
             leading: Icon(Theme.of(context).brightness == Brightness.dark
                 ? Icons.dark_mode
                 : Icons.light_mode),
@@ -64,6 +64,36 @@ class SettingsView extends GetView<SettingsController> {
               ),
             ),
             onTap: () => controller.changeColor(),
+          ),
+          Text(
+            "Данни",
+            style: Theme.of(context)
+                .textTheme
+                .headlineMedium!
+                .copyWith(color: Theme.of(context).colorScheme.primary),
+          ),
+          Divider(thickness: 2, color: Theme.of(context).colorScheme.primary),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // Text("Лист"),
+              const Icon(
+                Icons.list,
+                size: 30,
+              ),
+              Obx(
+                () => Switch(
+                  value: controller.isGrid.value!,
+                  onChanged: (val) => controller.changeList(val),
+                ),
+              ),
+              const Icon(
+                Icons.grid_4x4,
+                size: 30,
+              ),
+
+              // Text("Решетка"),
+            ],
           )
         ],
       ),

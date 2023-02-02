@@ -34,7 +34,8 @@ class TeacherCard extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                // height: 200,
+                width: 190,
+                height: 190,
                 child: Hero(
                   tag: teacher,
                   child: CachedNetworkImage(
