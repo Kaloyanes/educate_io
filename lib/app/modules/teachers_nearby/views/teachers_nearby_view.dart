@@ -12,33 +12,30 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           // automaticallyImplyLeading: false,
           title: Obx(
             () => TextField(
+              controller: controller.searchController,
               decoration: InputDecoration(
                 fillColor: Theme.of(context).colorScheme.primaryContainer,
                 hintText: "Бургас",
                 label: Text("Място"),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
               ),
+              textInputAction: TextInputAction.search,
+              onEditingComplete: () => controller.search(),
             )
                 .animate(
-                  delay: 100.ms,
+                  delay: 300.ms,
                   target: controller.showControls.value ? 1 : 0,
                 )
                 .scaleXY(
                   curve: Curves.easeOutCubic,
                   duration: 400.ms,
-                  delay: 150.ms,
+                  delay: 250.ms,
                   begin: -2,
                   end: 1,
                 )
@@ -52,10 +49,50 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
                 .blurXY(
                   begin: 3,
                   end: 0,
-                  duration: 300.ms,
+                  duration: 150.ms,
                   curve: Curves.easeOut,
                 ),
           ),
+          actions: [
+            Obx(
+              () => Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                margin: const EdgeInsets.all(10),
+                child: IconButton(
+                  onPressed: () => controller.search(),
+                  icon: Icon(Icons.search),
+                ),
+              )
+                  .animate(
+                    delay: 300.ms,
+                    target: controller.showControls.value ? 1 : 0,
+                  )
+                  .scaleXY(
+                    curve: Curves.easeOutCubic,
+                    duration: 400.ms,
+                    delay: 250.ms,
+                    begin: -2,
+                    end: 1,
+                  )
+                  .slideY(
+                    end: 0,
+                    begin: -5,
+                    curve: Curves.easeOutQuint,
+                    duration: 400.ms,
+                  )
+                  .then()
+                  .blurXY(
+                    begin: 3,
+                    end: 0,
+                    duration: 150.ms,
+                    curve: Curves.easeOut,
+                  ),
+            ),
+          ],
+
           backgroundColor: Colors.transparent,
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarIconBrightness: Brightness.dark,
@@ -75,13 +112,13 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
               ),
             )
                 .animate(
-                  delay: 100.ms,
+                  delay: 300.ms,
                   target: controller.showControls.value ? 1 : 0,
                 )
                 .scaleXY(
                   curve: Curves.easeOutCubic,
                   duration: 400.ms,
-                  delay: 150.ms,
+                  delay: 250.ms,
                   begin: -2,
                   end: 1,
                 )
@@ -95,7 +132,7 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
                 .blurXY(
                   begin: 3,
                   end: 0,
-                  duration: 300.ms,
+                  duration: 150.ms,
                   curve: Curves.easeOut,
                 ),
           ),
@@ -136,13 +173,13 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
                   onPressed: () => controller.centerCamera(),
                   child: Icon(Icons.navigation_rounded))
               .animate(
-                delay: 100.ms,
+                delay: 300.ms,
                 target: controller.showControls.value ? 1 : 0,
               )
               .scaleXY(
                 curve: Curves.easeOutCubic,
                 duration: 400.ms,
-                delay: 150.ms,
+                delay: 200.ms,
                 begin: -2,
                 end: 1,
               )
@@ -156,7 +193,7 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
               .blurXY(
                 begin: 3,
                 end: 0,
-                duration: 300.ms,
+                duration: 150.ms,
                 curve: Curves.easeOut,
               ),
         ));

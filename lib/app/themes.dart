@@ -11,10 +11,9 @@ class Themes {
       colorScheme: colors.harmonized(),
       appBarTheme: AppBarTheme(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
+          borderRadius: BorderRadius.circular(1),
         ),
         centerTitle: true,
-        scrolledUnderElevation: 1,
       ),
       bottomAppBarTheme: const BottomAppBarTheme(
         elevation: 1,

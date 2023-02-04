@@ -35,7 +35,7 @@ class TeacherCard extends StatelessWidget {
             children: [
               SizedBox(
                 width: 190,
-                height: 190,
+                // height: 190,
                 child: Hero(
                   tag: teacher,
                   child: CachedNetworkImage(
@@ -70,26 +70,35 @@ class TeacherCard extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      teacher.name,
-                      style: Theme.of(Get.context!)
-                          .textTheme
-                          .titleLarge!
-                          .copyWith(fontSize: 20),
-                    ),
-                    Text(
-                      subject,
-                      style: Get.textTheme.titleMedium,
-                    ),
-                    Text(
-                      teacher.role == "teacher" ? "Учител" : "Ученик",
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        teacher.name,
+                        style: Theme.of(Get.context!)
+                            .textTheme
+                            .titleLarge!
+                            .copyWith(fontSize: 20),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        subject,
+                        style: Theme.of(context).textTheme.titleMedium,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        teacher.role == "teacher" ? "Учител" : "Ученик",
+                        style: Theme.of(context).textTheme.titleMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

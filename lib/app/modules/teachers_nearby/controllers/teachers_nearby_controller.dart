@@ -10,13 +10,21 @@ import 'package:fast_image_resizer/fast_image_resizer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart'
+    as places;
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:ui' as ui;
 
+import 'package:google_maps_webservice/geocoding.dart';
+
 class TeachersNearbyController extends GetxController {
   late GoogleMapController mapController;
+
+  final searchController = TextEditingController();
 
   final RxList<Marker> markers = <Marker>[].obs;
 
@@ -217,4 +225,22 @@ class TeachersNearbyController extends GetxController {
 
   Future<void> centerCamera() async => await mapController
       .animateCamera(CameraUpdate.newLatLngZoom(await getLocation(), 16));
+
+  Future<void> search() async {
+    print(searchController.text.trim());
+
+    var geocoding =
+        GoogleMapsGeocoding(apiKey: "AIzaSyBXQFGCIiVUpDMidzh8A_FhkD-9vVKqmfU");
+
+    var request = await geocoding.searchByAddress(searchController.text.trim(),
+        language: "bg");
+
+    var place = request.results.first;
+    mapController.animateCamera(
+      CameraUpdate.newLatLngZoom(
+        LatLng(place.geometry.location.lat, place.geometry.location.lng),
+        15,
+      ),
+    );
+  }
 }

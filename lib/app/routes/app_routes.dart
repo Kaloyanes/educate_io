@@ -17,6 +17,7 @@ abstract class Routes {
   static const TEACHERS_NEARBY = _Paths.TEACHERS_NEARBY;
   static const DETAILS = _Paths.DETAILS;
   static const SETTINGS = _Paths.SETTINGS;
+  static const SEARCH = _Paths.SEARCH;
 }
 
 abstract class _Paths {
@@ -33,4 +34,5 @@ abstract class _Paths {
   static const TEACHERS_NEARBY = '/teachers-nearby';
   static const DETAILS = '/details';
   static const SETTINGS = '/settings';
+  static const SEARCH = '/search';
 }
