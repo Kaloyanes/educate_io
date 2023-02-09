@@ -22,7 +22,7 @@ class ReviewCard extends StatelessWidget {
   final String docId;
   final DateTime date;
 
-  DateFormat dateFormatter = DateFormat("H:m | d/M/y");
+  final DateFormat dateFormatter = DateFormat("H:m | d/M/y");
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class ReviewCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text(name),
@@ -71,7 +71,7 @@ class ReviewCard extends StatelessWidget {
                         initialRating: review,
                         allowHalfRating: true,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text(dateFormatter.format(date)),

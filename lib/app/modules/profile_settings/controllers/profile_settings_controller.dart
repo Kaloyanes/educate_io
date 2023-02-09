@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,10 +9,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_picker/image_picker.dart';
 import "package:path/path.dart" as p;
 
@@ -112,6 +113,7 @@ class ProfileSettingsController extends GetxController {
     if (!file.existsSync()) return;
 
     var ext = p.extension(photo.value.path);
+
     try {
       final ref = storage.ref("/profile_pictures/${auth.currentUser!.uid}$ext");
 
@@ -137,6 +139,18 @@ class ProfileSettingsController extends GetxController {
         ),
       );
     }
+  }
+
+  Future<bool> checkPhotoForNSFW(String path) async {
+    var imageLabeler = ImageLabeler(options: ImageLabelerOptions());
+
+    var image = InputImage.fromFilePath(path);
+
+    var labels = await imageLabeler.processImage(image);
+
+    inspect(labels);
+
+    return false;
   }
 
   Future<void> deletePhotoSetting() async {

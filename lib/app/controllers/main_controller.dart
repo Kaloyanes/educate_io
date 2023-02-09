@@ -1,7 +1,6 @@
 import 'package:educate_io/app/services/get_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class MainController extends GetxController {
   final dynamicColor = false.obs;

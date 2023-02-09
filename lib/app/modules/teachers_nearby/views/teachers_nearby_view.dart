@@ -7,12 +7,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../controllers/teachers_nearby_controller.dart';
 
 class TeachersNearbyView extends GetView<TeachersNearbyController> {
-  TeachersNearbyView({Key? key}) : super(key: key);
+  const TeachersNearbyView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           // automaticallyImplyLeading: false,
@@ -22,7 +22,7 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
               decoration: InputDecoration(
                 fillColor: Theme.of(context).colorScheme.primaryContainer,
                 hintText: "Бургас",
-                label: Text("Място"),
+                label: const Text("Място"),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
               ),
               textInputAction: TextInputAction.search,
@@ -63,7 +63,7 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
                 margin: const EdgeInsets.all(10),
                 child: IconButton(
                   onPressed: () => controller.search(),
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                 ),
               )
                   .animate(
@@ -171,7 +171,7 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
         floatingActionButton: Obx(
           () => FloatingActionButton(
                   onPressed: () => controller.centerCamera(),
-                  child: Icon(Icons.navigation_rounded))
+                  child: const Icon(Icons.navigation_rounded))
               .animate(
                 delay: 300.ms,
                 target: controller.showControls.value ? 1 : 0,

@@ -14,7 +14,7 @@ class LikedTeachersView extends GetView<LikedTeachersController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Запазени учители'),
+        title: const Text('Запазени ментори'),
         centerTitle: true,
       ),
       body: StreamBuilder(
@@ -35,7 +35,7 @@ class LikedTeachersView extends GetView<LikedTeachersController> {
           if (data.isEmpty) {
             return Center(
               child: Text(
-                "Нямаш запазени учители",
+                "Нямаш запазени ментори",
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             );
@@ -75,77 +75,12 @@ class LikedTeachersView extends GetView<LikedTeachersController> {
                     );
                   },
                 ),
-            ]
-                .animate(
-                  interval: 100.ms,
-                )
-                .scaleXY(
+            ].animate(interval: 100.ms).scaleXY(
                   begin: 0,
                   end: 1,
-                  curve: Curves.easeInOutCubic,
-                  duration: 350.ms,
-                )
-                .slideY(
-                  begin: 1,
-                  end: 0,
-                  curve: Curves.easeInOutCubic,
-                  duration: 300.ms,
-                  delay: 100.ms,
-                )
-                .blurXY(
-                  begin: 4,
-                  curve: Curves.easeOutExpo,
-                  delay: 250.ms,
-                  duration: 400.ms,
+                  curve: Curves.fastLinearToSlowEaseIn,
+                  duration: 500.ms,
                 ),
-            // itemBuilder: (context, index) {
-            //   return FutureBuilder(
-            //     future: FirebaseFirestore.instance
-            //         .collection("users")
-            //         .doc(data[index])
-            //         .get(),
-            //     builder: (context, snapshot) {
-            //       var teacherData = snapshot.data;
-            //       if (teacherData == null) {
-            //         return const Center(
-            //           child: CircularProgressIndicator(),
-            //         );
-            //       }
-
-            //       var mapData = teacherData.data() ?? {};
-            //       mapData.addAll({"uid": data[index]});
-            //       return Obx(
-            //         () => HeroMode(
-            //           enabled: controller.heroTransition.value,
-            //           child: TeacherCard(
-            //             subject: mapData["subjects"][0],
-            //             teacher: Teacher.fromMap(mapData),
-            //           )
-            //               .animate()
-            //               .scaleXY(
-            //                 begin: 0,
-            //                 end: 1,
-            //                 curve: Curves.easeInOutCubic,
-            //                 duration: 350.ms,
-            //               )
-            //               .slideY(
-            //                 begin: 1,
-            //                 end: 0,
-            //                 curve: Curves.easeInOutCubic,
-            //                 duration: 500.ms,
-            //                 delay: 100.ms,
-            //               )
-            //               .blurXY(
-            //                 begin: 2,
-            //                 curve: Curves.easeOutExpo,
-            //                 delay: 250.ms,
-            //                 duration: 400.ms,
-            //               ),
-            //         ),
-            //       );
-            //     },
-            //   );
-            // },
           );
         },
       ),

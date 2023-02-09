@@ -49,7 +49,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
                 ),
                 const SizedBox(height: 15),
                 profileTextField(
-                  addedDecoration: InputDecoration(prefixText: "+359"),
+                  addedDecoration: const InputDecoration(prefixText: "+359"),
                   label: "Телефон",
                   type: TextInputType.phone,
                   controller: controller.phoneController,

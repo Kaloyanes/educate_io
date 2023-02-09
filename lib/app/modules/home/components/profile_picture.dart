@@ -16,11 +16,10 @@ class ProfilePicture extends StatefulWidget {
 }
 
 class _ProfilePictureState extends State<ProfilePicture> {
-  var authStream = Stream.empty();
+  var authStream = const Stream.empty();
 
   @override
   void initState() {
-    // TODO: implement initState
     authStream = FirebaseAuth.instance.authStateChanges();
     super.initState();
   }

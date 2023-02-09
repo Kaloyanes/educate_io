@@ -45,12 +45,6 @@ class GetStorageService {
     await _box.write("theme", themeString);
   }
 
-  bool GridMode() {
-    // TODO: SETTING FOR A GRID
-
-    return true;
-  }
-
   Color getColor() {
     var color = Color(_box.read<int>("color") ?? Colors.orange.value);
 

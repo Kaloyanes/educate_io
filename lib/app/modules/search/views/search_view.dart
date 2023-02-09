@@ -1,7 +1,6 @@
 import 'package:educate_io/app/modules/home/components/teacher_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
@@ -39,7 +38,12 @@ class SearchView extends GetView<SearchController> {
             ),
           ),
         ),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.filter_list))],
+        actions: [
+          IconButton(
+            onPressed: () => controller.filter(),
+            icon: const Icon(Icons.filter_list),
+          )
+        ],
         title: Obx(
             () => Text("Намерени резултати: ${controller.teachers.length}")),
         centerTitle: true,
@@ -47,11 +51,10 @@ class SearchView extends GetView<SearchController> {
       body: CupertinoScrollbar(
         child: Obx(
           () => GridView(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, mainAxisExtent: 300),
-            // itemCount: controller.teachers.length > 10
-            //     ? 10
-            //     : controller.teachers.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: controller.gridTeacherCount.value,
+              mainAxisExtent: 300,
+            ),
             children: [
               for (var i = 0;
                   i <

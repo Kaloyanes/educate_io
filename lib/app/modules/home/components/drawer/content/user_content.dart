@@ -16,7 +16,7 @@ class UserContent extends StatelessWidget {
         children: [
           DrawerDestination(
             icon: CupertinoIcons.heart_fill,
-            label: "Запазени учители",
+            label: "Запазени ментори",
             onTap: () => Get.toNamed(Routes.LIKED_TEACHERS),
           ),
           DrawerDestination(
@@ -26,7 +26,7 @@ class UserContent extends StatelessWidget {
           ),
           DrawerDestination(
             icon: Icons.person_pin_circle,
-            label: "Учители на близо",
+            label: "Ментори на близо",
             onTap: () => Get.toNamed(Routes.TEACHERS_NEARBY),
           ),
           const Spacer(),

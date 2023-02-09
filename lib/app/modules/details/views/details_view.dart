@@ -45,10 +45,11 @@ class DetailsView extends GetView<DetailsController> {
             children: [
               favouriteButton(),
               const Spacer(),
-              IconButton(
-                onPressed: () => controller.createChat(),
-                icon: const Icon(Icons.chat),
-              ),
+              if (FirebaseAuth.instance.currentUser != null)
+                IconButton(
+                  onPressed: () => controller.createChat(),
+                  icon: const Icon(Icons.chat),
+                ),
               if (controller.teacher.phone != null)
                 IconButton(
                   onPressed: () => controller.callTeacher(),
@@ -92,173 +93,248 @@ class DetailsView extends GetView<DetailsController> {
 
   Widget profileView(BuildContext context, Teacher teacher) {
     return SingleChildScrollView(
-      child: Column(children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Hero(
-            tag: teacher,
-            child: CachedNetworkImage(
-              imageUrl: teacher.photoUrl!,
-              imageBuilder: (context, imageProvider) => ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image(
-                  fit: BoxFit.fitWidth,
-                  width: 350,
-                  image: imageProvider,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Hero(
+              tag: teacher,
+              child: CachedNetworkImage(
+                imageUrl: teacher.photoUrl!,
+                imageBuilder: (context, imageProvider) => ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image(
+                    fit: BoxFit.fitWidth,
+                    width: 350,
+                    image: imageProvider,
+                  ),
                 ),
-              ),
-              errorWidget: (context, url, error) => const Icon(
-                Icons.question_mark,
-                size: 50,
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.question_mark,
+                  size: 50,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              if (teacher.description != null)
-                CategoryCard(
-                  category: "Описание",
-                  value: Text(
-                    teacher.description!,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (teacher.badSubjects != null)
-                    Expanded(
-                      child: CategoryCard(
-                        category: "Търси",
-                        value: Column(
-                          children: [
-                            for (var badSubject in teacher.badSubjects!)
-                              Text(
-                                badSubject,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              )
-                          ],
-                        ),
-                      ),
-                    ),
-                  Expanded(
-                    child: CategoryCard(
-                      category: "Обучава",
-                      value: Column(
-                        children: [
-                          for (var subject in teacher.subjects)
-                            Text(
-                              subject,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            )
-                        ],
-                      ),
+          const SizedBox(
+            height: 10,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                personalInfo(teacher),
+                if (teacher.description != null)
+                  CategoryCard(
+                    category: "Описание",
+                    value: Text(
+                      teacher.description!,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-            ].animate(interval: 70.ms).scaleXY(
-                  end: 1,
-                  begin: 0,
-                  duration: 600.ms,
-                  curve: Curves.easeInOutQuint,
+                subjectsColumn(teacher, context),
+                const SizedBox(
+                  height: 10,
                 ),
+              ].animate(interval: 70.ms).scaleXY(
+                    end: 1,
+                    begin: 0,
+                    duration: 600.ms,
+                    curve: Curves.easeInOutQuint,
+                  ),
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        ListTile(
-          onTap: () => Get.to(
-            () => const RatingView(),
-            arguments: {
-              "id": teacher.uid,
-            },
+          const SizedBox(
+            height: 20,
           ),
-          title: FutureBuilder(
-              future: FirebaseFirestore.instance
-                  .collection("users")
-                  .doc(teacher.uid)
-                  .collection("reviews")
-                  .get(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+          rating(teacher).animate(delay: 300.ms).scaleXY(
+                delay: 150.ms,
+                begin: 0,
+                duration: 600.ms,
+                end: 1,
+                curve: Curves.easeInOutExpo,
+              ),
+          const SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
+    );
+  }
 
-                var docs = snapshot.data!.docs;
+  ListTile rating(Teacher teacher) {
+    return ListTile(
+      onTap: () => Get.to(
+        () => const RatingView(),
+        arguments: {
+          "id": teacher.uid,
+        },
+      ),
+      title: FutureBuilder(
+          future: FirebaseFirestore.instance
+              .collection("users")
+              .doc(teacher.uid)
+              .collection("reviews")
+              .get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
 
-                var rating = 0.0;
-                if (docs.isNotEmpty) {
-                  for (var element in docs) {
-                    rating += element.data()["rating"] as num;
-                  }
+            var docs = snapshot.data!.docs;
 
-                  rating /= docs.length;
-                }
+            var rating = 0.0;
+            if (docs.isNotEmpty) {
+              for (var element in docs) {
+                rating += element.data()["rating"] as num;
+              }
 
-                return Column(
+              rating /= docs.length;
+            }
+
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        RatingBar.builder(
-                          itemBuilder: (context, index) => Icon(
-                            Icons.star,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          onRatingUpdate: (value) => print(value),
-                          ignoreGestures: true,
-                          allowHalfRating: true,
-                          initialRating: rating,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          rating.toStringAsFixed(1),
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ],
+                    RatingBar.builder(
+                      itemBuilder: (context, index) => Icon(
+                        Icons.star,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      onRatingUpdate: (value) {},
+                      ignoreGestures: true,
+                      allowHalfRating: true,
+                      initialRating: rating,
+                    ),
+                    const SizedBox(
+                      width: 10,
                     ),
                     Text(
-                      "${docs.length} ${docs.length == 1 ? "ревю" : "ревюта"}",
+                      rating.toStringAsFixed(1),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                         fontSize: 20,
                       ),
-                    )
+                    ),
                   ],
-                );
-              }),
-        ).animate(delay: 300.ms).scaleXY(
-              delay: 150.ms,
-              begin: 0,
-              duration: 600.ms,
-              end: 1,
-              curve: Curves.easeInOutExpo,
+                ),
+                Text(
+                  "${docs.length} ${docs.length == 1 ? "ревю" : "ревюта"}",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: 20,
+                  ),
+                )
+              ],
+            );
+          }),
+    );
+  }
+
+  Row subjectsColumn(Teacher teacher, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (teacher.badSubjects != null)
+          Expanded(
+            child: CategoryCard(
+              category: "Търси",
+              value: Column(
+                children: [
+                  for (var badSubject in teacher.badSubjects!)
+                    Text(
+                      badSubject,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    )
+                ],
+              ),
             ),
-        const SizedBox(
-          height: 20,
+          ),
+        Expanded(
+          child: CategoryCard(
+            category: "Обучава",
+            value: Column(
+              children: [
+                for (var subject in teacher.subjects)
+                  Text(
+                    subject,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  )
+              ],
+            ),
+          ),
         ),
-      ]),
+      ],
+    );
+  }
+
+  Row personalInfo(Teacher teacher) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Flexible(
+          flex: 3,
+          child: Card(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Center(
+                child: FittedBox(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.email,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        teacher.email,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 1,
+          child: Card(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Center(
+                child: FittedBox(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.person,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        (DateTime.now().difference(teacher.birthDay).inDays /
+                                365)
+                            .toStringAsFixed(0),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

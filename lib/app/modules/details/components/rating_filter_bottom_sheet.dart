@@ -14,7 +14,7 @@ class _RatingFiltersBottomSheetState extends State<RatingFiltersBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 300,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -43,7 +43,7 @@ class _RatingFiltersBottomSheetState extends State<RatingFiltersBottomSheet> {
                   "endStars": selectedRange.end,
                 },
               ),
-              icon: Icon(Icons.save),
+              icon: const Icon(Icons.save),
               label: const Text("Запази филтрите"),
             )
           ],

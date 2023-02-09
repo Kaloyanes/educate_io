@@ -46,7 +46,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
                   size: 50,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Text(

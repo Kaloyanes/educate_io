@@ -11,8 +11,6 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/liked_teachers/bindings/liked_teachers_binding.dart';
 import '../modules/liked_teachers/views/liked_teachers_view.dart';
-import '../modules/profile/bindings/profile_binding.dart';
-import '../modules/profile/views/profile_view.dart';
 import '../modules/profile_settings/bindings/profile_settings_bindings.dart';
 import '../modules/profile_settings/views/profile_settings_view.dart';
 import '../modules/search/bindings/search_binding.dart';
@@ -57,12 +55,6 @@ class AppPages {
       ],
     ),
     GetPage(
-      name: _Paths.PROFILE,
-      page: () => const ProfileView(),
-      binding: ProfileBinding(),
-      children: [],
-    ),
-    GetPage(
       name: _Paths.PROFILE_SETTINGS,
       page: () => const ProfileSettingsView(),
       binding: ProfileSettingsBinding(),
@@ -79,7 +71,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.TEACHERS_NEARBY,
-      page: () => TeachersNearbyView(),
+      page: () => const TeachersNearbyView(),
       binding: TeachersNearbyBinding(),
     ),
     GetPage(

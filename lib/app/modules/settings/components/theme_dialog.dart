@@ -10,15 +10,15 @@ class ThemeDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Сменете темата"),
+      title: const Text("Сменете темата"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           RadioListTile(
             enableFeedback: true,
-            title: Text("Системна"),
-            subtitle: Text(
+            title: const Text("Системна"),
+            subtitle: const Text(
                 "Ако устройството ви е в тъмен режим, то и приложението ще бъде"),
             value: ThemeMode.system,
             selected: themeVal == ThemeMode.system,
@@ -28,7 +28,7 @@ class ThemeDialog extends StatelessWidget {
           ),
           RadioListTile(
             enableFeedback: true,
-            title: Text("Тъмна"),
+            title: const Text("Тъмна"),
             value: ThemeMode.dark,
             selected: themeVal == ThemeMode.dark,
             groupValue: themeVal,
@@ -37,7 +37,7 @@ class ThemeDialog extends StatelessWidget {
           ),
           RadioListTile(
             enableFeedback: true,
-            title: Text("Светла"),
+            title: const Text("Светла"),
             value: ThemeMode.light,
             selected: themeVal == ThemeMode.light,
             groupValue: themeVal,
@@ -49,7 +49,7 @@ class ThemeDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Get.back(),
-          child: Text("Ок"),
+          child: const Text("Ок"),
         ),
       ],
     );

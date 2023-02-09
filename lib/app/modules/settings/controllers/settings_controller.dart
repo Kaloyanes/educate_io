@@ -2,7 +2,6 @@ import 'package:educate_io/app/modules/home/controllers/home_controller.dart';
 import 'package:educate_io/app/modules/settings/components/color_picker_dialog.dart';
 import 'package:educate_io/app/modules/settings/components/theme_dialog.dart';
 import 'package:educate_io/app/services/get_storage_service.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -11,6 +10,9 @@ class SettingsController extends GetxController {
   final themeVal = GetStorageService().read<String>("theme").obs;
 
   final isGrid = GetStorageService().read<bool>("isGrid").obs;
+
+  final gridTeacherCount =
+      (GetStorageService().read<int>("teacherGridCount") ?? 2).obs;
 
   @override
   void onInit() {
@@ -40,5 +42,10 @@ class SettingsController extends GetxController {
     homeController.isGrid.value = value;
     isGrid.value = value;
     await GetStorageService().writeSettings("isGrid", value);
+  }
+
+  Future<void> changeGridTeacher(int value) async {
+    await GetStorageService().writeSettings("teacherGridCount", value);
+    gridTeacherCount.value = value;
   }
 }

@@ -3,7 +3,6 @@ import 'package:educate_io/app/controllers/main_controller.dart';
 import 'package:educate_io/app/firebase_options.dart';
 import 'package:educate_io/app/services/get_storage_service.dart';
 import 'package:educate_io/app/themes.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -12,9 +11,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-// import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'app/routes/app_pages.dart';
 
@@ -22,6 +21,8 @@ Future<void> main() async {
   if (kDebugMode) {
     Animate.restartOnHotReload = true;
   }
+
+  await dotenv.load(fileName: ".env");
 
   var binding = WidgetsFlutterBinding.ensureInitialized();
 

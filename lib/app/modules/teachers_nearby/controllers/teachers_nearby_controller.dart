@@ -1,19 +1,13 @@
 import 'dart:developer';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/details/views/details_view.dart';
-import 'package:educate_io/app/modules/teachers_nearby/components/filter_bottom_sheet.dart';
-import 'package:fast_image_resizer/fast_image_resizer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart'
-    as places;
-import 'package:geocoding/geocoding.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -103,15 +97,16 @@ class TeachersNearbyController extends GetxController {
     final Path clipPath = Path();
     clipPath.addRRect(RRect.fromRectAndRadius(
         Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
-        Radius.circular(100)));
+        const Radius.circular(100)));
     clipPath.addRRect(RRect.fromRectAndRadius(
         Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10),
-        Radius.circular(100)));
+        const Radius.circular(100)));
     canvas.clipPath(clipPath);
 
     //paintImage
     final ui.Codec codec = await ui.instantiateImageCodec(imageUint8List);
     final ui.FrameInfo imageFI = await codec.getNextFrame();
+
     paintImage(
         canvas: canvas,
         rect: Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
@@ -119,53 +114,53 @@ class TeachersNearbyController extends GetxController {
 
     if (addBorder) {
       //draw Border
-      paint..color = borderColor;
-      paint..style = PaintingStyle.stroke;
-      paint..strokeWidth = borderSize;
+      paint
+        ..color = borderColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = borderSize;
       canvas.drawCircle(Offset(radius, radius), radius, paint);
     }
 
-    if (title != null) {
-      if (title.split(" ").length > 1) {
-        title = title.split(" ")[0];
-      }
-      // //draw Title background
-      paint..color = titleBackgroundColor;
-      paint..style = PaintingStyle.fill;
-      canvas.drawRRect(
-          RRect.fromRectAndRadius(
-              Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10),
-              Radius.circular(100)),
-          paint);
-
-      //draw Title
-      textPainter.text = TextSpan(
-          text: title,
-          style: TextStyle(
-            fontSize: radius / 2.5,
-            fontWeight: FontWeight.bold,
-            color: titleColor,
-          ));
-      textPainter.layout();
-      textPainter.paint(
-          canvas,
-          Offset(radius - textPainter.width / 2,
-              size * 9.5 / 10 - textPainter.height / 2));
+    if (title.split(" ").length > 1) {
+      title = title.split(" ")[0];
     }
 
+    paint
+      ..color = titleBackgroundColor
+      ..style = PaintingStyle.fill;
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(
+            Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10),
+            const Radius.circular(100)),
+        paint);
+
+    //draw Title
+    textPainter.text = TextSpan(
+        text: title,
+        style: TextStyle(
+          fontSize: radius / 2.5,
+          fontWeight: FontWeight.bold,
+          color: titleColor,
+        ));
+    textPainter.layout();
+    textPainter.paint(
+        canvas,
+        Offset(radius - textPainter.width / 2,
+            size * 9.5 / 10 - textPainter.height / 2));
+
     //convert canvas as PNG bytes
-    final _image = await pictureRecorder
+    final image = await pictureRecorder
         .endRecording()
         .toImage(size, (size * 1.1).toInt());
-    final data = await _image.toByteData(format: ui.ImageByteFormat.png);
+    final data = await image.toByteData(format: ui.ImageByteFormat.png);
 
     //convert PNG bytes as BitmapDescriptor
     return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
 
-  Future<void> showDetails(Teacher teacher) async {
+  void showDetails(Teacher teacher) {
     Get.to(
-      DetailsView(),
+      const DetailsView(),
       arguments: {"teacher": teacher},
       fullscreenDialog: true,
     );
@@ -181,8 +176,6 @@ class TeachersNearbyController extends GetxController {
           element.get("show") == true,
     )) {
       var value = doc.get("place") as GeoPoint;
-
-      inspect(value);
 
       markers
           .add(await template(LatLng(value.latitude, value.longitude), doc.id));
@@ -202,23 +195,15 @@ class TeachersNearbyController extends GetxController {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
     var position = await Geolocator.getCurrentPosition();
     return Future.value(LatLng(position.latitude, position.longitude));
   }
@@ -227,10 +212,7 @@ class TeachersNearbyController extends GetxController {
       .animateCamera(CameraUpdate.newLatLngZoom(await getLocation(), 16));
 
   Future<void> search() async {
-    print(searchController.text.trim());
-
-    var geocoding =
-        GoogleMapsGeocoding(apiKey: "AIzaSyBXQFGCIiVUpDMidzh8A_FhkD-9vVKqmfU");
+    var geocoding = GoogleMapsGeocoding(apiKey: dotenv.env["GOOGLE_MAPS_API"]);
 
     var request = await geocoding.searchByAddress(searchController.text.trim(),
         language: "bg");

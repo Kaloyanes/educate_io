@@ -4,7 +4,6 @@ import 'package:educate_io/app/modules/home/components/drawer/drawer_component.d
 import 'package:educate_io/app/modules/home/components/profile_picture.dart';
 import 'package:educate_io/app/modules/home/components/teacher_category.dart';
 import 'package:educate_io/app/modules/search/views/search_view.dart';
-import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -22,7 +21,32 @@ class HomeView extends GetView<HomeController> {
       drawer: const DrawerComponent(),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          appBar(context, innerBoxIsScrolled),
+          SliverAppBar.large(
+            forceElevated: innerBoxIsScrolled,
+            actions: [
+              IconButton(
+                  onPressed: () => Get.to(
+                        const SearchView(),
+                      ),
+                  icon: const Icon(Icons.search)),
+              const SizedBox(
+                width: 10,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(right: 20),
+                child: ProfilePicture(),
+              )
+            ],
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                "Ментори",
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              centerTitle: true,
+            ),
+            expandedHeight: 120,
+            stretch: true,
+          ),
         ],
         body: Column(
           children: [
@@ -31,35 +55,6 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
       ),
-    );
-  }
-
-  SliverAppBar appBar(BuildContext context, bool scrolled) {
-    return SliverAppBar.large(
-      forceElevated: scrolled,
-      actions: [
-        IconButton(
-            onPressed: () => Get.to(
-                  SearchView(),
-                ),
-            icon: const Icon(Icons.search)),
-        SizedBox(
-          width: 10,
-        ),
-        const Padding(
-          padding: EdgeInsets.only(right: 20),
-          child: ProfilePicture(),
-        )
-      ],
-      flexibleSpace: FlexibleSpaceBar(
-        title: Text(
-          "Учители",
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        centerTitle: true,
-      ),
-      expandedHeight: 120,
-      stretch: true,
     );
   }
 
@@ -96,7 +91,7 @@ class HomeView extends GetView<HomeController> {
               .get(),
           builder: (context, snapshot) {
             if (snapshot.data == null) {
-              return Text("maika ti");
+              return const Text("maika ti");
             }
 
             var user = Teacher.fromMap(snapshot.data!.data()!);
@@ -116,7 +111,7 @@ class HomeView extends GetView<HomeController> {
 
               return ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: list.length < 10 ? list.length : 10,
                 itemBuilder: (context, index) => TeacherSubject(
                   isGrid: false,

@@ -1,9 +1,12 @@
+import 'dart:developer';
+import 'dart:ui' as ui;
 import 'dart:typed_data';
 
 import 'package:crop_your_image/crop_your_image.dart';
 import 'package:educate_io/app/modules/profile_settings/controllers/profile_settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 
 class ImageCropView extends StatelessWidget {
   ImageCropView({super.key, required Uint8List imageData})
@@ -12,6 +15,7 @@ class ImageCropView extends StatelessWidget {
   final Uint8List _imageData;
 
   final cropController = CropController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +28,6 @@ class ImageCropView extends StatelessWidget {
         image: _imageData,
         controller: cropController,
         onCropped: (value) {
-          (value);
           Get.back(result: value);
         },
         withCircleUi: true,

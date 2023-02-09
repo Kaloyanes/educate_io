@@ -1,10 +1,8 @@
 import 'package:educate_io/app/controllers/main_controller.dart';
 import 'package:educate_io/app/services/get_storage_service.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class ColorPickerDialog extends StatefulWidget {
   const ColorPickerDialog({super.key});
@@ -41,7 +39,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       alignment: Alignment.center,
-      title: Text("Цвят на темата"),
+      title: const Text("Цвят на темата"),
       content: SizedBox(
         height: MediaQuery.of(context).size.height / 2,
         child: ColorPicker(
@@ -70,15 +68,15 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
           children: [
             ElevatedButton(
               onPressed: () => changeThemeColor(save: true),
-              child: Text("Запази новия цвят"),
+              child: const Text("Запази новия цвят"),
             ),
             ElevatedButton(
               onPressed: () => changeThemeColor(dynamicColor: true, save: true),
-              child: Text("Динамичен цвят"),
+              child: const Text("Динамичен цвят"),
             ),
             OutlinedButton(
               onPressed: () => Get.back(),
-              child: Text("Отказ"),
+              child: const Text("Отказ"),
             )
           ],
         ),

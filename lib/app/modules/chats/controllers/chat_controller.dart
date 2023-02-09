@@ -13,7 +13,7 @@ class ChatController extends GetxController {
       .doc(Get.arguments["docId"])
       .collection("messages");
 
-  final collectionStream = Stream.empty().obs;
+  final collectionStream = const Stream.empty().obs;
 
   Object photoUrl = Get.arguments["photoUrl"];
   String docId = Get.arguments["docId"];
@@ -65,15 +65,15 @@ class ChatController extends GetxController {
             FocusScope.of(context).unfocus();
 
             return AlertDialog(
-              icon: Icon(Icons.warning),
-              title: Text(
+              icon: const Icon(Icons.warning),
+              title: const Text(
                 "Намали малко скороста ве момче",
               ),
               actionsAlignment: MainAxisAlignment.center,
               actions: [
                 TextButton(
                   onPressed: () => Get.back(),
-                  child: Text("Ок"),
+                  child: const Text("Ок"),
                 ),
               ],
             );

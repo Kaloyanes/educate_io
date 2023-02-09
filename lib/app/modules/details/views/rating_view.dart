@@ -1,7 +1,3 @@
-import 'dart:developer';
-import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/details/components/review_card.dart';
 import 'package:educate_io/app/modules/details/controllers/rating_controller.dart';
@@ -38,7 +34,7 @@ class RatingView extends GetView<RatingController> {
             SliverAppBar.medium(
               actions: [
                 IconButton(
-                  icon: Icon(Icons.filter_alt),
+                  icon: const Icon(Icons.filter_alt),
                   onPressed: () => controller.filter(),
                 )
               ],
@@ -55,7 +51,7 @@ class RatingView extends GetView<RatingController> {
                     const SizedBox(
                       height: 20,
                     ),
-                    rating_info(context),
+                    ratingInfo(context),
                     Obx(
                       () => StreamBuilder(
                         stream: controller.docStream.value,
@@ -180,7 +176,7 @@ class RatingView extends GetView<RatingController> {
     );
   }
 
-  Column rating_info(BuildContext context) {
+  Column ratingInfo(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -235,7 +231,7 @@ class RatingView extends GetView<RatingController> {
                       controller: controller.reviewController,
                       maxLines: 3,
                       minLines: 3,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Ревю",
                       ),
                       validator: (value) {
@@ -248,7 +244,7 @@ class RatingView extends GetView<RatingController> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 AnimatedContainer(

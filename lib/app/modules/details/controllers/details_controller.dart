@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class DetailsController extends GetxController {
   final Teacher teacher = Get.arguments["teacher"];
@@ -26,7 +25,7 @@ class DetailsController extends GetxController {
 
       ScaffoldMessenger.of(Get.context!).showSnackBar(
         const SnackBar(
-          content: Text("Премахнат учител от любими учители"),
+          content: Text("Премахнат ментор от любими ментори"),
           duration: Duration(seconds: 2),
         ),
       );
@@ -34,7 +33,7 @@ class DetailsController extends GetxController {
       teachers.add(teacher.uid);
       ScaffoldMessenger.of(Get.context!).showSnackBar(
         const SnackBar(
-          content: Text("Успешно добавен учител към любими учители"),
+          content: Text("Успешно добавен ментор към любими ментори"),
           duration: Duration(seconds: 2),
         ),
       );
@@ -43,7 +42,7 @@ class DetailsController extends GetxController {
     doc.update({"likedTeachers": teachers});
   }
 
-  void createChat() {
+  Future<void> createChat() async {
     var store = FirebaseFirestore.instance;
     var uid = FirebaseAuth.instance.currentUser?.uid ?? "";
 
@@ -51,9 +50,12 @@ class DetailsController extends GetxController {
       showDialog(
         context: Get.context!,
         builder: (context) => AlertDialog(
-          icon: Icon(Icons.warning),
-          title: Text("Трябва да сте в акаунт за да можете да пишете на лично"),
-          actions: [TextButton(onPressed: () => Get.back(), child: Text("Ок"))],
+          icon: const Icon(Icons.warning),
+          title: const Text(
+              "Трябва да сте в акаунт за да можете да пишете на лично"),
+          actions: [
+            TextButton(onPressed: () => Get.back(), child: const Text("Ок"))
+          ],
         ),
       );
 
@@ -64,16 +66,29 @@ class DetailsController extends GetxController {
       showDialog(
         context: Get.context!,
         builder: (context) => AlertDialog(
-          icon: Icon(Icons.warning),
-          title: Text("Не можете да пишете на себе си"),
-          actions: [TextButton(onPressed: () => Get.back(), child: Text("Ок"))],
+          icon: const Icon(Icons.warning),
+          title: const Text("Не можете да пишете на себе си"),
+          actions: [
+            TextButton(onPressed: () => Get.back(), child: const Text("Ок"))
+          ],
         ),
       );
 
       return;
     }
 
-    var chatDocId = uid + "." + teacher.uid!;
+    var doc = await store.collection("chats").doc("$uid.${teacher.uid}").get();
+
+    if (doc.exists) {
+      Get.to(() => const ChatView(), arguments: {
+        "docId": doc.id,
+        "photoUrl": teacher.photoUrl,
+        "name": teacher.name,
+        "initials": "KS",
+      });
+    }
+
+    var chatDocId = "$uid.${teacher.uid!}";
 
     var chatDoc = store.collection("chats").doc(chatDocId);
 

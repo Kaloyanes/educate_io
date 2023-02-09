@@ -35,7 +35,6 @@ class TeacherCard extends StatelessWidget {
             children: [
               SizedBox(
                 width: 190,
-                // height: 190,
                 child: Hero(
                   tag: teacher,
                   child: CachedNetworkImage(
@@ -45,7 +44,7 @@ class TeacherCard extends StatelessWidget {
                         top: Radius.circular(20),
                       ),
                       child: Image(
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.cover,
                         image: imageProvider,
                       ),
                     ),
@@ -71,7 +70,7 @@ class TeacherCard extends StatelessWidget {
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 10,
                   ),
                   child: Column(
@@ -91,11 +90,6 @@ class TeacherCard extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        teacher.role == "teacher" ? "Учител" : "Ученик",
-                        style: Theme.of(context).textTheme.titleMedium,
-                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),

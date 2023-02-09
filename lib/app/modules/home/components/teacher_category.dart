@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/home/components/teacher_card.dart';
@@ -75,7 +73,7 @@ class _TeacherSubjectState extends State<TeacherSubject> {
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Center(
                     child: Text(
-                  "Няма учители или ученици по " + widget.subject,
+                  "Няма ментори или ученици по ${widget.subject}",
                   style: Theme.of(context).textTheme.titleMedium,
                 )),
               );
@@ -85,8 +83,8 @@ class _TeacherSubjectState extends State<TeacherSubject> {
               return Expanded(
                 child: GridView.builder(
                   // shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisExtent: 300,
                     mainAxisSpacing: 15,

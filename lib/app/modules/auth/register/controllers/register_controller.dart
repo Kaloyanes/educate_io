@@ -88,17 +88,13 @@ class RegisterController extends GetxController {
       "birthDay": birthDate.value,
       "subjects": subjects,
       "likedTeachers": [],
-      "phone": "+359${phoneNumController.text}",
       "showProfile": showProfile.value,
     };
 
-    if (role.value.trim() == "student") {
-      data.addAll({
-        "badSubjects": badSubjects,
-      });
-    }
+    data.addIf(role.value.trim() == "student", "badSubjects", badSubjects);
 
-    print(data);
+    data.addIf(
+        phoneNumController.text.isNotEmpty, "phone", phoneNumController.text);
 
     try {
       await FirebaseAuthService.createAccount(
@@ -140,7 +136,7 @@ class RegisterController extends GetxController {
     var data = {
       "email": user.email,
       "birthDay": birthDate.value,
-      "name": nameController.text.trim(),
+      "name": user.displayName,
       "role": role.value.trim(),
       "likedTeachers": [],
       "phone": "+359${phoneNumController.text}",
@@ -148,11 +144,10 @@ class RegisterController extends GetxController {
       "subjects": subjects,
     };
 
-    if (role.value.trim() == "student") {
-      data.addAll({
-        "badSubjects": badSubjects,
-      });
-    }
+    data.addIf(role.value.trim() == "student", "badSubjects", badSubjects);
+
+    data.addIf(
+        phoneNumController.text.isNotEmpty, "phone", phoneNumController.text);
 
     await FirebaseFirestore.instance
         .collection("users")
@@ -170,7 +165,7 @@ class RegisterController extends GetxController {
       controller: birthDayController,
       decoration: const InputDecoration(
         prefixIcon: Icon(Icons.cake),
-        label: Text("Рождена дата"),
+        label: Text("Рождена дата*"),
       ),
       onTap: () => changeDate(),
       validator: (value) {
@@ -285,7 +280,7 @@ class RegisterController extends GetxController {
         },
         decoration: InputDecoration(
           label: const Text(
-            "Предмети по които си добър",
+            "Мога да помогна по...",
           ),
           hintText: "Програмиране",
           suffixIcon: IconButton(
@@ -331,7 +326,7 @@ class RegisterController extends GetxController {
         },
         decoration: InputDecoration(
           label: const Text(
-            "Предмети по които НЕ си добър",
+            "Търся помощ по...",
           ),
           hintText: "Програмиране",
           suffixIcon: IconButton(
@@ -389,13 +384,6 @@ class RegisterController extends GetxController {
         prefixIcon: Icon(Icons.phone),
       ),
       keyboardType: TextInputType.phone,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Добавете телефонен номер";
-        }
-
-        return null;
-      },
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(
@@ -413,7 +401,7 @@ class RegisterController extends GetxController {
       controller: emailController,
       decoration: const InputDecoration(
         // border: OutlineInputBorder(),
-        label: Text("Имейл"),
+        label: Text("Имейл*"),
         prefixIcon: Icon(Icons.email),
       ),
       validator: (value) {
@@ -436,8 +424,7 @@ class RegisterController extends GetxController {
       keyboardType: TextInputType.text,
       controller: nameController,
       decoration: const InputDecoration(
-        // border: OutlineInputBorder(),
-        label: Text("Име"),
+        label: Text("Име*"),
         prefixIcon: Icon(Icons.person),
       ),
       inputFormatters: [
@@ -461,7 +448,7 @@ class RegisterController extends GetxController {
     return DropdownButtonFormField(
       decoration: const InputDecoration(
         prefixIcon: Icon(Icons.person),
-        label: Text("Роля"),
+        label: Text("Роля*"),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -477,7 +464,7 @@ class RegisterController extends GetxController {
         ),
         DropdownMenuItem(
           value: "teacher",
-          child: Text("Учител"),
+          child: Text("Ментор"),
         ),
       ],
       onChanged: (value) => setRole = value,
@@ -503,7 +490,7 @@ class RegisterController extends GetxController {
         },
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
-          label: const Text("Потвърди парола"),
+          label: const Text("Потвърди парола*"),
           prefixIcon: const Icon(Icons.password),
           suffixIcon: IconButton(
             onPressed: () => setPasswordVisibility = !showPassword.value,
@@ -534,7 +521,7 @@ class RegisterController extends GetxController {
         },
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
-          label: const Text("Парола"),
+          label: const Text("Парола*"),
           prefixIcon: const Icon(Icons.password),
           suffixIcon: IconButton(
             onPressed: () => setPasswordVisibility = !showPassword.value,
@@ -552,7 +539,7 @@ class RegisterController extends GetxController {
       child: Column(
         children: [
           // Name
-          nameField(),
+          if (!isGoogle) nameField(),
           const SizedBox(
             height: 15,
           ),

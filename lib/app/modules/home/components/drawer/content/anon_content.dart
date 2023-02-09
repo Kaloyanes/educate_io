@@ -23,7 +23,7 @@ class AnonContent extends StatelessWidget {
             label: "Създай акаунт",
             onTap: () => Get.toNamed(Routes.REGISTER),
           ),
-          Spacer(),
+          const Spacer(),
         ],
       ),
     );
