@@ -144,7 +144,7 @@ class HomeView extends GetView<HomeController> {
                 return Container();
               }
 
-              var text = "Добре Дошъл";
+              var text = "Добре дошъл,";
 
               if (!snapshot.hasError && snapshot.data!.exists) {
                 text += "\n${snapshot.data?["name"] ?? ""}";
