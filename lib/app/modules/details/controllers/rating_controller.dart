@@ -46,7 +46,7 @@ class RatingController extends GetxController {
         context: Get.context!,
         builder: (context) => AlertDialog(
           icon: const Icon(Icons.warning),
-          content: const Text("Не можете да пишете ревю без акаунт"),
+          content: const Text("Не можете да оставете отзив без акаунт"),
           actions: [
             TextButton(
               onPressed: () => Get.back,
@@ -78,7 +78,8 @@ class RatingController extends GetxController {
         context: Get.context!,
         builder: (context) => AlertDialog(
           icon: const Icon(Icons.warning, size: 45),
-          title: const Text("Не можете да пишете ревю на собствения ви акаунт"),
+          title:
+              const Text("Не можете да оставете отзив на собствения ви акаунт"),
           actions: [
             TextButton(
               child: const Text("Oк"),
@@ -96,15 +97,14 @@ class RatingController extends GetxController {
         context: Get.context!,
         builder: (context) => AlertDialog(
           icon: const Icon(Icons.question_mark_rounded, size: 45),
-          title: const Text(
-              "Вече имате едно оставено ревю. Искате ли да го замените?"),
+          title: const Text("Вече имате един отзив. Искате ли да го замените?"),
           actions: [
             TextButton(
               child: const Text("Не"),
               onPressed: () => Get.back(result: false),
             ),
             TextButton(
-              child: const Text("Ок"),
+              child: const Text("Да"),
               onPressed: () => Get.back(result: true),
             ),
           ],
@@ -135,7 +135,7 @@ class RatingController extends GetxController {
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       const SnackBar(
-        content: Text("Успешно е оставено ревю"),
+        content: Text("Успешно е оставен отзив"),
       ),
     );
 

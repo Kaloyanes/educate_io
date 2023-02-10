@@ -33,6 +33,16 @@ class DetailsView extends GetView<DetailsController> {
                 centerTitle: true,
                 collapseMode: CollapseMode.parallax,
               ),
+              actions: [
+                IconButton(
+                  onPressed: () => controller.report(),
+                  icon: const Icon(
+                    Icons.report_rounded,
+                    color: Colors.red,
+                    size: 25,
+                  ),
+                )
+              ],
             ),
             SliverToBoxAdapter(
               child: profileView(context, controller.teacher),
@@ -226,7 +236,7 @@ class DetailsView extends GetView<DetailsController> {
                   ],
                 ),
                 Text(
-                  "${docs.length} ${docs.length == 1 ? "ревю" : "ревюта"}",
+                  "${docs.length} ${docs.length == 1 ? "отзив" : "отзиви"}",
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 20,

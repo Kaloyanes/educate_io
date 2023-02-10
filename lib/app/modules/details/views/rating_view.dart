@@ -39,7 +39,7 @@ class RatingView extends GetView<RatingController> {
                 )
               ],
               flexibleSpace: const FlexibleSpaceBar(
-                title: Text("Ревюта"),
+                title: Text("Отзиви"),
                 centerTitle: true,
               ),
             ),
@@ -69,7 +69,7 @@ class RatingView extends GetView<RatingController> {
                           if (docs.isEmpty) {
                             return Center(
                               child: Text(
-                                "Няма ревюта",
+                                "Няма отзиви",
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
                             );
@@ -255,7 +255,7 @@ class RatingView extends GetView<RatingController> {
                       : const BoxConstraints.tightFor(width: 300, height: 40),
                   child: ElevatedButton(
                     onPressed: () => controller.writeReview(),
-                    child: const Text("Качи ревю"),
+                    child: const Text("Качи "),
                   ),
                 )
               ],

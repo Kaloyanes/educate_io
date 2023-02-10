@@ -118,4 +118,31 @@ class DetailsController extends GetxController {
 
     await launchUrl(url);
   }
+
+  void report() {
+    final reportDetails = TextEditingController();
+
+    showDialog(
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        title: const Text("Докладвай"),
+        content: TextField(
+          controller: reportDetails,
+          decoration: const InputDecoration(
+            label: Text("Описание на доклада"),
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: const Text("Отказ"),
+            onPressed: () => Get.back(),
+          ),
+          TextButton(
+            child: const Text("Докладвай"),
+            onPressed: () => Get.back(),
+          )
+        ],
+      ),
+    );
+  }
 }

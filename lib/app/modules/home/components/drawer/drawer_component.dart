@@ -49,12 +49,24 @@ class _DrawerComponentState extends State<DrawerComponent> {
                 const SizedBox(
                   width: 10,
                 ),
-                Text(
-                  "EducateIO",
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "EducateIO",
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    Text(
+                      "От ученици за ученици",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    )
+                  ],
                 ),
               ],
             ),

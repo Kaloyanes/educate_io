@@ -4,6 +4,7 @@ import 'package:educate_io/app/modules/home/components/drawer/drawer_component.d
 import 'package:educate_io/app/modules/home/components/profile_picture.dart';
 import 'package:educate_io/app/modules/home/components/teacher_category.dart';
 import 'package:educate_io/app/modules/search/views/search_view.dart';
+import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -25,16 +26,19 @@ class HomeView extends GetView<HomeController> {
             forceElevated: innerBoxIsScrolled,
             actions: [
               IconButton(
-                  onPressed: () => Get.to(
-                        const SearchView(),
-                      ),
-                  icon: const Icon(Icons.search)),
+                onPressed: () => Get.to(
+                  const SearchView(),
+                ),
+                icon: const Icon(Icons.search),
+              ),
               const SizedBox(
                 width: 10,
               ),
-              const Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: ProfilePicture(),
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: GestureDetector(
+                    onTap: () => Get.toNamed(Routes.PROFILE_SETTINGS),
+                    child: const ProfilePicture()),
               )
             ],
             flexibleSpace: FlexibleSpaceBar(
@@ -91,7 +95,9 @@ class HomeView extends GetView<HomeController> {
               .get(),
           builder: (context, snapshot) {
             if (snapshot.data == null) {
-              return const Text("maika ti");
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
 
             var user = Teacher.fromMap(snapshot.data!.data()!);

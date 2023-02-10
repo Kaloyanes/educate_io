@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:educate_io/app/modules/auth/TOS/tos_view.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -59,6 +60,8 @@ class RegisterController extends GetxController {
   set addbadSubject(String val) => badSubjects.add(val.trim().capitalizeFirst!);
 
   final showProfile = true.obs;
+
+  final TOSAgree = false.obs;
 
   Future<void> changeDate() async {
     FocusScope.of(Get.context!).requestFocus(FocusNode());
@@ -533,6 +536,24 @@ class RegisterController extends GetxController {
     );
   }
 
+  Obx TOSField() {
+    return Obx(
+      () => CheckboxListTile(
+        value: TOSAgree.value,
+        onChanged: (value) => TOSAgree.value = value ?? false,
+        title: TextButton(
+          child: const Text(
+            "Съгласявате ли се с нашите условия за ползване?",
+            softWrap: true,
+          ),
+          onPressed: () => Get.to(
+            () => const TosView(),
+          ),
+        ),
+      ),
+    );
+  }
+
   Form registerForm(bool isGoogle) {
     return Form(
       key: formKey,
@@ -584,6 +605,10 @@ class RegisterController extends GetxController {
 
             return Container();
           }),
+          const SizedBox(
+            height: 15,
+          ),
+          TOSField(),
         ],
       ),
     );
