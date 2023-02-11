@@ -264,107 +264,109 @@ class RegisterController extends GetxController {
   }
 
   Column studentSettings() {
-    return Column(children: [
-      Obx(
-        () => SwitchListTile(
-          value: showProfile.value,
-          onChanged: (val) => showProfile.value = val,
-          title: const Text("Да се показва ли профила на други ученици?"),
-        ),
-      ),
-      const SizedBox(
-        height: 15,
-      ),
-      TextFormField(
-        controller: subjectController,
-        onFieldSubmitted: (value) {
-          addSubject = value;
-          subjectController.clear();
-        },
-        decoration: InputDecoration(
-          label: const Text(
-            "Мога да помогна по...",
+    return Column(
+      children: [
+        Obx(
+          () => SwitchListTile(
+            value: showProfile.value,
+            onChanged: (val) => showProfile.value = val,
+            title: const Text("Да се показва ли профила на други ученици?"),
           ),
-          hintText: "Програмиране",
-          suffixIcon: IconButton(
-            padding: EdgeInsets.zero,
-            icon: const Icon(
-              Icons.add,
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        TextFormField(
+          controller: subjectController,
+          onFieldSubmitted: (value) {
+            addSubject = value;
+            subjectController.clear();
+          },
+          decoration: InputDecoration(
+            label: const Text(
+              "Мога да помогна по...",
             ),
-            onPressed: () {
-              if (subjectController.text.isNotEmpty) {
-                addSubject = subjectController.text.trim();
-                subjectController.clear();
-                return;
-              }
+            hintText: "Програмиране",
+            suffixIcon: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(
+                Icons.add,
+              ),
+              onPressed: () {
+                if (subjectController.text.isNotEmpty) {
+                  addSubject = subjectController.text.trim();
+                  subjectController.clear();
+                  return;
+                }
 
-              throw Exception("Category text is empty");
-            },
-          ),
-          prefixIcon: const Icon(CupertinoIcons.check_mark),
-        ),
-        validator: (value) {
-          if (subjects.isEmpty && showProfile.value) {
-            return "Добави 1 предмет в който си добър";
-          }
-
-          return null;
-        },
-      ),
-      if (subjects.isNotEmpty)
-        ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: subjects.length,
-          itemBuilder: (context, index) => subjectTile(index, subjects),
-        ),
-      const SizedBox(
-        height: 15,
-      ),
-      TextFormField(
-        controller: badsubjectController,
-        onFieldSubmitted: (value) {
-          addbadSubject = value;
-          badsubjectController.clear();
-        },
-        decoration: InputDecoration(
-          label: const Text(
-            "Търся помощ по...",
-          ),
-          hintText: "Програмиране",
-          suffixIcon: IconButton(
-            padding: EdgeInsets.zero,
-            icon: const Icon(
-              Icons.add,
+                throw Exception("Category text is empty");
+              },
             ),
-            onPressed: () {
-              if (badsubjectController.text.isNotEmpty) {
-                addbadSubject = badsubjectController.text;
-                badsubjectController.clear();
-                return;
-              }
-
-              throw Exception("Category text is empty");
-            },
+            prefixIcon: const Icon(CupertinoIcons.check_mark),
           ),
-          prefixIcon: const Icon(CupertinoIcons.xmark),
-        ),
-        validator: (value) {
-          if (badSubjects.isEmpty && showProfile.value) {
-            return "Добави 1 предмет в който не си добър";
-          }
+          validator: (value) {
+            if (subjects.isEmpty && showProfile.value) {
+              return "Добави 1 предмет по който можеш да помогнеш";
+            }
 
-          return null;
-        },
-      ),
-      if (badSubjects.isNotEmpty)
-        ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: badSubjects.length,
-          itemBuilder: (context, index) => subjectTile(index, badSubjects),
+            return null;
+          },
         ),
-    ]);
+        if (subjects.isNotEmpty)
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: subjects.length,
+            itemBuilder: (context, index) => subjectTile(index, subjects),
+          ),
+        const SizedBox(
+          height: 15,
+        ),
+        TextFormField(
+          controller: badsubjectController,
+          onFieldSubmitted: (value) {
+            addbadSubject = value;
+            badsubjectController.clear();
+          },
+          decoration: InputDecoration(
+            label: const Text(
+              "Търся помощ по...",
+            ),
+            hintText: "Програмиране",
+            suffixIcon: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(
+                Icons.add,
+              ),
+              onPressed: () {
+                if (badsubjectController.text.isNotEmpty) {
+                  addbadSubject = badsubjectController.text;
+                  badsubjectController.clear();
+                  return;
+                }
+
+                throw Exception("Category text is empty");
+              },
+            ),
+            prefixIcon: const Icon(CupertinoIcons.xmark),
+          ),
+          validator: (value) {
+            if (badSubjects.isEmpty) {
+              return "Добави 1 предмет по който ти трябва помощ";
+            }
+
+            return null;
+          },
+        ),
+        if (badSubjects.isNotEmpty)
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: badSubjects.length,
+            itemBuilder: (context, index) => subjectTile(index, badSubjects),
+          ),
+      ],
+    );
   }
 
   ListTile subjectTile(int index, List subjects) {

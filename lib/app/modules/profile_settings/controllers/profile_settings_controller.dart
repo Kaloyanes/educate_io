@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:educate_io/app/modules/auth/register/controllers/register_controller.dart';
 import 'package:educate_io/app/modules/profile_settings/components/photo_bottom_sheet.dart';
 import 'package:educate_io/app/modules/profile_settings/views/image_crop_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -139,18 +140,6 @@ class ProfileSettingsController extends GetxController {
         ),
       );
     }
-  }
-
-  Future<bool> checkPhotoForNSFW(String path) async {
-    var imageLabeler = ImageLabeler(options: ImageLabelerOptions());
-
-    var image = InputImage.fromFilePath(path);
-
-    var labels = await imageLabeler.processImage(image);
-
-    inspect(labels);
-
-    return false;
   }
 
   Future<void> deletePhotoSetting() async {
@@ -369,126 +358,110 @@ class ProfileSettingsController extends GetxController {
   }
 
   Column studentSettings() {
-    return Column(children: [
-      Obx(
-        () => SwitchListTile(
-          value: showProfile.value,
-          onChanged: (val) {
-            setSavedSettings = true;
-            showProfile.value = val;
-          },
-          title: const Text("Да се показва ли профила на други ученици?"),
-        ),
-      ),
-      const SizedBox(
-        height: 15,
-      ),
-      TextFormField(
-        controller: subjectController,
-        onFieldSubmitted: (value) {
-          addSubject = value;
-          subjectController.clear();
-        },
-        decoration: InputDecoration(
-          label: const Text(
-            "Предмети по които си добър",
+    return Column(
+      children: [
+        Obx(
+          () => SwitchListTile(
+            value: showProfile.value,
+            onChanged: (val) => showProfile.value = val,
+            title: const Text("Да се показва ли профила на други ученици?"),
           ),
-          hintText: "Програмиране",
-          suffixIcon: IconButton(
-            padding: EdgeInsets.zero,
-            icon: const Icon(
-              Icons.add,
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        TextFormField(
+          controller: subjectController,
+          onFieldSubmitted: (value) {
+            addSubject = value;
+            subjectController.clear();
+          },
+          decoration: InputDecoration(
+            label: const Text(
+              "Мога да помогна по...",
             ),
-            onPressed: () {
-              if (subjectController.text.isNotEmpty) {
-                addSubject = subjectController.text.trim();
-                subjectController.clear();
-                return;
-              }
+            hintText: "Програмиране",
+            suffixIcon: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(
+                Icons.add,
+              ),
+              onPressed: () {
+                if (subjectController.text.isNotEmpty) {
+                  addSubject = subjectController.text.trim();
+                  subjectController.clear();
+                  return;
+                }
 
-              throw Exception("Category text is empty");
-            },
-          ),
-          prefixIcon: const Icon(CupertinoIcons.check_mark),
-        ),
-        validator: (value) {
-          if (subjects.isEmpty && showProfile.value) {
-            return "Добави 1 предмет в който си добър";
-          }
-
-          return null;
-        },
-      ),
-      if (subjects.isNotEmpty)
-        ReorderableListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: subjects.length,
-          itemBuilder: (context, index) => reorderableTile(index, subjects),
-          onReorder: (int oldIndex, int newIndex) {
-            if (oldIndex < newIndex) {
-              newIndex -= 1;
-            }
-            final item = subjects.removeAt(oldIndex);
-            subjects.insert(newIndex, item);
-            setSavedSettings = true;
-          },
-        ),
-      const SizedBox(
-        height: 15,
-      ),
-      TextFormField(
-        controller: badSubjectController,
-        onFieldSubmitted: (value) {
-          addbadSubject = value;
-          badSubjectController.clear();
-        },
-        decoration: InputDecoration(
-          label: const Text(
-            "Предмети по които НЕ си добър",
-          ),
-          hintText: "Програмиране",
-          suffixIcon: IconButton(
-            padding: EdgeInsets.zero,
-            icon: const Icon(
-              Icons.add,
+                throw Exception("Category text is empty");
+              },
             ),
-            onPressed: () {
-              if (badSubjectController.text.isNotEmpty) {
-                addbadSubject = badSubjectController.text;
-                badSubjectController.clear();
-                return;
-              }
-
-              throw Exception("Category text is empty");
-            },
+            prefixIcon: const Icon(CupertinoIcons.check_mark),
           ),
-          prefixIcon: const Icon(CupertinoIcons.xmark),
-        ),
-        validator: (value) {
-          if (badSubjects.isEmpty && showProfile.value) {
-            return "Добави 1 предмет в който не си добър";
-          }
-
-          return null;
-        },
-      ),
-      if (badSubjects.isNotEmpty)
-        ReorderableListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: badSubjects.length,
-          itemBuilder: (context, index) => reorderableTile(index, badSubjects),
-          onReorder: (int oldIndex, int newIndex) {
-            if (oldIndex < newIndex) {
-              newIndex -= 1;
+          validator: (value) {
+            if (subjects.isEmpty && showProfile.value) {
+              return "Добави 1 предмет по който можеш да помогнеш";
             }
-            final item = badSubjects.removeAt(oldIndex);
-            badSubjects.insert(newIndex, item);
-            setSavedSettings = true;
+
+            return null;
           },
         ),
-    ]);
+        if (subjects.isNotEmpty)
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: subjects.length,
+            itemBuilder: (context, index) => reorderableTile(index, subjects),
+          ),
+        const SizedBox(
+          height: 15,
+        ),
+        TextFormField(
+          controller: badSubjectController,
+          onFieldSubmitted: (value) {
+            addbadSubject = value;
+            badSubjectController.clear();
+          },
+          decoration: InputDecoration(
+            label: const Text(
+              "Търся помощ по...",
+            ),
+            hintText: "Програмиране",
+            suffixIcon: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(
+                Icons.add,
+              ),
+              onPressed: () {
+                if (badSubjectController.text.isNotEmpty) {
+                  addbadSubject = badSubjectController.text;
+                  badSubjectController.clear();
+                  return;
+                }
+
+                throw Exception("Category text is empty");
+              },
+            ),
+            prefixIcon: const Icon(CupertinoIcons.xmark),
+          ),
+          validator: (value) {
+            if (badSubjects.isEmpty) {
+              return "Добави 1 предмет по който ти трябва помощ";
+            }
+
+            return null;
+          },
+        ),
+        if (badSubjects.isNotEmpty)
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: badSubjects.length,
+            itemBuilder: (context, index) =>
+                reorderableTile(index, badSubjects),
+          ),
+      ],
+    );
   }
 
   Widget reorderableTile(int index, List subjects) {
@@ -525,23 +498,15 @@ class ProfileSettingsController extends GetxController {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
     var position = await Geolocator.getCurrentPosition();
 
     var locationDoc = store.collection("locations").doc(auth.currentUser!.uid);
@@ -550,5 +515,22 @@ class ProfileSettingsController extends GetxController {
       "place": GeoPoint(position.latitude, position.longitude),
       "show": showProfile.value,
     });
+  }
+
+  Future<void> deleteProfile() async {
+    var uid = FirebaseAuth.instance.currentUser!.uid;
+
+    await FirebaseFirestore.instance.collection("users").doc(uid).delete();
+    await FirebaseFirestore.instance.collection("locations").doc(uid).delete();
+    var chats = await FirebaseFirestore.instance.collection("chats").get();
+
+    for (var chat in chats.docs) {
+      if (chat.id.contains(uid)) {
+        await FirebaseFirestore.instance
+            .collection("chats")
+            .doc(chat.id)
+            .delete();
+      }
+    }
   }
 }

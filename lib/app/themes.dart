@@ -5,7 +5,7 @@ class Themes {
   static ThemeData theme(ColorScheme colors) {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: colors.harmonized(),
+      colorScheme: colors,
       appBarTheme: AppBarTheme(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(1),
@@ -23,8 +23,10 @@ class Themes {
         showCloseIcon: true,
         behavior: SnackBarBehavior.fixed,
         backgroundColor: colors.onInverseSurface,
-        contentTextStyle:
-            const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        contentTextStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+            color: colors.inverseSurface),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,

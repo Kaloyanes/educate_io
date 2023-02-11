@@ -119,10 +119,10 @@ class DetailsController extends GetxController {
     await launchUrl(url);
   }
 
-  void report() {
+  Future report() async {
     final reportDetails = TextEditingController();
 
-    showDialog(
+    await showDialog(
       context: Get.context!,
       builder: (context) => AlertDialog(
         title: const Text("Докладвай"),
@@ -144,5 +144,14 @@ class DetailsController extends GetxController {
         ],
       ),
     );
+
+    await FirebaseFirestore.instance.collection("reports").doc().set({
+      "reportedUid": teacher.uid,
+      "reason": reportDetails.text.trim(),
+      "sent": DateTime.now(),
+    });
+
+    ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
+        content: Text("Благодарим ви, че правите ЕducateIO по-добро място")));
   }
 }
