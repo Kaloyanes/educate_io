@@ -12,80 +12,51 @@ class GoogleDataView extends GetView<RegisterController> {
     initializeDateFormatting();
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar.medium(
-            stretch: true,
-            flexibleSpace: const FlexibleSpaceBar(
-              title: Text("Данни"),
-              expandedTitleScale: 1.5,
-              centerTitle: true,
-              collapseMode: CollapseMode.parallax,
+      body: WillPopScope(
+        onWillPop: () {
+          return Future.value(false);
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar.medium(
+              automaticallyImplyLeading: false,
+              stretch: true,
+              flexibleSpace: const FlexibleSpaceBar(
+                title: Text("Данни"),
+                expandedTitleScale: 1.5,
+                centerTitle: true,
+                collapseMode: CollapseMode.parallax,
+              ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    controller.registerForm(true),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    ElevatedButton(
-                      onPressed: () => controller.googleRegister(),
-                      child: const Text("Направи акаунт"),
-                    ),
-                    SizedBox(
-                      height: Get.mediaQuery.padding.bottom,
-                    ),
-                  ],
+            SliverToBoxAdapter(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      controller.registerForm(true),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      ElevatedButton(
+                        onPressed: () => controller.googleRegister(),
+                        child: const Text("Направи акаунт"),
+                      ),
+                      SizedBox(
+                        height: Get.mediaQuery.padding.bottom,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Form googleForm() {
-    return Form(
-      key: controller.formKey,
-      child: Column(
-        children: [
-          controller.nameField(),
-          const SizedBox(
-            height: 15,
-          ),
-          // Password
-          controller.passwordField(),
-          const SizedBox(
-            height: 15,
-          ),
-          // Password verification
-          controller.confirmPasswordField(),
-          const SizedBox(
-            height: 15,
-          ),
-
-          // Role selection
-          controller.roleSelectionField(),
-          const SizedBox(
-            height: 15,
-          ),
-          // Рождена дата
-          controller.birthDayField(),
-
-          // Teacher categories
-          controller.teacherSettings(),
-        ],
+          ],
+        ),
       ),
     );
   }
