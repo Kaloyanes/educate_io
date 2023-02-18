@@ -37,6 +37,13 @@ class TeacherCard extends StatelessWidget {
                 width: 190,
                 child: Hero(
                   tag: teacher,
+                  transitionOnUserGestures: true,
+                  placeholderBuilder: (context, heroSize, child) => SizedBox(
+                    width: heroSize.width,
+                    height: heroSize.height,
+                  ),
+                  createRectTween: (begin, end) =>
+                      MaterialRectCenterArcTween(begin: begin, end: end),
                   child: CachedNetworkImage(
                     imageUrl: teacher.photoUrl ?? "",
                     imageBuilder: (context, imageProvider) => ClipRRect(
@@ -44,7 +51,7 @@ class TeacherCard extends StatelessWidget {
                         top: Radius.circular(20),
                       ),
                       child: Image(
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fitWidth,
                         image: imageProvider,
                       ),
                     ),

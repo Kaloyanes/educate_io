@@ -109,6 +109,8 @@ class DetailsView extends GetView<DetailsController> {
             padding: const EdgeInsets.all(20.0),
             child: Hero(
               tag: teacher,
+              createRectTween: (begin, end) =>
+                  MaterialRectCenterArcTween(begin: begin, end: end),
               child: CachedNetworkImage(
                 imageUrl: teacher.photoUrl!,
                 imageBuilder: (context, imageProvider) => ClipRRect(
@@ -294,23 +296,26 @@ class DetailsView extends GetView<DetailsController> {
       children: [
         Flexible(
           flex: 3,
-          child: Card(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Center(
-                child: FittedBox(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.email,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        teacher.email,
-                      )
-                    ],
+          child: GestureDetector(
+            onTap: () => controller.launchEmail(),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Center(
+                  child: FittedBox(
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.email,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          teacher.email,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -321,15 +326,15 @@ class DetailsView extends GetView<DetailsController> {
           flex: 1,
           child: Card(
             child: Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Center(
                 child: FittedBox(
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.person,
+                      const Icon(
+                        Icons.cake_rounded,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Text(

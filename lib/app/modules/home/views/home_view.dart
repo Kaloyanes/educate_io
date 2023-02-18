@@ -88,11 +88,11 @@ class HomeView extends GetView<HomeController> {
           );
         }
 
-        return FutureBuilder(
-          future: FirebaseFirestore.instance
+        return StreamBuilder(
+          stream: FirebaseFirestore.instance
               .collection("users")
               .doc(FirebaseAuth.instance.currentUser?.uid)
-              .get(),
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.data == null) {
               return const Center(
@@ -100,9 +100,10 @@ class HomeView extends GetView<HomeController> {
               );
             }
 
-            var user = Teacher.fromMap(snapshot.data!.data()!);
+            var user = snapshot.data!.data()!;
 
-            var list = user.badSubjects ?? user.subjects;
+            var list =
+                (user["badSubjects"] ?? user["subjects"]) as List<dynamic>;
 
             return Obx(() {
               if (controller.isGrid.value) {
@@ -150,10 +151,10 @@ class HomeView extends GetView<HomeController> {
                 return Container();
               }
 
-              var text = "Добре дошъл,";
+              var text = "Добре дошъл";
 
               if (!snapshot.hasError && snapshot.data!.exists) {
-                text += "\n${snapshot.data?["name"] ?? ""}";
+                text += ",\n${snapshot.data?["name"] ?? ""}";
               }
 
               return Text(

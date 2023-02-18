@@ -44,9 +44,6 @@ class SearchView extends GetView<SearchController> {
             icon: const Icon(Icons.filter_list),
           )
         ],
-        title: Obx(
-            () => Text("Намерени резултати: ${controller.teachers.length}")),
-        centerTitle: true,
       ),
       body: CupertinoScrollbar(
         child: Obx(

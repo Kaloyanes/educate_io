@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/auth/register/controllers/register_controller.dart';
 import 'package:educate_io/app/modules/profile_settings/components/photo_bottom_sheet.dart';
 import 'package:educate_io/app/modules/profile_settings/views/image_crop_view.dart';
+import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -48,11 +49,17 @@ class ProfileSettingsController extends GetxController {
             const Text("Сигурни ли сте, че не искате да запазите промените?"),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.pop(context, true);
+            },
             child: const Text("Да"),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.pop(context, false);
+            },
             child: const Text("Не"),
           ),
         ],
@@ -155,13 +162,12 @@ class ProfileSettingsController extends GetxController {
   }
 
   Future<void> saveSettings() async {
-    saveInfo();
+    await saveInfo();
     if (deletePhoto.value) {
-      deletePhotoSetting();
+      await deletePhotoSetting();
     } else {
-      savePhoto();
+      await savePhoto();
     }
-    Get.appUpdate();
 
     setSavedSettings = false;
     ScaffoldMessenger.of(Get.context!).showSnackBar(
@@ -178,10 +184,26 @@ class ProfileSettingsController extends GetxController {
     super.onClose();
   }
 
+  bool _ignoreSubject = true;
+  bool _ignoreBad = true;
+
   @override
   void onInit() {
     super.onInit();
     getInfo();
+
+    subjects.listen((p0) {
+      if (!_ignoreSubject) {
+        setSavedSettings = true;
+      }
+      _ignoreSubject = false;
+    });
+    badSubjects.listen((p0) {
+      if (!_ignoreBad) {
+        setSavedSettings = true;
+      }
+      _ignoreBad = false;
+    });
   }
 
   final showRoleSettings = false.obs;
@@ -197,11 +219,15 @@ class ProfileSettingsController extends GetxController {
 
   final subjects = <String>[].obs;
 
-  set addSubject(String val) => subjects.add(val.trim().capitalizeFirst!);
+  set addSubject(String val) {
+    subjects.add(val.trim().capitalizeFirst!);
+  }
 
   final badSubjects = <String>[].obs;
 
-  set addbadSubject(String val) => badSubjects.add(val.trim().capitalizeFirst!);
+  set addbadSubject(String val) {
+    badSubjects.add(val.trim().capitalizeFirst!);
+  }
 
   final Rx<LatLng?> currentLocation = null.obs;
 
@@ -215,7 +241,8 @@ class ProfileSettingsController extends GetxController {
 
     displayNameController.text = data!["name"];
     descriptionController.text = data["description"] ?? "";
-    phoneController.text = (data["phone"] as String).substring(4);
+    phoneController.text =
+        data.containsKey("phone") ? (data["phone"] as String).substring(4) : "";
     emailController.text = data["email"];
     role.value = data["role"];
     showProfile.value = data["showProfile"] as bool;
@@ -250,17 +277,19 @@ class ProfileSettingsController extends GetxController {
     var data = {
       "name": displayNameController.text.trim().capitalize,
       "description": descriptionController.text.trim(),
-      "phone": "+359${phoneController.text.trim()}",
       "showProfile": showProfile.value,
       "subjects": subjects
     };
 
-    if (badSubjects.isNotEmpty) data.addAll({"badSubjects": badSubjects});
+    data.addIf(role.value == "student", "badSubjects", badSubjects);
+
+    data.addIf(phoneController.text.trim().isNotEmpty, "phone",
+        "+359${phoneController.text.trim()}");
 
     var email = emailController.text.trim();
     if (email != auth.currentUser!.email) {
       data.addAll({"email": email});
-      auth.currentUser!.updateEmail(email);
+      await auth.currentUser!.updateEmail(email);
     }
 
     var locationDoc = store.collection("locations").doc(auth.currentUser!.uid);
@@ -275,7 +304,7 @@ class ProfileSettingsController extends GetxController {
   }
 
   Future<void> forgotPassword() async {
-    auth.sendPasswordResetEmail(email: auth.currentUser!.email ?? "");
+    await auth.sendPasswordResetEmail(email: auth.currentUser!.email ?? "");
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       const SnackBar(
@@ -286,6 +315,84 @@ class ProfileSettingsController extends GetxController {
         ),
       ),
     );
+  }
+
+  Future<void> updateLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    var position = await Geolocator.getCurrentPosition();
+
+    var locationDoc = store.collection("locations").doc(auth.currentUser!.uid);
+
+    locationDoc.set({
+      "place": GeoPoint(position.latitude, position.longitude),
+      "show": showProfile.value,
+    });
+
+    ScaffoldMessenger.of(Get.context!)
+        .showSnackBar(const SnackBar(content: Text("Подновихте си локацията")));
+  }
+
+  Future<void> deleteProfile() async {
+    var shouldDelete = await showDialog(
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        icon: const Icon(
+          Icons.warning,
+          color: Colors.red,
+          size: 30,
+        ),
+        title: const Text("Сигурни ли сте, че искате да си изтрийте профила?"),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: true),
+            child: const Text("Да"),
+          ),
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: const Text("Не"),
+          )
+        ],
+      ),
+    );
+
+    if (!shouldDelete) return;
+
+    var uid = FirebaseAuth.instance.currentUser!.uid;
+
+    await FirebaseFirestore.instance.collection("users").doc(uid).delete();
+    await FirebaseFirestore.instance.collection("locations").doc(uid).delete();
+    var chats = await FirebaseFirestore.instance.collection("chats").get();
+
+    for (var chat in chats.docs) {
+      if (chat.id.contains(uid)) {
+        await FirebaseFirestore.instance
+            .collection("chats")
+            .doc(chat.id)
+            .delete();
+      }
+    }
+    await FirebaseAuth.instance.currentUser!.delete();
+    Get.offAllNamed(Routes.HOME);
   }
 
   Column teacherSettings() {
@@ -363,7 +470,10 @@ class ProfileSettingsController extends GetxController {
         Obx(
           () => SwitchListTile(
             value: showProfile.value,
-            onChanged: (val) => showProfile.value = val,
+            onChanged: (val) {
+              showProfile.value = val;
+              setSavedSettings = true;
+            },
             title: const Text("Да се показва ли профила на други ученици?"),
           ),
         ),
@@ -407,11 +517,18 @@ class ProfileSettingsController extends GetxController {
           },
         ),
         if (subjects.isNotEmpty)
-          ListView.builder(
+          ReorderableListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: subjects.length,
             itemBuilder: (context, index) => reorderableTile(index, subjects),
+            onReorder: (oldIndex, newIndex) {
+              if (oldIndex < newIndex) {
+                newIndex -= 1;
+              }
+              final item = subjects.removeAt(oldIndex);
+              subjects.insert(newIndex, item);
+            },
           ),
         const SizedBox(
           height: 15,
@@ -433,6 +550,8 @@ class ProfileSettingsController extends GetxController {
                 Icons.add,
               ),
               onPressed: () {
+                setSavedSettings = true;
+
                 if (badSubjectController.text.isNotEmpty) {
                   addbadSubject = badSubjectController.text;
                   badSubjectController.clear();
@@ -453,12 +572,20 @@ class ProfileSettingsController extends GetxController {
           },
         ),
         if (badSubjects.isNotEmpty)
-          ListView.builder(
+          ReorderableListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: badSubjects.length,
             itemBuilder: (context, index) =>
                 reorderableTile(index, badSubjects),
+            onReorder: (oldIndex, newIndex) {
+              setSavedSettings = true;
+              if (oldIndex < newIndex) {
+                newIndex -= 1;
+              }
+              final item = badSubjects.removeAt(oldIndex);
+              badSubjects.insert(newIndex, item);
+            },
           ),
       ],
     );
@@ -474,7 +601,11 @@ class ProfileSettingsController extends GetxController {
           Icons.remove,
           color: Colors.red,
         ),
-        onPressed: () => subjects.removeAt(index),
+        onPressed: () {
+          setSavedSettings = true;
+
+          subjects.removeAt(index);
+        },
       ),
       trailing: ReorderableDragStartListener(
         index: index,
@@ -483,54 +614,5 @@ class ProfileSettingsController extends GetxController {
         ),
       ),
     );
-  }
-
-  Future<void> updateLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    var position = await Geolocator.getCurrentPosition();
-
-    var locationDoc = store.collection("locations").doc(auth.currentUser!.uid);
-
-    locationDoc.set({
-      "place": GeoPoint(position.latitude, position.longitude),
-      "show": showProfile.value,
-    });
-  }
-
-  Future<void> deleteProfile() async {
-    var uid = FirebaseAuth.instance.currentUser!.uid;
-
-    await FirebaseFirestore.instance.collection("users").doc(uid).delete();
-    await FirebaseFirestore.instance.collection("locations").doc(uid).delete();
-    var chats = await FirebaseFirestore.instance.collection("chats").get();
-
-    for (var chat in chats.docs) {
-      if (chat.id.contains(uid)) {
-        await FirebaseFirestore.instance
-            .collection("chats")
-            .doc(chat.id)
-            .delete();
-      }
-    }
   }
 }

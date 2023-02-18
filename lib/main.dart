@@ -33,7 +33,6 @@ Future<void> main() async {
   await GetStorage.init("settings");
 
   runApp(const App());
-  // FlutterNativeSplash.remove();
 }
 
 class App extends GetView<MainController> {
@@ -77,8 +76,9 @@ class App extends GetView<MainController> {
             darkTheme: Themes.theme(controller.darkColor.value),
             debugShowCheckedModeBanner: false,
             scrollBehavior: const CupertinoScrollBehavior(),
-            locale: const Locale("bg"),
+            locale: const Locale("bg", "BG"),
             defaultTransition: Transition.native,
+            routingCallback: (value) => HapticFeedback.mediumImpact(),
             // localizationsDelegates: const [
             //   GlobalMaterialLocalizations.delegate,
             //   GlobalWidgetsLocalizations.delegate,

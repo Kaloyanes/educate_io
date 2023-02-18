@@ -72,12 +72,15 @@ class SettingsView extends GetView<SettingsController> {
           Obx(
             () => Column(
               children: [
-                const Text(
-                  "Как да бъдат показани менторите на началната страница?",
-                  style: TextStyle(
-                    fontSize: 20,
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    "Как да бъдат показани менторите на началната страница?",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
                 RadioListTile(
                   value: false,
@@ -97,12 +100,15 @@ class SettingsView extends GetView<SettingsController> {
           Obx(
             () => Column(
               children: [
-                const Text(
-                  "Колко на брой менторя да виждаш на 1 ред?",
-                  style: TextStyle(
-                    fontSize: 20,
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    "Колко на брой менторa да виждаш на 1 ред?",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
                 DropdownButton(
                   enableFeedback: true,

@@ -406,7 +406,7 @@ class RegisterController extends GetxController {
       controller: emailController,
       decoration: const InputDecoration(
         // border: OutlineInputBorder(),
-        label: Text("Имейл*"),
+        label: Text("E-mail*"),
         prefixIcon: Icon(Icons.email),
       ),
       validator: (value) {
@@ -496,7 +496,7 @@ class RegisterController extends GetxController {
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
           label: const Text("Потвърди парола*"),
-          prefixIcon: const Icon(Icons.password),
+          prefixIcon: const Icon(Icons.lock),
           suffixIcon: IconButton(
             onPressed: () => setPasswordVisibility = !showPassword.value,
             icon: const Icon(Icons.remove_red_eye),
@@ -527,7 +527,7 @@ class RegisterController extends GetxController {
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
           label: const Text("Парола*"),
-          prefixIcon: const Icon(Icons.password),
+          prefixIcon: const Icon(Icons.lock),
           suffixIcon: IconButton(
             onPressed: () => setPasswordVisibility = !showPassword.value,
             icon: const Icon(Icons.remove_red_eye),

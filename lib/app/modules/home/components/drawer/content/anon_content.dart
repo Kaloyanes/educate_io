@@ -14,7 +14,7 @@ class AnonContent extends StatelessWidget {
         children: [
           DrawerDestination(
             icon: Icons.login,
-            label: "Влез в акаунта си",
+            label: "Влез",
             onTap: () => Get.toNamed(Routes.LOGIN),
           ),
           const SizedBox(height: 10),

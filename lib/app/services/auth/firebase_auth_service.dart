@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/auth/register/views/google_data_view.dart';
+import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -62,19 +63,7 @@ class FirebaseAuthService {
       return;
     }
 
-    var data =
-        await Get.off<Map<String, dynamic>>(const GoogleDataView()) ?? {};
-
-    data.addAll(
-      {
-        "name": "Калоян Стоянов",
-        "email": userCred.user?.email,
-      },
-    );
-
-    doc.set(data);
-
-    Get.back();
+    Get.offAll(() => GoogleDataView());
   }
 
   static Future<void> forgotPassword(String email) async {

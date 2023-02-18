@@ -54,6 +54,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
                   type: TextInputType.phone,
                   controller: controller.phoneController,
                   profileController: controller,
+                  canBeEmpty: true,
                   formatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(
@@ -107,7 +108,7 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
                 overlayColor:
                     MaterialStatePropertyAll(Colors.red.withAlpha(20)),
               ),
-              onPressed: () {},
+              onPressed: () => controller.deleteProfile(),
               child: const Text("Изтрий профила"),
             ),
             SizedBox(height: Get.mediaQuery.padding.bottom),
@@ -157,6 +158,8 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
     List<TextInputFormatter> formatters = const [],
     bool canBeEmpty = false,
     String? Function(String)? validator,
+    int? maxLines,
+    int? minLines,
   }) {
     return TextFormField(
       decoration: addedDecoration.copyWith(
@@ -177,6 +180,8 @@ class ProfileSettingsView extends GetView<ProfileSettingsController> {
 
         return null;
       },
+      maxLines: maxLines,
+      minLines: minLines,
     );
   }
 

@@ -61,7 +61,24 @@ class RatingController extends GetxController {
 
     if (!formKey.currentState!.validate()) return;
 
-    var text = reviewController.text;
+    var text = reviewController.text.trim();
+
+    if (text.isEmpty) {
+      showDialog(
+        context: Get.context!,
+        builder: (context) => AlertDialog(
+          icon: const Icon(Icons.warning),
+          content: const Text("Не можете да оставете празен отзив"),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back,
+              child: const Text("Ок"),
+            )
+          ],
+        ),
+      );
+      return;
+    }
     var uid = FirebaseAuth.instance.currentUser?.uid;
     var profileDoc =
         await FirebaseFirestore.instance.collection("users").doc(uid).get();
@@ -143,12 +160,8 @@ class RatingController extends GetxController {
     reviewController.clear();
   }
 
-  void scrollToTop() {
-    scrollController.animateTo(
-      scrollController.position.minScrollExtent,
-      duration: const Duration(milliseconds: 700),
-      curve: Curves.fastOutSlowIn,
-    );
-    showFAB.value = false;
+  void edit(double rating, String text) {
+    giveRating.value = rating;
+    reviewController.text = text;
   }
 }

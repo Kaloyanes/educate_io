@@ -25,7 +25,6 @@ abstract class _Paths {
   static const AUTH = '/auth';
   static const LOGIN = '/login';
   static const REGISTER = '/register';
-  static const PROFILE = '/profile';
   static const PROFILE_SETTINGS = '/profile-settings';
   static const GOOGLE_DATA = '/google-data';
   static const CHATS = '/chats';

@@ -14,14 +14,6 @@ class DrawerComponent extends StatefulWidget {
 }
 
 class _DrawerComponentState extends State<DrawerComponent> {
-  late Stream<User?> authStream;
-
-  @override
-  void initState() {
-    super.initState();
-    authStream = FirebaseAuth.instance.authStateChanges();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -32,43 +24,48 @@ class _DrawerComponentState extends State<DrawerComponent> {
         ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             height: Get.mediaQuery.padding.top + 20,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.person_pin_circle,
-                  size: 50,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "EducateIO",
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+            padding: EdgeInsets.symmetric(
+              horizontal: 15,
+            ),
+            child: FittedBox(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.person_pin_circle,
+                    size: 50,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "EducateIO",
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "От ученици за ученици",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    )
-                  ],
-                ),
-              ],
+                      Text(
+                        "От ученици за ученици",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
 

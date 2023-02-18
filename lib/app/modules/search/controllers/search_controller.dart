@@ -37,7 +37,7 @@ class SearchController extends GetxController {
 
     var teachersFiltered = <Teacher>[];
 
-    for (var teacher in notFilteredTeachers) {
+    for (var teacher in teachers) {
       var docDir = FirebaseFirestore.instance
           .collection('users')
           .doc(teacher.uid)
@@ -86,7 +86,7 @@ class SearchController extends GetxController {
   void filterResults(String value) {
     if (value.isEmpty) teachers.value = notFilteredTeachers;
 
-    teachers.value = teachers.where((element) {
+    teachers.value = notFilteredTeachers.where((element) {
       return element.name.contains(value) ||
           hasThisSubject(element.subjects, value) ||
           hasThisSubject(element.badSubjects ?? [], value) ||

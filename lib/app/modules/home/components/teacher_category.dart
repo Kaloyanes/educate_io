@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/home/components/teacher_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class TeacherSubject extends StatefulWidget {
   const TeacherSubject({
@@ -70,35 +71,47 @@ class _TeacherSubjectState extends State<TeacherSubject> {
 
             if (list.isEmpty) {
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20.0, horizontal: 15),
                 child: Center(
-                    child: Text(
-                  "Няма ментори или ученици по ${widget.subject}",
-                  style: Theme.of(context).textTheme.titleMedium,
-                )),
+                  child: Text(
+                    "Няма ментори или ученици по ${widget.subject}",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
               );
             }
 
             if (widget.isGrid) {
               return Expanded(
-                child: GridView.builder(
-                  // shrinkWrap: true,
+                child: GridView(
+                  shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisExtent: 300,
                     mainAxisSpacing: 15,
                   ),
-                  itemCount: list.length,
-                  itemBuilder: (context, index) {
-                    var data = list.elementAt(index).data();
-                    data.addAll({"uid": list.elementAt(index).id});
+                  children: [
+                    for (var doc in list)
+                      Builder(
+                        builder: (context) {
+                          var data = doc.data();
 
-                    return TeacherCard(
-                      subject: widget.subject,
-                      teacher: Teacher.fromMap(data),
-                    );
-                  },
+                          data.addAll({"uid": doc.id});
+
+                          return TeacherCard(
+                            subject: widget.subject,
+                            teacher: Teacher.fromMap(data),
+                          );
+                        },
+                      )
+                  ].animate(interval: 100.ms).scaleXY(
+                        begin: 0,
+                        end: 1,
+                        curve: Curves.fastLinearToSlowEaseIn,
+                        duration: 500.ms,
+                      ),
                 ),
               );
             }

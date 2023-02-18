@@ -3,6 +3,7 @@ import 'package:educate_io/app/models/message_model.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -23,9 +24,11 @@ class ChatMessage extends StatefulWidget {
 
 class _ChatMessageState extends State<ChatMessage>
     with TickerProviderStateMixin {
-  DateFormat formatter = DateFormat("H:mm \nd/MM");
+  DateFormat formatter = DateFormat("H:mm | d/MM");
 
   late AnimationController controller;
+
+  bool showInfo = false;
 
   @override
   void initState() {
@@ -80,7 +83,12 @@ class _ChatMessageState extends State<ChatMessage>
             },
           );
         },
-        onTap: () => HapticFeedback.selectionClick(),
+        onTap: () {
+          setState(() {
+            showInfo = !showInfo;
+          });
+          HapticFeedback.selectionClick();
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 7),
           child: Column(
@@ -111,7 +119,13 @@ class _ChatMessageState extends State<ChatMessage>
                   textAlign: TextAlign.center,
                 ),
               ),
-              Align(
+              SizedBox(
+                height: 10,
+              ),
+              AnimatedContainer(
+                curve: Curves.easeOutExpo,
+                height: showInfo ? 20 : 0,
+                duration: 350.ms,
                 alignment: widget.ownMessage
                     ? Alignment.centerRight
                     : Alignment.centerLeft,
@@ -119,7 +133,7 @@ class _ChatMessageState extends State<ChatMessage>
                   formatter.format(widget.message.time),
                   textAlign:
                       widget.ownMessage ? TextAlign.right : TextAlign.left,
-                  style: Theme.of(context).textTheme.labelSmall,
+                  style: Theme.of(context).textTheme.labelMedium,
                 ),
               ),
             ],
@@ -127,17 +141,5 @@ class _ChatMessageState extends State<ChatMessage>
         ),
       ),
     );
-    // .animate(delay: 100.ms)
-    // .then()
-    // .scaleXY(
-    //   begin: 2,
-    //   end: 1,
-    //   curve: Curves.easeOutExpo,
-    //   duration: 400.ms,
-    // )
-    // .blurXY(
-    //   begin: 4,
-    //   end: 0,
-    // );
   }
 }

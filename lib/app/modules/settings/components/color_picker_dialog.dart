@@ -13,7 +13,8 @@ class ColorPickerDialog extends StatefulWidget {
 
 class _ColorPickerDialogState extends State<ColorPickerDialog> {
   final mainController = Get.find<MainController>();
-  var color = Theme.of(Get.context!).colorScheme.primary;
+  var color = Color(GetStorageService().read("color") ??
+      Theme.of(Get.context!).colorScheme.primary.value);
 
   Future<void> changeThemeColor(
       {bool dynamicColor = false, bool save = false}) async {
@@ -43,14 +44,13 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
       content: SizedBox(
         height: MediaQuery.of(context).size.height / 2,
         child: ColorPicker(
-          showColorName: true,
-          borderRadius: 20,
           pickersEnabled: const {
             ColorPickerType.accent: false,
-            ColorPickerType.custom: true,
+            ColorPickerType.custom: false,
             ColorPickerType.wheel: true,
             ColorPickerType.primary: false,
           },
+          wheelSquarePadding: 20,
           color: color,
           onColorChanged: (value) {
             setState(() {
@@ -60,6 +60,9 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
           },
           crossAxisAlignment: CrossAxisAlignment.center,
           wheelWidth: 25,
+          showRecentColors: false,
+          wheelDiameter: 400,
+          enableShadesSelection: false,
         ),
       ),
       actionsAlignment: MainAxisAlignment.center,

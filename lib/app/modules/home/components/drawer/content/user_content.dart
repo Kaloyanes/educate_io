@@ -32,7 +32,7 @@ class UserContent extends StatelessWidget {
           const Spacer(),
           DrawerDestination(
             icon: Icons.person,
-            label: "Настройки на профила",
+            label: "Профил",
             onTap: () => Get.toNamed(Routes.PROFILE_SETTINGS),
           ),
           const SizedBox(height: 10),
@@ -44,7 +44,7 @@ class UserContent extends StatelessWidget {
           const SizedBox(height: 10),
           DrawerDestination(
             icon: Icons.logout,
-            label: "Излез от профила",
+            label: "Излез",
             onTap: () {
               FirebaseAuthService.logOut();
             },

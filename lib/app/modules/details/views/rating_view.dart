@@ -90,50 +90,37 @@ class RatingView extends GetView<RatingController> {
                             ));
                           }
 
-                          return NotificationListener<ScrollNotification>(
-                            onNotification: (notification) {
-                              if (notification is UserScrollNotification &&
-                                  notification.direction !=
-                                      ScrollDirection.idle) {
-                                controller.showFAB.value =
-                                    notification.direction ==
-                                            ScrollDirection.forward &&
-                                        !notification.metrics.atEdge;
-                              }
-                              return false;
-                            },
-                            child: ListView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              children: [
-                                for (int i = 0; i < docs.length; i++)
-                                  Builder(
-                                    builder: (context) {
-                                      var docId = docs[i].id;
+                          return ListView(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            children: [
+                              for (int i = 0; i < docs.length; i++)
+                                Builder(
+                                  builder: (context) {
+                                    var docId = docs[i].id;
 
-                                      var data = docs[i].data();
+                                    var data = docs[i].data();
 
-                                      return ReviewCard(
-                                        docId: docId,
-                                        name: data["name"],
-                                        review: data["rating"] as double,
-                                        reviewText: data["message"],
-                                        photoUrl: data["photoUrl"],
-                                        date:
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                          (data["date"] as Timestamp)
-                                              .millisecondsSinceEpoch,
-                                        ),
-                                      );
-                                    },
-                                  )
-                              ].animate(interval: 70.ms).scaleXY(
-                                    end: 1,
-                                    begin: 0,
-                                    duration: 600.ms,
-                                    curve: Curves.easeInOutQuint,
-                                  ),
-                            ),
+                                    return ReviewCard(
+                                      docId: docId,
+                                      userId: Get.arguments["id"],
+                                      name: data["name"],
+                                      rating: data["rating"] as double,
+                                      reviewText: data["message"],
+                                      photoUrl: data["photoUrl"],
+                                      date: DateTime.fromMillisecondsSinceEpoch(
+                                        (data["date"] as Timestamp)
+                                            .millisecondsSinceEpoch,
+                                      ),
+                                    );
+                                  },
+                                )
+                            ].animate(interval: 70.ms).scaleXY(
+                                  end: 1,
+                                  begin: 0,
+                                  duration: 600.ms,
+                                  curve: Curves.easeInOutQuint,
+                                ),
                           );
                         },
                       ),
@@ -145,34 +132,34 @@ class RatingView extends GetView<RatingController> {
           ],
         ),
       ),
-      floatingActionButton: Obx(
-        () => FloatingActionButton(
-          onPressed: () => controller.scrollToTop(),
-          child: const Icon(
-            Icons.arrow_upward,
-          ),
-        )
-            .animate(target: controller.showFAB.value ? 1 : 0)
-            .scaleXY(
-              curve: Curves.easeOutCubic,
-              duration: 400.ms,
-              delay: 150.ms,
-              begin: -1,
-              end: 1,
-            )
-            .slideY(
-              begin: 4,
-              end: 0,
-              curve: Curves.easeInOutExpo,
-              duration: 800.ms,
-            )
-            .blurXY(
-              begin: 3,
-              end: 0,
-              duration: 450.ms,
-              curve: Curves.easeOut,
-            ),
-      ),
+      // floatingActionButton: Obx(
+      //   () => FloatingActionButton(
+      //     onPressed: () => controller.scrollToTop(),
+      //     child: const Icon(
+      //       Icons.arrow_upward,
+      //     ),
+      //   )
+      //       .animate(target: controller.showFAB.value ? 1 : 0)
+      //       .scaleXY(
+      //         curve: Curves.easeOutCubic,
+      //         duration: 400.ms,
+      //         delay: 150.ms,
+      //         begin: -1,
+      //         end: 1,
+      //       )
+      //       .slideY(
+      //         begin: 4,
+      //         end: 0,
+      //         curve: Curves.easeInOutExpo,
+      //         duration: 800.ms,
+      //       )
+      //       .blurXY(
+      //         begin: 3,
+      //         end: 0,
+      //         duration: 450.ms,
+      //         curve: Curves.easeOut,
+      //       ),
+      // ),
     );
   }
 
@@ -182,16 +169,18 @@ class RatingView extends GetView<RatingController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            RatingBar.builder(
-              itemBuilder: (context, index) => Icon(
-                Icons.star,
-                color: Theme.of(context).colorScheme.primary,
+            Obx(
+              () => RatingBar.builder(
+                itemBuilder: (context, index) => Icon(
+                  Icons.star,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                initialRating: controller.giveRating.value,
+                onRatingUpdate: (value) => controller.giveRating.value = value,
+                allowHalfRating: true,
+                glow: true,
+                updateOnDrag: true,
               ),
-              initialRating: controller.giveRating.value,
-              onRatingUpdate: (value) => controller.giveRating.value = value,
-              allowHalfRating: true,
-              glow: true,
-              updateOnDrag: true,
             ),
             Obx(
               () => Text(
@@ -231,8 +220,15 @@ class RatingView extends GetView<RatingController> {
                       controller: controller.reviewController,
                       maxLines: 3,
                       minLines: 3,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Ревю",
+                        suffixIcon: controller.reviewController.text.isNotEmpty
+                            ? IconButton(
+                                onPressed: () =>
+                                    controller.reviewController.clear(),
+                                icon: const Icon(Icons.clear),
+                              )
+                            : null,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {

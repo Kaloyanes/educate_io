@@ -13,12 +13,12 @@ class DetailsController extends GetxController {
   final Teacher teacher = Get.arguments["teacher"];
 
   Future<void> favoriteTeacher(Teacher teacher) async {
-    var doc = FirebaseFirestore.instance
+    var doc = await FirebaseFirestore.instance
         .collection("users")
-        .doc(FirebaseAuth.instance.currentUser!.uid);
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
 
-    var teachers =
-        await doc.get().then((value) => value.get("likedTeachers") as List);
+    var teachers = List.castFrom<dynamic, String>(doc.get("likedTeachers"));
 
     if (teachers.contains(teacher.uid)) {
       teachers.remove(teacher.uid);
@@ -30,7 +30,7 @@ class DetailsController extends GetxController {
         ),
       );
     } else {
-      teachers.add(teacher.uid);
+      teachers.add(teacher.uid!);
       ScaffoldMessenger.of(Get.context!).showSnackBar(
         const SnackBar(
           content: Text("Успешно добавен ментор към любими ментори"),
@@ -39,7 +39,10 @@ class DetailsController extends GetxController {
       );
     }
 
-    doc.update({"likedTeachers": teachers});
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({"likedTeachers": teachers});
   }
 
   Future<void> createChat() async {
@@ -109,11 +112,6 @@ class DetailsController extends GetxController {
   }
 
   Future<void> callTeacher() async {
-    if (Platform.isAndroid) {
-      await FlutterPhoneDirectCaller.callNumber(teacher.phone!);
-      return;
-    }
-
     Uri url = Uri.parse("tel:${teacher.phone}");
 
     await launchUrl(url);
@@ -122,36 +120,46 @@ class DetailsController extends GetxController {
   Future report() async {
     final reportDetails = TextEditingController();
 
-    await showDialog(
-      context: Get.context!,
-      builder: (context) => AlertDialog(
-        title: const Text("Докладвай"),
-        content: TextField(
-          controller: reportDetails,
-          decoration: const InputDecoration(
-            label: Text("Описание на доклада"),
+    var report = await showDialog<bool>(
+          context: Get.context!,
+          builder: (context) => AlertDialog(
+            title: const Text("Докладвай"),
+            content: TextField(
+              controller: reportDetails,
+              decoration: const InputDecoration(
+                label: Text("Описание на доклада"),
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("Отказ"),
+                onPressed: () => Get.back(result: false),
+              ),
+              TextButton(
+                child: const Text("Докладвай"),
+                onPressed: () => Get.back(result: true),
+              )
+            ],
           ),
-        ),
-        actions: [
-          TextButton(
-            child: const Text("Отказ"),
-            onPressed: () => Get.back(),
-          ),
-          TextButton(
-            child: const Text("Докладвай"),
-            onPressed: () => Get.back(),
-          )
-        ],
-      ),
-    );
+        ) ??
+        false;
+
+    if (!report) return;
 
     await FirebaseFirestore.instance.collection("reports").doc().set({
       "reportedUid": teacher.uid,
       "reason": reportDetails.text.trim(),
       "sent": DateTime.now(),
+      "reportedBy": (FirebaseAuth.instance.currentUser?.uid ?? "Anon")
     });
 
-    ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
         content: Text("Благодарим ви, че правите ЕducateIO по-добро място")));
+  }
+
+  Future<void> launchEmail() async {
+    var uri = Uri.parse("mailto:${teacher.email}");
+
+    await launchUrl(uri);
   }
 }

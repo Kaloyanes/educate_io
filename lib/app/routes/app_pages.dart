@@ -1,3 +1,4 @@
+import 'package:educate_io/app/modules/auth/register/views/google_data_view.dart';
 import 'package:get/get.dart';
 
 import '../middleware/auth_middleware.dart';
@@ -53,6 +54,10 @@ class AppPages {
           binding: RegisterBinding(),
         ),
       ],
+    ),
+    GetPage(
+      name: _Paths.GOOGLE_DATA,
+      page: () => const GoogleDataView(),
     ),
     GetPage(
       name: _Paths.PROFILE_SETTINGS,

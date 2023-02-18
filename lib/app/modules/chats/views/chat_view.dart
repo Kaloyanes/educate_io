@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/message_model.dart';
 import 'package:educate_io/app/modules/chats/components/chat_message.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
+import 'package:educate_io/app/modules/details/views/details_view.dart';
+import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,32 +24,40 @@ class ChatView extends GetView<ChatController> {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 40,
-        title: Row(
-          children: [
-            Hero(
-              flightShuttleBuilder: (flightContext, animation, flightDirection,
-                      fromHeroContext, toHeroContext) =>
-                  fromHeroContext.widget,
-              tag: controller.photoUrl,
-              child: CircleAvatar(
-                foregroundImage:
-                    CachedNetworkImageProvider(controller.photoUrl.toString()),
-                child: Text(controller.initials),
+        title: GestureDetector(
+          onTap: () => Get.to(
+            () => const DetailsView(),
+            arguments: {
+              "teacher": Get.arguments["teacher"],
+            },
+          ),
+          child: Row(
+            children: [
+              Hero(
+                flightShuttleBuilder: (flightContext, animation,
+                        flightDirection, fromHeroContext, toHeroContext) =>
+                    fromHeroContext.widget,
+                tag: controller.photoUrl,
+                child: CircleAvatar(
+                  foregroundImage: CachedNetworkImageProvider(
+                      controller.photoUrl.toString()),
+                  child: Text(controller.initials),
+                ),
               ),
-            ),
-            const SizedBox(
-              width: 15,
-            ),
-            Hero(
-              flightShuttleBuilder: (flightContext, animation, flightDirection,
-                      fromHeroContext, toHeroContext) =>
-                  fromHeroContext.widget,
-              tag: controller.docId,
-              child: Text(
-                controller.name,
+              const SizedBox(
+                width: 15,
               ),
-            ),
-          ],
+              Hero(
+                flightShuttleBuilder: (flightContext, animation,
+                        flightDirection, fromHeroContext, toHeroContext) =>
+                    fromHeroContext.widget,
+                tag: controller.docId,
+                child: Text(
+                  controller.name,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       body: Column(

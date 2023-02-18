@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/home/components/teacher_card.dart';
@@ -30,7 +32,10 @@ class LikedTeachersView extends GetView<LikedTeachersController> {
             );
           }
 
-          var data = snapshot.data!.data()!["likedTeachers"] as List;
+          var data = List.castFrom<dynamic, String>(
+              snapshot.data!.data()!["likedTeachers"] as List);
+
+          controller.teachers = data;
 
           if (data.isEmpty) {
             return Center(
@@ -40,7 +45,6 @@ class LikedTeachersView extends GetView<LikedTeachersController> {
               ),
             );
           }
-
           return GridView(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
@@ -56,22 +60,24 @@ class LikedTeachersView extends GetView<LikedTeachersController> {
                       .get(),
                   builder: (context, snapshot) {
                     var teacherData = snapshot.data;
-                    if (teacherData == null) {
+                    if (teacherData == null ||
+                        snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
 
                     var mapData = teacherData.data() ?? {};
+
+                    if (mapData.isEmpty) {
+                      controller.removeTeacher(snapshot.data!.id);
+                      return Container();
+                    }
                     mapData.addAll({"uid": data[index]});
-                    return Obx(
-                      () => HeroMode(
-                        enabled: controller.heroTransition.value,
-                        child: TeacherCard(
-                          subject: mapData["subjects"][0],
-                          teacher: Teacher.fromMap(mapData),
-                        ),
-                      ),
+
+                    return TeacherCard(
+                      subject: mapData["subjects"][0],
+                      teacher: Teacher.fromMap(mapData),
                     );
                   },
                 ),

@@ -42,7 +42,7 @@ class LoginView extends GetView<LoginController> {
                           controller: controller.emailController,
                           decoration: const InputDecoration(
                             // border: OutlineInputBorder(),
-                            label: Text("Имейл"),
+                            label: Text("Е-mail"),
                             prefixIcon: Icon(Icons.email),
                           ),
                           validator: (value) {
@@ -67,7 +67,7 @@ class LoginView extends GetView<LoginController> {
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
                               label: const Text("Парола"),
-                              prefixIcon: const Icon(Icons.password),
+                              prefixIcon: const Icon(Icons.lock),
                               suffixIcon: IconButton(
                                 onPressed: () =>
                                     controller.setPasswordVisibility =

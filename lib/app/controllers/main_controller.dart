@@ -8,7 +8,7 @@ class MainController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    dynamicColor.value = GetStorageService().read<bool>("dynamic") ?? false;
+    dynamicColor.value = GetStorageService().read<bool>("dynamic") ?? true;
   }
 
   var lightColor = ColorScheme.fromSeed(

@@ -58,9 +58,8 @@ class TeachersNearbyController extends GetxController {
     var teacher = Teacher.fromMap(doc.data() ?? {});
 
     return Marker(
-      markerId: MarkerId(latlng.toString()),
+      markerId: MarkerId(teacher.uid ?? latlng.toString()),
       position: latlng,
-      flat: false,
       icon: await convertImageFileToCustomBitmapDescriptor(
         imageBytes,
         title: teacher.name,
@@ -72,7 +71,6 @@ class TeachersNearbyController extends GetxController {
         borderSize: 20,
       ),
       onTap: () => showDetails(teacher),
-      consumeTapEvents: false,
     );
   }
 
