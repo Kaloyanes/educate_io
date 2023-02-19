@@ -6,7 +6,6 @@ import 'package:crop_your_image/crop_your_image.dart';
 import 'package:educate_io/app/modules/profile_settings/controllers/profile_settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 
 class ImageCropView extends StatelessWidget {
   ImageCropView({super.key, required Uint8List imageData})

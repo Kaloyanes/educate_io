@@ -80,7 +80,11 @@ class DetailsController extends GetxController {
       return;
     }
 
-    var doc = await store.collection("chats").doc("$uid.${teacher.uid}").get();
+    var chatDocId = {"$uid.${teacher.uid!}", "${teacher.uid}.$uid"};
+    var collection = await store.collection("chats").get();
+    var doc = collection.docs.firstWhere((element) =>
+        element.id == chatDocId.elementAt(0) ||
+        element.id == chatDocId.elementAt(1));
 
     if (doc.exists) {
       Get.to(() => const ChatView(), arguments: {
@@ -89,11 +93,11 @@ class DetailsController extends GetxController {
         "name": teacher.name,
         "initials": "KS",
       });
+
+      return;
     }
 
-    var chatDocId = "$uid.${teacher.uid!}";
-
-    var chatDoc = store.collection("chats").doc(chatDocId);
+    var chatDoc = store.collection("chats").doc(chatDocId.elementAt(0));
 
     chatDoc.set({"lastMessage": Timestamp.now(), "creator": uid});
 
