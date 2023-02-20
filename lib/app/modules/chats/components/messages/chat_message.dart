@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/models/message_model.dart';
+import 'package:educate_io/app/modules/chats/components/message_settings.dart';
+import 'package:educate_io/app/modules/chats/models/message_model.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,17 +25,13 @@ class ChatMessage extends StatefulWidget {
   State<ChatMessage> createState() => _ChatMessageState();
 }
 
-class _ChatMessageState extends State<ChatMessage>
-    with TickerProviderStateMixin {
+class _ChatMessageState extends State<ChatMessage> {
   DateFormat formatter = DateFormat("H:mm | d/MM");
-
-  late AnimationController controller;
 
   bool showInfo = false;
 
   @override
   void initState() {
-    controller = AnimationController(vsync: this);
     super.initState();
   }
 
@@ -44,43 +43,12 @@ class _ChatMessageState extends State<ChatMessage>
       child: GestureDetector(
         onLongPress: () async {
           if (!widget.ownMessage) return;
-          HapticFeedback.lightImpact();
 
           await showModalBottomSheet<String>(
             context: context,
-            builder: (context) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Container(
-                    height: 5,
-                    width: Get.size.width / 3,
-                    decoration: BoxDecoration(
-                      color: Theme.of(Get.context!).dividerColor,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  ListTile(
-                    leading: const Icon(Icons.delete),
-                    title: const Text("Изтрийте съобщението"),
-                    onTap: () {
-                      Get.back();
-                      Get.find<ChatController>().messages.removeWhere(
-                          (element) => element.msgId == widget.doc.id);
-                      widget.doc.delete();
-                    },
-                    tileColor: Theme.of(context).colorScheme.tertiaryContainer,
-                  ),
-                  SizedBox(
-                    height: Get.mediaQuery.padding.bottom,
-                  )
-                ],
-              );
-            },
+            builder: (context) => MessageSettings(
+              doc: widget.doc,
+            ),
           );
         },
         onTap: () {
@@ -119,7 +87,7 @@ class _ChatMessageState extends State<ChatMessage>
                   textAlign: TextAlign.center,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               AnimatedContainer(

@@ -1,3 +1,4 @@
+import 'package:educate_io/app/services/geo_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -15,7 +16,6 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          // automaticallyImplyLeading: false,
           title: Obx(
             () => TextField(
               controller: controller.searchController,
@@ -94,9 +94,9 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
           ],
 
           backgroundColor: Colors.transparent,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark,
-          ),
+          // systemOverlayStyle: const SystemUiOverlayStyle(
+          //   statusBarIconBrightness: Brightness.dark,
+          // ),
           leadingWidth: 70,
           toolbarHeight: 70,
           leading: Obx(
@@ -138,7 +138,7 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
           ),
         ),
         body: FutureBuilder(
-          future: controller.getLocation(),
+          future: GeoService.getLocation(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -149,14 +149,13 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
             return Obx(
               () => GoogleMap(
                 initialCameraPosition: CameraPosition(
-                  target: snapshot.data ??
-                      const LatLng(37.42796133580664, -122.085749655962),
+                  target: snapshot.data ?? const LatLng(42.510578, 27.461014),
                   zoom: 16,
                 ),
                 zoomControlsEnabled: false,
                 onMapCreated: (mapController) =>
                     controller.configureMap(mapController),
-                mapType: MapType.normal,
+                mapType: MapType.hybrid,
                 myLocationEnabled: true,
                 myLocationButtonEnabled: false,
                 zoomGesturesEnabled: true,

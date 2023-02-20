@@ -6,13 +6,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Message {
   String sender;
   DateTime time;
-  String value;
+  dynamic value;
   String msgId;
+  bool? isEdited;
+  String? type;
+
   Message({
     required this.sender,
     required this.time,
     required this.value,
     required this.msgId,
+    required this.isEdited,
+    required this.type,
   });
 
   Map<String, dynamic> toMap() {
@@ -21,6 +26,8 @@ class Message {
       'time': time.millisecondsSinceEpoch,
       'value': value,
       'msgId': msgId,
+      'isEdited': isEdited,
+      'type': type,
     };
   }
 
@@ -29,8 +36,10 @@ class Message {
       sender: map['sender'] as String,
       time: DateTime.fromMillisecondsSinceEpoch(
           (map['time'] as Timestamp).millisecondsSinceEpoch),
-      value: map['value'] as String,
+      value: map['value'] as dynamic,
       msgId: map['msgId'] as String,
+      isEdited: map['isEdited'] != null ? map['isEdited'] as bool : null,
+      type: map['type'] != null ? map['type'] as String : null,
     );
   }
 
@@ -41,35 +50,46 @@ class Message {
 
   @override
   String toString() {
-    return 'Message(sender: $sender, time: $time, value: $value, msgId: $msgId)';
+    return 'Message(sender: $sender, time: $time, value: $value, msgId: $msgId, isEdited: $isEdited, type: $type)';
   }
 
   @override
   bool operator ==(covariant Message other) {
-    // if (identical(this, other)) return true;
+    if (identical(this, other)) return true;
 
     return other.sender == sender &&
         other.time == time &&
         other.value == value &&
-        other.msgId == msgId;
+        other.msgId == msgId &&
+        other.isEdited == isEdited &&
+        other.type == type;
   }
 
   Message copyWith({
     String? sender,
     DateTime? time,
-    String? value,
+    dynamic? value,
     String? msgId,
+    bool? isEdited,
+    String? type,
   }) {
     return Message(
       sender: sender ?? this.sender,
       time: time ?? this.time,
       value: value ?? this.value,
       msgId: msgId ?? this.msgId,
+      isEdited: isEdited ?? this.isEdited,
+      type: type ?? this.type,
     );
   }
 
   @override
   int get hashCode {
-    return sender.hashCode ^ time.hashCode ^ value.hashCode ^ msgId.hashCode;
+    return sender.hashCode ^
+        time.hashCode ^
+        value.hashCode ^
+        msgId.hashCode ^
+        isEdited.hashCode ^
+        type.hashCode;
   }
 }

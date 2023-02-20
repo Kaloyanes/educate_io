@@ -5,9 +5,11 @@ import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/chats/views/chat_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class DetailsController extends GetxController {
   final Teacher teacher = Get.arguments["teacher"];
@@ -82,15 +84,14 @@ class DetailsController extends GetxController {
 
     var chatDocId = {"$uid.${teacher.uid!}", "${teacher.uid}.$uid"};
     var collection = await store.collection("chats").get();
-    var doc = collection.docs.firstWhere((element) =>
+    var doc = collection.docs.firstWhereOrNull((element) =>
         element.id == chatDocId.elementAt(0) ||
         element.id == chatDocId.elementAt(1));
 
-    if (doc.exists) {
+    if (doc != null && doc.exists) {
       Get.to(() => const ChatView(), arguments: {
+        "teacher": teacher,
         "docId": doc.id,
-        "photoUrl": teacher.photoUrl,
-        "name": teacher.name,
         "initials": "KS",
       });
 
@@ -99,19 +100,18 @@ class DetailsController extends GetxController {
 
     var chatDoc = store.collection("chats").doc(chatDocId.elementAt(0));
 
-    chatDoc.set({"lastMessage": Timestamp.now(), "creator": uid});
+    await chatDoc.set({"lastMessage": Timestamp.now(), "creator": uid});
 
-    chatDoc.collection("messages").doc("example").set({
+    await chatDoc.collection("messages").doc("example").set({
       "time": Timestamp.now(),
       "sender": "",
       "value": "",
     });
 
     Get.to(() => const ChatView(), arguments: {
-      "docId": chatDocId,
+      "teacher": teacher,
+      "docId": chatDocId.elementAt(0),
       "initials": "KS",
-      "photoUrl": teacher.photoUrl,
-      "name": teacher.name,
     });
   }
 
@@ -157,13 +157,11 @@ class DetailsController extends GetxController {
       "reportedBy": (FirebaseAuth.instance.currentUser?.uid ?? "Anon")
     });
 
+    HapticFeedback.lightImpact();
     ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
         content: Text("Благодарим ви, че правите ЕducateIO по-добро място")));
   }
 
-  Future<void> launchEmail() async {
-    var uri = Uri.parse("mailto:${teacher.email}");
-
-    await launchUrl(uri);
-  }
+  Future<void> launchEmail() async =>
+      await launchUrlString("mailto:${teacher.email}");
 }
