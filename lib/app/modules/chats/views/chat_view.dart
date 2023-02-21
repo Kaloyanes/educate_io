@@ -102,8 +102,6 @@ class ChatView extends GetView<ChatController> {
                     bool isOwnMessage =
                         item.sender == FirebaseAuth.instance.currentUser!.uid;
 
-                    Widget child;
-
                     switch (item.type) {
                       case "location":
                         return LocationMessage(

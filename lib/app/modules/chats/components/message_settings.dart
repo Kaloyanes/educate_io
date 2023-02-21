@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class MessageSettings extends StatelessWidget {
-  MessageSettings({super.key, required this.doc, ref});
+  MessageSettings({super.key, required this.doc, this.ref});
 
   final DocumentReference doc;
 
@@ -41,6 +43,8 @@ class MessageSettings extends StatelessWidget {
                 .messages
                 .removeWhere((element) => element.msgId == doc.id);
             doc.delete();
+
+            inspect(ref);
 
             if (ref != null) {
               await ref!.delete();

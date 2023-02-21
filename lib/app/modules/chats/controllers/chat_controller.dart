@@ -202,7 +202,8 @@ class ChatController extends GetxController {
     if (image == null) return;
 
     var id = Uuid().v4();
-    var ref = FirebaseStorage.instance.ref("/chats/$id");
+    var ref =
+        FirebaseStorage.instance.ref("/chats/${Get.arguments["docId"]}/$id");
 
     var upload = ref.putData(await image.readAsBytes());
 
@@ -252,10 +253,15 @@ class ChatController extends GetxController {
   }
 
   Future<void> deleteChat() async {
-    await FirebaseFirestore.instance
-        .collection("chats")
-        .doc(Get.arguments["docId"])
-        .delete();
+    print("hello world");
+    await FirebaseFirestore.instance.collection("chats").doc(docId).delete();
+
+    var allImagesInChat =
+        await FirebaseStorage.instance.ref("/chats/$docId").listAll();
+
+    for (var result in allImagesInChat.items) {
+      await result.delete();
+    }
 
     Get.back();
   }
