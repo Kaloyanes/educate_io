@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:educate_io/app/modules/chats/components/messages/chat_message.dart';
+import 'package:educate_io/app/modules/chats/components/messages/date_time_message.dart';
 import 'package:educate_io/app/modules/chats/components/messages/image_message.dart';
 import 'package:educate_io/app/modules/chats/components/messages/location_message.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
@@ -76,6 +77,7 @@ class ChatView extends GetView<ChatController> {
                             color: Colors.red,
                           ),
                         ),
+                        onTap: () => controller.deleteChat(),
                       )
                     ],
                   ),
@@ -104,31 +106,34 @@ class ChatView extends GetView<ChatController> {
 
                     switch (item.type) {
                       case "location":
-                        child = LocationMessage(
-                          message: item,
+                        return LocationMessage(
                           ownMessage: isOwnMessage,
+                          message: item,
                           doc: controller.collection.doc(item.msgId),
                         );
-                        break;
 
                       case "image":
-                        child = ImageMessage(
+                        return ImageMessage(
                           ownMessage: isOwnMessage,
                           message: item,
                           doc: controller.collection.doc(item.msgId),
                         );
-                        break;
+
+                      case "time":
+                        return DateTimeMessage(
+                          ownMessage: isOwnMessage,
+                          message: item,
+                          doc: controller.collection.doc(item.msgId),
+                          personName: controller.teacher.name,
+                        );
 
                       default:
-                        child = ChatMessage(
-                          doc: controller.collection.doc(item.msgId),
-                          message: item,
+                        return ChatMessage(
                           ownMessage: isOwnMessage,
+                          message: item,
+                          doc: controller.collection.doc(item.msgId),
                         );
-                        break;
                     }
-
-                    return child;
                   },
                 ),
               ),

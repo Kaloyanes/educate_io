@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:educate_io/app/modules/chats/components/message_settings.dart';
 import 'package:educate_io/app/modules/chats/models/message_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 class ImageMessage extends StatelessWidget {
   const ImageMessage(
@@ -35,22 +38,18 @@ class ImageMessage extends StatelessWidget {
                     clipBehavior: Clip.none,
                     boundaryMargin: EdgeInsets.all(20),
                     maxScale: 5,
-                    child: Expanded(
-                      child: Hero(
-                        tag:
-                            "https://th.bing.com/th/id/R.f669c481ffe41136656ce832e1028f13?rik=EXK99P6fFCak2g&riu=http%3a%2f%2fwww.gwwoinc.com%2fuploads%2fattachments%2fcjzcz3xv81zur68uoso9c97ck-arundel-es-entrance-1.0.0.2000.1333.full.jpg&ehk=XRruf9ZyTYRGBEpFmwpOdT2R0pZ%2ftmSZ%2bwkrjtUt%2fFE%3d&risl=&pid=ImgRaw&r=0",
-                        child: CachedNetworkImage(
-                          height: Get.height,
-                          width: Get.width,
-                          imageBuilder: (context, imageProvider) => ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image(
-                              image: imageProvider,
-                            ),
+                    child: Hero(
+                      tag: message.value,
+                      child: CachedNetworkImage(
+                        height: Get.height,
+                        width: Get.width,
+                        imageBuilder: (context, imageProvider) => ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image(
+                            image: imageProvider,
                           ),
-                          imageUrl:
-                              "https://th.bing.com/th/id/R.f669c481ffe41136656ce832e1028f13?rik=EXK99P6fFCak2g&riu=http%3a%2f%2fwww.gwwoinc.com%2fuploads%2fattachments%2fcjzcz3xv81zur68uoso9c97ck-arundel-es-entrance-1.0.0.2000.1333.full.jpg&ehk=XRruf9ZyTYRGBEpFmwpOdT2R0pZ%2ftmSZ%2bwkrjtUt%2fFE%3d&risl=&pid=ImgRaw&r=0",
                         ),
+                        imageUrl: message.value,
                       ),
                     ),
                   ),
@@ -67,14 +66,20 @@ class ImageMessage extends StatelessWidget {
             ),
           );
         },
+        onLongPress: () => showModalBottomSheet(
+          context: context,
+          builder: (context) => MessageSettings(
+            doc: doc,
+            ref: FirebaseStorage.instance.refFromURL(message.value),
+          ),
+        ),
         child: Container(
           margin: EdgeInsets.symmetric(
             horizontal: 20,
             vertical: 10,
           ),
           child: Hero(
-            tag:
-                "https://th.bing.com/th/id/R.f669c481ffe41136656ce832e1028f13?rik=EXK99P6fFCak2g&riu=http%3a%2f%2fwww.gwwoinc.com%2fuploads%2fattachments%2fcjzcz3xv81zur68uoso9c97ck-arundel-es-entrance-1.0.0.2000.1333.full.jpg&ehk=XRruf9ZyTYRGBEpFmwpOdT2R0pZ%2ftmSZ%2bwkrjtUt%2fFE%3d&risl=&pid=ImgRaw&r=0",
+            tag: message.value,
             child: CachedNetworkImage(
               width: 250,
               imageBuilder: (context, imageProvider) => ClipRRect(
@@ -83,8 +88,7 @@ class ImageMessage extends StatelessWidget {
                   image: imageProvider,
                 ),
               ),
-              imageUrl:
-                  "https://th.bing.com/th/id/R.f669c481ffe41136656ce832e1028f13?rik=EXK99P6fFCak2g&riu=http%3a%2f%2fwww.gwwoinc.com%2fuploads%2fattachments%2fcjzcz3xv81zur68uoso9c97ck-arundel-es-entrance-1.0.0.2000.1333.full.jpg&ehk=XRruf9ZyTYRGBEpFmwpOdT2R0pZ%2ftmSZ%2bwkrjtUt%2fFE%3d&risl=&pid=ImgRaw&r=0",
+              imageUrl: message.value,
             ),
           ),
         ),

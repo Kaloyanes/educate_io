@@ -1,46 +1,61 @@
-import 'dart:async';
-
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/chats/components/message_settings.dart';
 import 'package:educate_io/app/modules/chats/models/message_model.dart';
-import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class ChatMessage extends StatefulWidget {
-  const ChatMessage(
+class DateTimeMessage extends StatefulWidget {
+  const DateTimeMessage(
       {super.key,
       required this.message,
       required this.ownMessage,
-      required this.doc});
+      required this.doc,
+      required this.personName});
 
   final Message message;
   final bool ownMessage;
   final DocumentReference doc;
+  final String personName;
 
   @override
-  State<ChatMessage> createState() => _ChatMessageState();
+  State<DateTimeMessage> createState() => _DateTimeMessageState();
 }
 
-class _ChatMessageState extends State<ChatMessage> {
-  DateFormat formatter = DateFormat("H:mm | d/MM/yyyy");
+class _DateTimeMessageState extends State<DateTimeMessage> {
+  void saveCalendar(DateTime date) {
+    final Event event = Event(
+      title: 'Среща с ${widget.personName}',
+      startDate: date,
+      endDate: date.add(const Duration(hours: 1, minutes: 30)),
+      iosParams: const IOSParams(
+        reminder: Duration(hours: 1),
+      ),
+    );
 
-  bool showInfo = false;
-
-  @override
-  void initState() {
-    super.initState();
+    Add2Calendar.addEvent2Cal(event);
   }
 
   @override
   Widget build(BuildContext context) {
+    DateFormat formatter = DateFormat("H:mm | d/MM/yyyy");
+
+    bool showInfo = false;
+
+    DateTime date = (widget.message.value as Timestamp).toDate();
+
     return Align(
       alignment:
           widget.ownMessage ? Alignment.centerRight : Alignment.centerLeft,
       child: GestureDetector(
+        onTap: () {
+          setState(() {
+            showInfo = !showInfo;
+          });
+          HapticFeedback.selectionClick();
+        },
         onLongPress: () async {
           if (!widget.ownMessage) return;
 
@@ -50,12 +65,6 @@ class _ChatMessageState extends State<ChatMessage> {
               doc: widget.doc,
             ),
           );
-        },
-        onTap: () {
-          setState(() {
-            showInfo = !showInfo;
-          });
-          HapticFeedback.selectionClick();
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 7),
@@ -82,9 +91,25 @@ class _ChatMessageState extends State<ChatMessage> {
                       ? Theme.of(context).colorScheme.primaryContainer
                       : Theme.of(context).colorScheme.secondaryContainer,
                 ),
-                child: Text(
-                  widget.message.value,
-                  textAlign: TextAlign.center,
+                child: Column(
+                  children: [
+                    Text(
+                      "${date.day}/${date.month}/${date.year}",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    Text(
+                      "${date.hour}:${date.minute}",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => saveCalendar(date),
+                      icon: const Icon(Icons.calendar_month),
+                      label: const Text("Запази в календара"),
+                    )
+                  ],
                 ),
               ),
               const SizedBox(

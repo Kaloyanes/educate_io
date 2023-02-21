@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class MessageSettings extends StatelessWidget {
-  const MessageSettings({super.key, required this.doc});
+  MessageSettings({super.key, required this.doc, ref});
 
   final DocumentReference doc;
+
+  Reference? ref;
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +35,16 @@ class MessageSettings extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.delete),
           title: const Text("Изтрийте съобщението"),
-          onTap: () {
+          onTap: () async {
             Get.back();
             Get.find<ChatController>()
                 .messages
                 .removeWhere((element) => element.msgId == doc.id);
             doc.delete();
+
+            if (ref != null) {
+              await ref!.delete();
+            }
           },
           tileColor: Theme.of(context).colorScheme.tertiaryContainer,
         ),
