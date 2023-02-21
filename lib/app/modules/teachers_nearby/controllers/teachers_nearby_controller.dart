@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/details/views/details_view.dart';
+import 'package:educate_io/app/services/geo_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -180,34 +181,8 @@ class TeachersNearbyController extends GetxController {
     }
   }
 
-  Future<LatLng> getLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    var position = await Geolocator.getCurrentPosition();
-    return Future.value(LatLng(position.latitude, position.longitude));
-  }
-
-  Future<void> centerCamera() async => await mapController
-      .animateCamera(CameraUpdate.newLatLngZoom(await getLocation(), 16));
+  Future<void> centerCamera() async => await mapController.animateCamera(
+      CameraUpdate.newLatLngZoom(await GeoService.getLocation(), 16));
 
   Future<void> search() async {
     var geocoding = GoogleMapsGeocoding(apiKey: dotenv.env["GOOGLE_MAPS_API"]);

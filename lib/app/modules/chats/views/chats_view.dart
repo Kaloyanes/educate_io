@@ -108,9 +108,7 @@ class ChatsView extends GetView<ChatsController> {
                                 arguments: {
                                   "teacher": Teacher.fromMap(personData),
                                   "docId": doc.id,
-                                  "photoUrl": personData["photoUrl"],
                                   "initials": initials,
-                                  "name": personData["name"],
                                 },
                               );
                             },
