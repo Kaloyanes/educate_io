@@ -1,6 +1,5 @@
 import 'package:educate_io/app/modules/chats/chat_messages/controllers/location_picker_controller.dart';
 import 'package:educate_io/app/services/geo_service.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +73,7 @@ class LocationPickerView extends GetView<LocationPickerController> {
           FloatingActionButton(
               onPressed: () => controller.centerCamera(),
               child: const Icon(Icons.navigation_rounded)),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           FloatingActionButton(

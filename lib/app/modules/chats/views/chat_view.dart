@@ -7,6 +7,7 @@ import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
 import 'package:educate_io/app/modules/details/views/details_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -32,56 +33,87 @@ class ChatView extends GetView<ChatController> {
             },
           ),
           child: Row(
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Hero(
-                    flightShuttleBuilder: (flightContext, animation,
-                            flightDirection, fromHeroContext, toHeroContext) =>
-                        fromHeroContext.widget,
-                    tag: controller.teacher.photoUrl ?? "",
-                    child: CircleAvatar(
-                      foregroundImage: CachedNetworkImageProvider(
-                          controller.teacher.photoUrl!),
-                      child: Text(controller.initials),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Hero(
-                    flightShuttleBuilder: (flightContext, animation,
-                            flightDirection, fromHeroContext, toHeroContext) =>
-                        fromHeroContext.widget,
-                    tag: controller.docId,
-                    child: Text(
-                      controller.teacher.name,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  if (controller.teacher.phone != null)
-                    IconButton(
-                      onPressed: () => controller.call(),
-                      icon: const Icon(Icons.call),
-                    ),
-                  PopupMenuButton(
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: Text(
-                          "Изтрий чата",
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
+              Flexible(
+                flex: 2,
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Hero(
+                        transitionOnUserGestures: true,
+                        tag: controller.teacher.photoUrl ?? controller.teacher,
+                        child: CircleAvatar(
+                          foregroundImage: CachedNetworkImageProvider(
+                              controller.teacher.photoUrl ?? ""),
+                          child: Text(controller.initials),
                         ),
-                        onTap: () => controller.deleteChat(),
-                      )
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      Hero(
+                        transitionOnUserGestures: true,
+                        flightShuttleBuilder: (flightContext,
+                                animation,
+                                flightDirection,
+                                fromHeroContext,
+                                toHeroContext) =>
+                            AnimatedBuilder(
+                          animation: animation,
+                          child: toHeroContext.widget,
+                          builder: (_, child) {
+                            return DefaultTextStyle.merge(
+                              child: child ?? const Text("maika ti"),
+                              style: TextStyle.lerp(
+                                DefaultTextStyle.of(toHeroContext).style,
+                                DefaultTextStyle.of(fromHeroContext).style,
+                                flightDirection == HeroFlightDirection.pop
+                                    ? 1 - animation.value
+                                    : animation.value,
+                              ),
+                            );
+                          },
+                        ),
+                        tag: controller.docId,
+                        child: Text(
+                          controller.teacher.name,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
                     ],
                   ),
-                ],
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    if (controller.teacher.phone != null)
+                      IconButton(
+                        onPressed: () => controller.call(),
+                        icon: const Icon(Icons.call),
+                      ),
+                    PopupMenuButton(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: const Text(
+                            "Изтрий чата",
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                          onTap: () => controller.deleteChat(),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -94,6 +126,9 @@ class ChatView extends GetView<ChatController> {
               () => CupertinoScrollbar(
                 controller: controller.listController,
                 child: ListView.builder(
+                  cacheExtent: 50000,
+                  semanticChildCount: controller.messages.length,
+                  dragStartBehavior: DragStartBehavior.down,
                   itemCount: controller.messages.length,
                   reverse: true,
                   controller: controller.listController,
@@ -223,6 +258,7 @@ class ChatView extends GetView<ChatController> {
                     width: 20,
                   ),
                   Hero(
+                    transitionOnUserGestures: true,
                     tag: "sendButton",
                     child: IconButton(
                       onPressed: () => controller.sendMessage(),

@@ -51,6 +51,8 @@
         <false />
         <key>NSPhotoLibraryUsageDescription</key>
         <string>To upload a profile photo.</string>
+        <key>NSPhotoLibraryAddUsageDescription</key>
+        <string>Download images from messages</string>
         <key> NSCameraUsageDescription</key>
         <string>To capture a photo for a profile photo</string>
         <key> LSApplicationQueriesSchemes</key>

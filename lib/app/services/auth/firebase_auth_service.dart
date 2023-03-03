@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/auth/register/views/google_data_view.dart';
-import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -54,7 +53,7 @@ class FirebaseAuthService {
       idToken: googleAuth?.idToken,
     );
 
-    var userCred = await auth.signInWithCredential(credential);
+    await auth.signInWithCredential(credential);
     var doc = store.collection("users").doc(auth.currentUser?.uid);
 
     var doc2 = await doc.get();
@@ -63,7 +62,7 @@ class FirebaseAuthService {
       return;
     }
 
-    Get.offAll(() => GoogleDataView());
+    Get.offAll(() => const GoogleDataView());
   }
 
   static Future<void> forgotPassword(String email) async {

@@ -4,8 +4,8 @@
 # This file should be version controlled.
 
 version:
-  revision: 7f7a8778d8a823cabcdcb4c5ee27deb2c499af5e
-  channel: flutter-3.7-candidate.12
+  revision: d63c54c9c2d7e03663631a09d97777a3c7223e0b
+  channel: master
 
 project_type: app
 
@@ -13,11 +13,11 @@ project_type: app
 migration:
   platforms:
     - platform: root
-      create_revision: 7f7a8778d8a823cabcdcb4c5ee27deb2c499af5e
-      base_revision: 7f7a8778d8a823cabcdcb4c5ee27deb2c499af5e
+      create_revision: d63c54c9c2d7e03663631a09d97777a3c7223e0b
+      base_revision: d63c54c9c2d7e03663631a09d97777a3c7223e0b
     - platform: web
-      create_revision: 7f7a8778d8a823cabcdcb4c5ee27deb2c499af5e
-      base_revision: 7f7a8778d8a823cabcdcb4c5ee27deb2c499af5e
+      create_revision: d63c54c9c2d7e03663631a09d97777a3c7223e0b
+      base_revision: d63c54c9c2d7e03663631a09d97777a3c7223e0b
 
   # User provided section
 

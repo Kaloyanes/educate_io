@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/auth/TOS/tos_view.dart';
-import 'package:educate_io/app/modules/auth/register/views/google_data_view.dart';
 import 'package:educate_io/app/routes/app_pages.dart';
 import 'package:educate_io/app/services/auth/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 

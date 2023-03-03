@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/chats/components/message_settings.dart';
 import 'package:educate_io/app/modules/chats/models/message_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -55,8 +53,8 @@ class _LocationMessageState extends State<LocationMessage> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Container(
-                  margin: EdgeInsets.all(40),
-                  child: CircularProgressIndicator(),
+                  margin: const EdgeInsets.all(40),
+                  child: const CircularProgressIndicator(),
                 );
               }
 
@@ -97,7 +95,7 @@ class _LocationMessageState extends State<LocationMessage> {
                     mapToolbarEnabled: false,
                     markers: {
                       Marker(
-                          markerId: MarkerId("meeting"),
+                          markerId: const MarkerId("meeting"),
                           position: locationData),
                     },
                   ),

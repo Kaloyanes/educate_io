@@ -68,7 +68,7 @@ class Message {
   Message copyWith({
     String? sender,
     DateTime? time,
-    dynamic? value,
+    dynamic value,
     String? msgId,
     bool? isEdited,
     String? type,

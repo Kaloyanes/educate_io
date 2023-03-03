@@ -108,6 +108,7 @@ class DetailsView extends GetView<DetailsController> {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Hero(
+              transitionOnUserGestures: true,
               tag: teacher,
               createRectTween: (begin, end) =>
                   MaterialRectCenterArcTween(begin: begin, end: end),

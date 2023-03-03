@@ -41,6 +41,7 @@ class _DateTimeMessageState extends State<DateTimeMessage> {
   @override
   Widget build(BuildContext context) {
     DateFormat formatter = DateFormat("H:mm | d/MM/yyyy");
+    DateFormat messageFormatter = DateFormat("d/MM/yyyy\nH:mm");
 
     bool showInfo = false;
 
@@ -94,12 +95,9 @@ class _DateTimeMessageState extends State<DateTimeMessage> {
                 child: Column(
                   children: [
                     Text(
-                      "${date.day}/${date.month}/${date.year}",
+                      messageFormatter.format(date),
                       style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    Text(
-                      "${date.hour}:${date.minute}",
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      textAlign: TextAlign.center,
                     ),
                     const SizedBox(
                       height: 15,

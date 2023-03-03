@@ -30,7 +30,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
             height: Get.mediaQuery.padding.top + 20,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: 15,
             ),
             child: FittedBox(

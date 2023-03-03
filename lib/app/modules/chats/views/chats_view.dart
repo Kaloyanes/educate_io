@@ -80,9 +80,12 @@ class ChatsView extends GetView<ChatsController> {
                             });
                           }
 
+                          var person = Teacher.fromMap(personData);
+
                           return ListTile(
                             leading: Hero(
-                              tag: personData["photoUrl"] ?? personData,
+                              transitionOnUserGestures: true,
+                              tag: person.photoUrl ?? person,
                               child: CircleAvatar(
                                 foregroundImage: CachedNetworkImageProvider(
                                     personData["photoUrl"] ?? ""),
@@ -90,15 +93,33 @@ class ChatsView extends GetView<ChatsController> {
                               ),
                             ),
                             title: Hero(
+                              transitionOnUserGestures: true,
                               flightShuttleBuilder: (flightContext,
                                       animation,
                                       flightDirection,
                                       fromHeroContext,
                                       toHeroContext) =>
-                                  toHeroContext.widget,
+                                  AnimatedBuilder(
+                                animation: animation,
+                                child: toHeroContext.widget,
+                                builder: (_, child) {
+                                  return DefaultTextStyle.merge(
+                                    child: child!,
+                                    style: TextStyle.lerp(
+                                      DefaultTextStyle.of(fromHeroContext)
+                                          .style,
+                                      DefaultTextStyle.of(toHeroContext).style,
+                                      flightDirection ==
+                                              HeroFlightDirection.push
+                                          ? 1 - animation.value
+                                          : animation.value,
+                                    ),
+                                  );
+                                },
+                              ),
                               tag: doc.id,
                               child: Text(
-                                personData["name"] ?? "",
+                                person.name,
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                             ),
@@ -106,7 +127,7 @@ class ChatsView extends GetView<ChatsController> {
                               Get.to(
                                 () => const ChatView(),
                                 arguments: {
-                                  "teacher": Teacher.fromMap(personData),
+                                  "teacher": person,
                                   "docId": doc.id,
                                   "initials": initials,
                                 },

@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/chats/components/message_settings.dart';
 import 'package:educate_io/app/modules/chats/models/message_model.dart';
-import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -66,7 +63,8 @@ class _ChatMessageState extends State<ChatMessage> {
                 : CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(20.0),
+                constraints: BoxConstraints(maxWidth: Get.width / 2),
+                padding: const EdgeInsets.all(15.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     bottomLeft: widget.ownMessage
@@ -84,7 +82,7 @@ class _ChatMessageState extends State<ChatMessage> {
                 ),
                 child: Text(
                   widget.message.value,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.left,
                 ),
               ),
               const SizedBox(

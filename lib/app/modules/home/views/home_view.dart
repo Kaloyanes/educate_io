@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/home/components/drawer/drawer_component.dart';
 import 'package:educate_io/app/modules/home/components/profile_picture.dart';
 import 'package:educate_io/app/modules/home/components/teacher_category.dart';
@@ -78,8 +77,8 @@ class HomeView extends GetView<HomeController> {
       stream: controller.authStream,
       builder: (context, snapshot) {
         if (FirebaseAuth.instance.currentUser == null) {
-          return Column(
-            children: const [
+          return const Column(
+            children: [
               TeacherSubject(
                 subject: "Програмиране",
                 isGrid: false,

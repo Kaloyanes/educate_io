@@ -1,8 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:educate_io/app/modules/auth/register/controllers/register_controller.dart';
 import 'package:educate_io/app/modules/profile_settings/components/photo_bottom_sheet.dart';
 import 'package:educate_io/app/modules/profile_settings/views/image_crop_view.dart';
 import 'package:educate_io/app/routes/app_pages.dart';

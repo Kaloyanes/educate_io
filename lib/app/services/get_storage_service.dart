@@ -31,7 +31,7 @@ class GetStorageService {
 
   Future<void> changeTheme(ThemeMode value) async {
     Get.changeThemeMode(value);
-    var themeString = "system";
+    String themeString;
     switch (value) {
       case ThemeMode.light:
         themeString = "light";
@@ -39,6 +39,10 @@ class GetStorageService {
 
       case ThemeMode.dark:
         themeString = "dark";
+        break;
+
+      case ThemeMode.system:
+        themeString = "system";
         break;
     }
 

@@ -6,7 +6,7 @@ class LocationPickerController extends GetxController {
   late GoogleMapController mapController;
 
   final cameraPosition =
-      CameraPosition(target: LatLng(42.510578, 27.461014)).obs;
+      const CameraPosition(target: LatLng(42.510578, 27.461014)).obs;
 
   Future<void> configureMap(GoogleMapController newMapController) async {
     mapController = newMapController;

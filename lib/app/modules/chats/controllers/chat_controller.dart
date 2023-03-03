@@ -8,7 +8,6 @@ import 'package:educate_io/app/modules/chats/models/message_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,7 +37,11 @@ class ChatController extends GetxController {
     super.onInit();
   }
 
+  bool ignore = true;
+
   void feed(QuerySnapshot<Map<String, dynamic>> event) {
+    if (ignore) return;
+
     var lastDoc = event.docChanges.last;
     var data = lastDoc.doc.data() ?? {};
 
@@ -70,7 +73,6 @@ class ChatController extends GetxController {
   Future<void> _feedMessages() async {
     var messageCollection = await collection.orderBy("time").get();
 
-    var msgs = <Message>[];
     var docs = messageCollection.docs;
 
     docs.removeWhere((element) => element.id == "example");
@@ -82,10 +84,10 @@ class ChatController extends GetxController {
 
       var msg = Message.fromMap(data);
 
-      messages.addIf(!msgs.contains(msg), msg);
+      messages.addIf(!messages.contains(msg), msg);
     }
 
-    // messages.addAll(msgs);
+    ignore = false;
   }
 
   var messages = <Message>[].obs;
@@ -201,7 +203,7 @@ class ChatController extends GetxController {
 
     if (image == null) return;
 
-    var id = Uuid().v4();
+    var id = const Uuid().v4();
     var ref =
         FirebaseStorage.instance.ref("/chats/${Get.arguments["docId"]}/$id");
 
@@ -223,7 +225,7 @@ class ChatController extends GetxController {
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(
-        Duration(days: 365),
+        const Duration(days: 365),
       ),
     );
 
@@ -231,7 +233,7 @@ class ChatController extends GetxController {
 
     var time = await showTimePicker(
       context: Get.context!,
-      initialTime: TimeOfDay(hour: 12, minute: 0),
+      initialTime: const TimeOfDay(hour: 12, minute: 0),
     );
 
     if (time == null) return;
@@ -253,7 +255,6 @@ class ChatController extends GetxController {
   }
 
   Future<void> deleteChat() async {
-    print("hello world");
     await FirebaseFirestore.instance.collection("chats").doc(docId).delete();
 
     var allImagesInChat =

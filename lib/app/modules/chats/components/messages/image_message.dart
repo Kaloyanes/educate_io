@@ -3,11 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/modules/chats/components/message_settings.dart';
 import 'package:educate_io/app/modules/chats/models/message_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
 
 class ImageMessage extends StatelessWidget {
   const ImageMessage(
@@ -36,7 +33,6 @@ class ImageMessage extends StatelessWidget {
                   alignment: Alignment.center,
                   child: InteractiveViewer(
                     clipBehavior: Clip.none,
-                    boundaryMargin: EdgeInsets.all(20),
                     maxScale: 5,
                     child: Hero(
                       tag: message.value,
@@ -55,7 +51,7 @@ class ImageMessage extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.all(20),
+                  margin: const EdgeInsets.all(20),
                   alignment: Alignment.topRight,
                   child: FloatingActionButton(
                     onPressed: () => Get.back(),
@@ -74,22 +70,26 @@ class ImageMessage extends StatelessWidget {
           ),
         ),
         child: Container(
-          margin: EdgeInsets.symmetric(
+          margin: const EdgeInsets.symmetric(
             horizontal: 20,
             vertical: 10,
           ),
-          child: Hero(
-            tag: message.value,
-            child: CachedNetworkImage(
-              width: 250,
-              imageBuilder: (context, imageProvider) => ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image(
-                  image: imageProvider,
-                ),
+          child: CachedNetworkImage(
+            width: 250,
+            imageBuilder: (context, imageProvider) => ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image(
+                image: imageProvider,
               ),
-              imageUrl: message.value,
             ),
+            placeholder: (context, url) => const SizedBox(
+              width: 250,
+              height: 200,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            imageUrl: message.value,
           ),
         ),
       ),
