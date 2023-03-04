@@ -1,7 +1,6 @@
 import 'package:educate_io/app/modules/auth/register/views/google_data_view.dart';
 import 'package:get/get.dart';
 
-import '../middleware/auth_middleware.dart';
 import '../modules/auth/login/bindings/login_binding.dart';
 import '../modules/auth/login/views/login_view.dart';
 import '../modules/auth/register/bindings/register_binding.dart';
@@ -35,9 +34,6 @@ class AppPages {
       name: _Paths.HOME,
       page: () => const HomeView(),
       binding: HomeBinding(),
-      middlewares: [
-        AuthMiddleware(),
-      ],
     ),
     GetPage(
       name: _Paths.AUTH,

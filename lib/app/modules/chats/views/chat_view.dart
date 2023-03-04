@@ -89,6 +89,7 @@ class ChatView extends GetView<ChatController> {
                   ),
                 ),
               ),
+              const Spacer(flex: 1),
               Flexible(
                 flex: 1,
                 child: Row(
