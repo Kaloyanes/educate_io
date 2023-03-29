@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:educate_io/app/models/teacher_model.dart';
 import 'package:educate_io/app/modules/chats/chat_messages/views/location_picker.dart';
 import 'package:educate_io/app/modules/chats/components/photo_picker.dart';
 import 'package:educate_io/app/modules/chats/models/message_model.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -33,15 +36,10 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     _feedMessages();
-    collection.orderBy("time").snapshots().listen((event) => feed(event));
     super.onInit();
   }
 
-  bool ignore = true;
-
   void feed(QuerySnapshot<Map<String, dynamic>> event) {
-    if (ignore) return;
-
     var lastDoc = event.docChanges.last;
     var data = lastDoc.doc.data() ?? {};
 
@@ -76,18 +74,16 @@ class ChatController extends GetxController {
     var docs = messageCollection.docs;
 
     docs.removeWhere((element) => element.id == "example");
-    docs.removeLast();
 
     for (var doc in docs) {
       var data = doc.data();
       data.addAll({"msgId": doc.id});
 
       var msg = Message.fromMap(data);
-
       messages.addIf(!messages.contains(msg), msg);
     }
 
-    ignore = false;
+    collection.orderBy("time").snapshots().listen((event) => feed(event));
   }
 
   var messages = <Message>[].obs;
@@ -265,5 +261,37 @@ class ChatController extends GetxController {
     }
 
     Get.back();
+  }
+
+  Future<void> pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      dialogTitle: "Избери файл който да пратиш на ${teacher.name}",
+    );
+
+    if (result == null) return;
+
+    for (var file in result.files) {
+      inspect(file);
+      _uploadFile(file);
+    }
+  }
+
+  void _uploadFile(PlatformFile file) {
+    if (file.path == null) return;
+
+    var ref = FirebaseStorage.instance
+        .ref("/chats/${Get.arguments["docId"]}/${file.name}");
+    var upload = ref.putFile(File(file.path!));
+
+    print("uploading");
+    upload.whenComplete(() async {
+      collection.doc().set({
+        "sender": FirebaseAuth.instance.currentUser!.uid,
+        "value": await ref.getDownloadURL(),
+        "time": Timestamp.now(),
+        "type": "file",
+      });
+    });
   }
 }

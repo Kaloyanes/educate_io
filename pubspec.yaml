@@ -51,6 +51,8 @@ dependencies:
   uuid: ^3.0.7
   permission_handler: ^10.2.0
   http: ^0.13.5
+  file_picker: ^5.2.5
+  dio: ^5.0.1
   
 dev_dependencies:
   flutter_lints: ^2.0.0

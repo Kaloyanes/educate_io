@@ -1,3 +1,4 @@
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +8,7 @@ import 'package:educate_io/app/services/get_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SearchController extends GetxController {
+class SearchTeachersController extends GetxController {
   final notFilteredTeachers = <Teacher>[];
   final teachers = <Teacher>[].obs;
 

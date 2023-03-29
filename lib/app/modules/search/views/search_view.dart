@@ -1,17 +1,16 @@
 import 'package:educate_io/app/modules/home/components/teacher_card.dart';
+import 'package:educate_io/app/modules/search/controllers/search_teachers_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
 
-import '../controllers/search_controller.dart';
-
-class SearchView extends GetView<SearchController> {
+class SearchView extends GetView<SearchTeachersController> {
   const SearchView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => SearchController());
+    Get.lazyPut(() => SearchTeachersController());
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
