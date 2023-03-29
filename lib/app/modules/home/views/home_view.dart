@@ -61,17 +61,6 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  Widget content() {
-    return Column(
-      children: <Widget>[
-        welcomeText(),
-        teacherListings(),
-      ].animate(interval: 100.ms).fadeIn(
-            curve: Curves.easeOut,
-          ),
-    );
-  }
-
   StreamBuilder<User?> teacherListings() {
     return StreamBuilder(
       stream: controller.authStream,
@@ -116,9 +105,9 @@ class HomeView extends GetView<HomeController> {
               }
 
               return ListView.builder(
+                cacheExtent: 1000,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: list.length < 10 ? list.length : 10,
                 itemBuilder: (context, index) => TeacherSubject(
                   isGrid: false,
                   subject: list.elementAt(index),

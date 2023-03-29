@@ -4,7 +4,6 @@ import 'package:educate_io/app/firebase_options.dart';
 import 'package:educate_io/app/services/get_storage_service.dart';
 import 'package:educate_io/app/themes.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -75,10 +74,12 @@ class App extends GetView<MainController> {
             theme: Themes.theme(controller.lightColor.value),
             darkTheme: Themes.theme(controller.darkColor.value),
             debugShowCheckedModeBanner: false,
-            scrollBehavior: const CupertinoScrollBehavior(),
+            // scrollBehavior: const CupertinoScrollBehavior(),
             locale: const Locale("bg", "BG"),
             defaultTransition: Transition.native,
-            routingCallback: (value) => HapticFeedback.mediumImpact(),
+            routingCallback: (value) {
+              HapticFeedback.mediumImpact();
+            },
             // localizationsDelegates: const [
             //   GlobalMaterialLocalizations.delegate,
             //   GlobalWidgetsLocalizations.delegate,

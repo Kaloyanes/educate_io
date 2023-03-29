@@ -8,15 +8,16 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class ReviewCard extends StatelessWidget {
-  ReviewCard(
-      {super.key,
-      required this.rating,
-      required this.reviewText,
-      required this.photoUrl,
-      required this.name,
-      required this.docId,
-      required this.date,
-      required this.userId});
+  ReviewCard({
+    super.key,
+    required this.rating,
+    required this.reviewText,
+    required this.photoUrl,
+    required this.name,
+    required this.docId,
+    required this.date,
+    required this.userId,
+  });
 
   final double rating;
   final String reviewText;
@@ -32,10 +33,11 @@ class ReviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(11.0),
         child: Column(
           children: [
             Row(
+              mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
@@ -60,6 +62,7 @@ class ReviewCard extends StatelessWidget {
                     Text(name),
                   ],
                 ),
+                Expanded(child: Container()),
                 Row(
                   children: [
                     Column(

@@ -38,8 +38,9 @@ class RatingView extends GetView<RatingController> {
                   onPressed: () => controller.filter(),
                 )
               ],
-              flexibleSpace: const FlexibleSpaceBar(
-                title: Text("Отзиви"),
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text("Отзиви",
+                    style: Theme.of(context).textTheme.headlineSmall),
                 centerTitle: true,
               ),
             ),
