@@ -7,6 +7,7 @@ import 'package:educate_io/app/modules/chats/components/messages/image_message.d
 import 'package:educate_io/app/modules/chats/components/messages/location_message.dart';
 import 'package:educate_io/app/modules/chats/controllers/chat_controller.dart';
 import 'package:educate_io/app/modules/details/views/details_view.dart';
+import 'package:educate_io/app/modules/teachers_nearby/components/map_switcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -134,10 +135,12 @@ class ChatView extends GetView<ChatController> {
 
                     switch (item.type) {
                       case "location":
-                        return LocationMessage(
-                          ownMessage: isOwnMessage,
-                          message: item,
-                          doc: controller.collection.doc(item.msgId),
+                        return MapSwitcher(
+                          child: LocationMessage(
+                            ownMessage: isOwnMessage,
+                            message: item,
+                            doc: controller.collection.doc(item.msgId),
+                          ),
                         );
 
                       case "image":

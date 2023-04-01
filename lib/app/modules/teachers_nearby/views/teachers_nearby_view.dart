@@ -1,6 +1,6 @@
+import 'package:educate_io/app/modules/teachers_nearby/components/map_switcher.dart';
 import 'package:educate_io/app/services/geo_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -11,129 +11,48 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MapSwitcher(
+      child: Scaffold(
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          title: Obx(
-            () => TextField(
-              controller: controller.searchController,
-              decoration: InputDecoration(
-                fillColor: Theme.of(context).colorScheme.primaryContainer,
-                hintText: "Бургас",
-                label: const Text("Място"),
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-              ),
-              textInputAction: TextInputAction.search,
-              onEditingComplete: () => controller.search(),
-            )
-                .animate(
-                  delay: 300.ms,
-                  target: controller.showControls.value ? 1 : 0,
-                )
-                .scaleXY(
-                  curve: Curves.easeOutCubic,
-                  duration: 400.ms,
-                  delay: 250.ms,
-                  begin: -2,
-                  end: 1,
-                )
-                .slideY(
-                  end: 0,
-                  begin: -5,
-                  curve: Curves.easeOutQuint,
-                  duration: 400.ms,
-                )
-                .then()
-                .blurXY(
-                  begin: 3,
-                  end: 0,
-                  duration: 150.ms,
-                  curve: Curves.easeOut,
-                ),
+          title: TextField(
+            controller: controller.searchController,
+            decoration: InputDecoration(
+              fillColor: Theme.of(context).colorScheme.primaryContainer,
+              hintText: "Бургас",
+              label: const Text("Място"),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+            ),
+            textInputAction: TextInputAction.search,
+            onEditingComplete: () => controller.search(),
           ),
           actions: [
-            Obx(
-              () => Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                margin: const EdgeInsets.all(10),
-                child: IconButton(
-                  onPressed: () => controller.search(),
-                  icon: const Icon(Icons.search),
-                ),
-              )
-                  .animate(
-                    delay: 300.ms,
-                    target: controller.showControls.value ? 1 : 0,
-                  )
-                  .scaleXY(
-                    curve: Curves.easeOutCubic,
-                    duration: 400.ms,
-                    delay: 250.ms,
-                    begin: -2,
-                    end: 1,
-                  )
-                  .slideY(
-                    end: 0,
-                    begin: -5,
-                    curve: Curves.easeOutQuint,
-                    duration: 400.ms,
-                  )
-                  .then()
-                  .blurXY(
-                    begin: 3,
-                    end: 0,
-                    duration: 150.ms,
-                    curve: Curves.easeOut,
-                  ),
-            ),
-          ],
-
-          backgroundColor: Colors.transparent,
-          // systemOverlayStyle: const SystemUiOverlayStyle(
-          //   statusBarIconBrightness: Brightness.dark,
-          // ),
-          leadingWidth: 70,
-          toolbarHeight: 70,
-          leading: Obx(
-            () => Container(
+            Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(50),
               ),
               margin: const EdgeInsets.all(10),
               child: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Get.back(),
+                onPressed: () => controller.search(),
+                icon: const Icon(Icons.search),
               ),
-            )
-                .animate(
-                  delay: 300.ms,
-                  target: controller.showControls.value ? 1 : 0,
-                )
-                .scaleXY(
-                  curve: Curves.easeOutCubic,
-                  duration: 400.ms,
-                  delay: 250.ms,
-                  begin: -2,
-                  end: 1,
-                )
-                .slideY(
-                  end: 0,
-                  begin: -5,
-                  curve: Curves.easeOutQuint,
-                  duration: 400.ms,
-                )
-                .then()
-                .blurXY(
-                  begin: 3,
-                  end: 0,
-                  duration: 150.ms,
-                  curve: Curves.easeOut,
-                ),
+            ),
+          ],
+          backgroundColor: Colors.transparent,
+          leadingWidth: 70,
+          toolbarHeight: 70,
+          leading: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            margin: const EdgeInsets.all(10),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.maybePop(context),
+            ),
           ),
         ),
         body: FutureBuilder(
@@ -166,34 +85,11 @@ class TeachersNearbyView extends GetView<TeachersNearbyController> {
             );
           },
         ),
-        floatingActionButton: Obx(
-          () => FloatingActionButton(
-                  onPressed: () => controller.centerCamera(),
-                  child: const Icon(Icons.navigation_rounded))
-              .animate(
-                delay: 300.ms,
-                target: controller.showControls.value ? 1 : 0,
-              )
-              .scaleXY(
-                curve: Curves.easeOutCubic,
-                duration: 400.ms,
-                delay: 200.ms,
-                begin: -2,
-                end: 1,
-              )
-              .slideY(
-                end: 0,
-                begin: 5,
-                curve: Curves.easeOutQuint,
-                duration: 400.ms,
-              )
-              .then()
-              .blurXY(
-                begin: 3,
-                end: 0,
-                duration: 150.ms,
-                curve: Curves.easeOut,
-              ),
-        ));
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => controller.centerCamera(),
+          child: const Icon(Icons.navigation_rounded),
+        ),
+      ),
+    );
   }
 }
