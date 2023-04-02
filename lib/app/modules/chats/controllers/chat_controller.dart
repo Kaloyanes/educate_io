@@ -251,16 +251,9 @@ class ChatController extends GetxController {
   }
 
   Future<void> deleteChat() async {
-    await FirebaseFirestore.instance.collection("chats").doc(docId).delete();
-
-    var allImagesInChat =
-        await FirebaseStorage.instance.ref("/chats/$docId").listAll();
-
-    for (var result in allImagesInChat.items) {
-      await result.delete();
-    }
-
     Get.back();
+
+    await FirebaseFirestore.instance.collection("chats").doc(docId).delete();
   }
 
   Future<void> pickFile() async {
