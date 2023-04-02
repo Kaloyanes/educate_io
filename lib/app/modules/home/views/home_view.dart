@@ -108,6 +108,7 @@ class HomeView extends GetView<HomeController> {
                 cacheExtent: 1000,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
+                itemCount: list.length,
                 itemBuilder: (context, index) => TeacherSubject(
                   isGrid: false,
                   subject: list.elementAt(index),

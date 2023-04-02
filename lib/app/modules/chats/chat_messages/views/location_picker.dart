@@ -1,4 +1,5 @@
 import 'package:educate_io/app/modules/chats/chat_messages/controllers/location_picker_controller.dart';
+import 'package:educate_io/app/modules/teachers_nearby/components/map_switcher.dart';
 import 'package:educate_io/app/services/geo_service.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,7 +25,7 @@ class LocationPickerView extends GetView<LocationPickerController> {
           margin: const EdgeInsets.all(10),
           child: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () => Get.back(),
+            onPressed: () => Navigator.maybePop(context),
           ),
         ),
       ),
@@ -39,22 +40,25 @@ class LocationPickerView extends GetView<LocationPickerController> {
 
           return Stack(
             children: [
-              GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: snapshot.data ?? const LatLng(42.510578, 27.461014),
-                  zoom: 16,
+              MapSwitcher(
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: snapshot.data ?? const LatLng(42.510578, 27.461014),
+                    zoom: 16,
+                  ),
+                  onCameraMove: (position) =>
+                      controller.updatePosition(position),
+                  onMapCreated: (mapController) =>
+                      controller.mapController = mapController,
+                  zoomControlsEnabled: false,
+                  mapType: MapType.hybrid,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                  zoomGesturesEnabled: true,
+                  rotateGesturesEnabled: false,
+                  compassEnabled: false,
+                  mapToolbarEnabled: false,
                 ),
-                onCameraMove: (position) => controller.updatePosition(position),
-                onMapCreated: (mapController) =>
-                    controller.mapController = mapController,
-                zoomControlsEnabled: false,
-                mapType: MapType.hybrid,
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                zoomGesturesEnabled: true,
-                rotateGesturesEnabled: false,
-                compassEnabled: false,
-                mapToolbarEnabled: false,
               ),
               const Center(
                 child: Icon(

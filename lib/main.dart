@@ -1,8 +1,8 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:educate_io/app/controllers/main_controller.dart';
-import 'package:educate_io/app/firebase_options.dart';
 import 'package:educate_io/app/services/get_storage_service.dart';
 import 'package:educate_io/app/themes.dart';
+import 'package:educate_io/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
