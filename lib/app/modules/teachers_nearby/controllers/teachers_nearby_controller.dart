@@ -56,6 +56,8 @@ class TeachersNearbyController extends GetxController {
 
     var teacher = Teacher.fromMap(doc.data() ?? {});
 
+    teacher.uid = doc.id;
+
     return Marker(
       markerId: MarkerId(teacher.uid ?? latlng.toString()),
       position: latlng,
@@ -157,7 +159,7 @@ class TeachersNearbyController extends GetxController {
 
   void showDetails(Teacher teacher) {
     Get.to(
-      const DetailsView(),
+      () => const DetailsView(),
       arguments: {"teacher": teacher},
       fullscreenDialog: true,
     );
