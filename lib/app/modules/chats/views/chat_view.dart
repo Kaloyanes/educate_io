@@ -135,6 +135,7 @@ class ChatView extends GetView<ChatController> {
 
                     switch (item.type) {
                       case "location":
+
                         return MapSwitcher(
                           child: LocationMessage(
                             ownMessage: isOwnMessage,
@@ -145,6 +146,7 @@ class ChatView extends GetView<ChatController> {
 
                       case "image":
                         return ImageMessage(
+                          key: UniqueKey(),
                           ownMessage: isOwnMessage,
                           message: item,
                           doc: controller.collection.doc(item.msgId),
@@ -152,6 +154,7 @@ class ChatView extends GetView<ChatController> {
 
                       case "time":
                         return DateTimeMessage(
+                          key: UniqueKey(),
                           ownMessage: isOwnMessage,
                           message: item,
                           doc: controller.collection.doc(item.msgId),
@@ -160,6 +163,7 @@ class ChatView extends GetView<ChatController> {
 
                       case "file":
                         return FileMessage(
+                          key: UniqueKey(),
                           message: item,
                           ownMessage: isOwnMessage,
                           doc: controller.collection.doc(item.msgId),
@@ -167,6 +171,7 @@ class ChatView extends GetView<ChatController> {
 
                       default:
                         return ChatMessage(
+                          key: UniqueKey(),
                           ownMessage: isOwnMessage,
                           message: item,
                           doc: controller.collection.doc(item.msgId),

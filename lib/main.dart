@@ -24,6 +24,7 @@ Future<void> main() async {
   if (imagePickerImplementation is ImagePickerAndroid) {
     imagePickerImplementation.useAndroidPhotoPicker = true;
   }
+
   if (kDebugMode) {
     Animate.restartOnHotReload = true;
   }

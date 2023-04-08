@@ -29,6 +29,7 @@ class DetailsController extends GetxController {
         ),
       );
     } else {
+      print(teacher.uid);
       teachers.add(teacher.uid!);
       ScaffoldMessenger.of(Get.context!).showSnackBar(
         const SnackBar(
