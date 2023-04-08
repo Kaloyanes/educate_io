@@ -39,11 +39,11 @@ class ChatBottomBar extends StatelessWidget {
                   break;
               }
             },
-            itemBuilder: (context) => const [
+            itemBuilder: (context) => [
               PopupMenuItem(
                 value: 1,
                 child: Row(
-                  children: [
+                  children: const [
                     Icon(Icons.location_on),
                     SizedBox(width: 10),
                     Text("Локация"),
@@ -53,7 +53,7 @@ class ChatBottomBar extends StatelessWidget {
               PopupMenuItem(
                 value: 2,
                 child: Row(
-                  children: [
+                  children: const [
                     Icon(Icons.image),
                     SizedBox(width: 10),
                     Text("Снимка"),
@@ -63,7 +63,7 @@ class ChatBottomBar extends StatelessWidget {
               PopupMenuItem(
                 value: 3,
                 child: Row(
-                  children: [
+                  children: const [
                     Icon(Icons.access_time_filled),
                     SizedBox(width: 10),
                     Text("Време"),
@@ -73,7 +73,7 @@ class ChatBottomBar extends StatelessWidget {
               PopupMenuItem(
                 value: 4,
                 child: Row(
-                  children: [
+                  children: const [
                     Icon(Icons.file_upload),
                     SizedBox(width: 10),
                     Text("Файл"),

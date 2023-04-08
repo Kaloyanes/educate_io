@@ -66,8 +66,8 @@ class HomeView extends GetView<HomeController> {
       stream: controller.authStream,
       builder: (context, snapshot) {
         if (FirebaseAuth.instance.currentUser == null) {
-          return const Column(
-            children: [
+          return Column(
+            children: const [
               TeacherSubject(
                 subject: "Програмиране",
                 isGrid: false,

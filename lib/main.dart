@@ -12,10 +12,18 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_picker_android/image_picker_android.dart';
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 
 import 'app/routes/app_pages.dart';
 
 Future<void> main() async {
+  final ImagePickerPlatform imagePickerImplementation =
+      ImagePickerPlatform.instance;
+
+  if (imagePickerImplementation is ImagePickerAndroid) {
+    imagePickerImplementation.useAndroidPhotoPicker = true;
+  }
   if (kDebugMode) {
     Animate.restartOnHotReload = true;
   }

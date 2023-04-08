@@ -3,7 +3,7 @@ version: 1.0.0+1
 publish_to: none
 description: Platform to find private tutors
 environment:
-  sdk: ">=2.90.0 <4.0.0"
+  sdk: ">=2.19.0 <4.0.0"
 
 dependencies:
   add_2_calendar: ^2.2.3
@@ -43,9 +43,10 @@ dependencies:
   google_maps_webservice: ^0.0.20-nullsafety.5
   google_sign_in: ^5.4.4
   image: ^4.0.13
-  image_picker: ^0.8.6+1
+  image_picker: ^0.8.7+1
+  image_picker_android: ^0.8.6+6
   intl: any
-  path: ^1.8.3
+  path: ^1.8.2
   path_provider: 2.0.12
   url_launcher: ^6.1.8
   uuid: ^3.0.7
