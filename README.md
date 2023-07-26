@@ -68,11 +68,11 @@ To get started with EducateIO, follow these steps:
 
 ## Contributing
 
-We welcome contributions from the open-source community to enhance the app's features and functionality. If you wish to contribute, please follow the guidelines outlined in the CONTRIBUTING.md file in the project repository.
+I welcome contributions from the open-source community to enhance the app's features and functionality.
 
 ## Feedback
 
-We value your feedback as it helps us improve the app and deliver a better experience. If you encounter any issues, have suggestions, or want to report a bug, please don't hesitate to reach out to us. You can send your feedback to feedback@EducateIO.
+We value your feedback as it helps us improve the app and deliver a better experience. If you encounter any issues, have suggestions, or want to report a bug, please don't hesitate to reach out to us. You can send your feedback to kaloyangfx@gmail.com.
 
 ## License
 
