@@ -38,9 +38,9 @@ EducateIO is an innovative mobile platform app that aims to foster a learning co
 
 To get started with EducateIO, follow these steps:
 
-1. **Download the App:** Visit the App Store or Google Play Store and search for "EducateIO". Download and install the app on your mobile device.
+1. **Download the App:** Download it via GitHub releases page.
 
-2. **Sign Up:** Create a new account or log in using your existing credentials. You can also sign up using your social media accounts.
+2. **Sign Up:** Create a new account or log in using your existing credentials. You can also sign up using your google accounts.
 
 3. **Set Up Profile:** After signing in, set up your profile by providing information about your areas of expertise and learning interests.
 
@@ -48,7 +48,7 @@ To get started with EducateIO, follow these steps:
 
 5. **Request Sessions:** When you find a tutor you like, you can request a tutoring session directly through the app. Discuss the details and schedule a convenient time for the session.
 
-6. **Become a Teacher:** If you wish to become a tutor and share your knowledge, go to your profile settings and enable the "Become a Teacher" option. Set your availability, subjects, and session fees.
+6. **Become a Teacher:** If you wish to become a tutor and share your knowledge, go to your profile settings and enable the "Become a Teacher" option. Set your subjects for other students to search you and upload a profile picture to make sure you are a real person.
 
 7. **Knowledge Exchange:** As a student, you can also participate in knowledge exchange with other students. Offer your expertise in a subject, and in return, you can gain knowledge on a different topic or receive compensation.
 
@@ -60,11 +60,9 @@ To get started with EducateIO, follow these steps:
 
 - **Messaging:** Access the messaging feature to communicate with tutors or students. Discuss session details, ask questions, and exchange knowledge.
 
-- **Sessions:** All scheduled and past tutoring sessions can be viewed under this section.
-
 - **Profile:** Manage your profile, update your details, and view your ratings and reviews here.
 
-- **Notifications:** Check the notification tab for updates on new messages, session requests, and other important activities.
+- **Reviews:** You can check a teacher's profile for reviews from other students.
 
 ## Contributing
 
