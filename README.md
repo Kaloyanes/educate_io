@@ -55,43 +55,41 @@ To get started with EducateIO, follow these steps:
 
 ## Screenshots
 
+# Home
 ![Screenshot_20230809-215251](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/ac00da7a-4fb1-42ef-a3db-c3d9f454abaf)
-Home
 
+# Teacher
 ![Screenshot_20230809-215317](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/d144308a-e674-4e57-914c-81f508d9b62f)
-Teacher
 
+# Reviews
 ![Screenshot_20230809-215352](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/274a083e-9e1d-4a51-9d82-f0d443b53310)
-Reviews
 
+# Saved Teachers
 ![Screenshot_20230809-215409](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/dd075e90-3332-4d4f-b9b1-4439da01c483)
-Saved Teachers
 
-
+# Navigation drawer 
 ![Screenshot_20230809-215415](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/8ecbbd69-d219-4e10-b4c8-4e425bf0e90f)
-Navigation drawer 
 
+# Chat system with multiple messages like map location, calendar scheduling, images and files
 ![Screenshot_20230809-215446](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/9b10b302-da44-431c-b1bc-8dc5e4b8ca86)
-Chat system with multiple messages like map location, calendar scheduling, images and files
 
+# Message options
 ![Screenshot_20230809-215505](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/fa7e0095-d1fd-43cc-b35b-e706aae78812)
-Message options
 
+# Google Maps showing teachers nearby
 ![Screenshot_20230809-215523](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/9e88119b-d708-4a6a-838b-f2c566039afe)
-Google Maps showing teachers nearby
 
+# Profile Editor
 ![Screenshot_20230809-215536](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/33e36475-3399-4c61-9523-f972d14ce871)
-Profile Editor
 
-
+# Sign in and google account
 ![Screenshot_20230809-215548](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/321ac35c-ac7b-4a6d-b921-f1c540976c1d)
-Sign in and google account
 
+# Sign up
 ![Screenshot_20230809-215551](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/b8371b3d-c356-43d5-b7f4-ceb72395d1c4)
-Sign up
 
+# Forgot password
 ![Screenshot_20230809-215554](https://github.com/KaloyanStoyanov06/educate_io/assets/51166786/89ec993e-2abc-4147-859b-1d76bdf7e30c)
-Forgot password
 
 ## How to Use
 
